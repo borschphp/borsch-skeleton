@@ -25,8 +25,6 @@ class ApiMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        throw new \InvalidArgumentException('Booboo is not valid...');
-
         // Example:
         // If the client did not provide valid credentials to access the api resources,
         // then return a 403 Forbidden response.
