@@ -15,7 +15,10 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 return [
     ApplicationInterface::class => DI\autowire(App::class),
-    RouterInterface::class => DI\autowire(FastRouteRouter::class), // ->setCacheFile()
+    RouterInterface::class => DI\autowire(FastRouteRouter::class)/*->method(
+        'setCacheFile',
+        __DIR__.'/../../storage/cache/routes'
+    )*/,
     RequestHandlerInterface::class => DI\autowire(RequestHandler::class),
     ServerRequestInterface::class => DI\factory(function () {
         return ServerRequestFactory::fromGlobals();

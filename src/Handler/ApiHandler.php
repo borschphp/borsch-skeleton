@@ -21,7 +21,7 @@ class ApiHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         return new JsonResponse([
-            'Context' => 'Borsch Application',
+            'Context' => sprintf('%s Application', env('APP_NAME', 'Borsch')),
             'Message' => 'JSON Response generated in /api handler.'
         ]);
     }

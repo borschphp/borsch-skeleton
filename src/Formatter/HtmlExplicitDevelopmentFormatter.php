@@ -38,7 +38,7 @@ class HtmlExplicitDevelopmentFormatter extends AbstractFormatter
             .trace {line-height: 1}
         </style>';
         $html .= '<div class="content">';
-        $html .= '<h1>Borsch Application Error</h1>';
+        $html .= sprintf('<h1>%s Application Error</h1>', env('APP_NAME', 'Borsch'));
         $html .= '<p>The application could not run because of the following error:</p>';
 
         $html .= '<h3>Details</h3>';

@@ -19,7 +19,7 @@ class HomeHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $html = '<h2>Borsch Application <small>Home page</small></h2>';
+        $html = '<h2>Borsch Application</h2><p>Home page</p>';
 
         return new HtmlResponse($html);
     }

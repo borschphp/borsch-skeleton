@@ -10,14 +10,6 @@ use Laminas\Db\Adapter\AdapterInterface;
  */
 return [
     AdapterInterface::class => DI\factory(function () {
-        return new Adapter([
-            'driver' => 'Pdo_Mysql',
-            'database' => 'music',
-            'username' => 'root',
-            'password' => 'root',
-            'hostname' => 'localhost',
-            'port' => 3306,
-            'charset' => 'utf8mb4'
-        ]);
+        return new Adapter(env('DATABASE'));
     })
 ];

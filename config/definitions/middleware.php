@@ -1,5 +1,7 @@
 <?php
 
+use App\Handler\ApiHandler;
+use App\Handler\HomeHandler;
 use App\Middleware\ImplicitHeadMiddleware;
 use App\Middleware\RouteMiddleware;
 
@@ -15,6 +17,7 @@ return [
     RouteMiddleware::class => DI\autowire(),
 
     // Routes
-//    HomeController::class => DI\autowire(),
-//    ApiController::class => DI\autowire(),
+    // See Pipeline upper for more details.
+    HomeHandler::class => DI\autowire(),
+    ApiHandler::class => DI\autowire(),
 ];

@@ -18,6 +18,8 @@ use Psr\Http\Server\RequestHandlerInterface;
  * Class ErrorHandlerMiddleware
  *
  * It uses the league/booboo package to deal with error.
+ * As Booboo simply register an error handler and does not deal directly with a try/catch, it actually can be register
+ * in a simple PHP file loaded at run time, but we set it up here for the sake of exemple.
  *
  * @package App\Middleware
  * @see https://booboo.thephpleague.com/
@@ -41,8 +43,7 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        // All errors of warning or higher show in the browser,
-        // but errors that are below this level to be ignored.
+        // All errors or warning or higher show in the browser, but errors that are below this level to be ignored.
         $html = new HtmlExplicitDevelopmentFormatter();
         $html->setErrorLimit(E_ERROR|E_WARNING|E_USER_ERROR|E_USER_WARNING);
 
