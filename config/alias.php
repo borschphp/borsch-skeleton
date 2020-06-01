@@ -8,6 +8,7 @@
  * @return null|string|array If found, return the string value or an array if $name correspond to a section of the
  *                           ini file.
  *                           If not found, returns $default or null.
+ * @uses env.ini
  */
 function env(string $name, $default = null)
 {

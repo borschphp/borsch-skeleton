@@ -2,40 +2,32 @@
 
 namespace App\Middleware;
 
-use App\Formatter\HtmlExplicitDevelopmentFormatter;
-use League\BooBoo\BooBoo;
-use League\BooBoo\Exception\NoFormattersRegisteredException;
-use League\BooBoo\Formatter\NullFormatter;
-use League\BooBoo\Handler\LogHandler;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+use ErrorException;
+use Laminas\Diactoros\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
 
 /**
  * Class ErrorHandlerMiddleware
- *
- * It uses the league/booboo package to deal with error.
- * As Booboo simply register an error handler and does not deal directly with a try/catch, it actually can be register
- * in a simple PHP file loaded at run time, but we set it up here for the sake of exemple.
- *
  * @package App\Middleware
- * @see https://booboo.thephpleague.com/
  */
 class ErrorHandlerMiddleware implements MiddlewareInterface
 {
 
-    /** @var BooBoo */
-    protected $booboo;
+    /** @var callable[] */
+    protected $listeners = [];
 
     /**
-     * ErrorHandlerMiddleware constructor.
+     * @param callable $listener
      */
-    public function __construct()
+    public function addListener(callable $listener): void
     {
-        $this->booboo = new BooBoo([]);
+        if (!in_array($listener, $this->listeners, true)) {
+            $this->listeners[] = $listener;
+        }
     }
 
     /**
@@ -43,32 +35,40 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        // All errors or warning or higher show in the browser, but errors that are below this level to be ignored.
-        $html = new HtmlExplicitDevelopmentFormatter();
-        $html->setErrorLimit(E_ERROR|E_WARNING|E_USER_ERROR|E_USER_WARNING);
+        set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline): void {
+            if (!(error_reporting() & $errno)) {
+                // error_reporting does not include this error
+                return;
+            }
 
-        $null = new NullFormatter();
+            throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        });
 
-        $this->booboo->pushFormatter($null);
-        $this->booboo->pushFormatter($html);
-
-        // To designate an error-formatter for use on production systems
-        // Should be commented on production, use only if really needed.
-        $this->booboo->setErrorPageFormatter($html);
-
-        // Log Handler
-        $log = new Logger('app');
-        $log->pushHandler(new StreamHandler(__DIR__.'/../../storage/logs/app.log'));
-
-        $logger = new LogHandler($log);
-        $this->booboo->pushHandler($logger);
-
-        // Register BooBoo as the error handler.
         try {
-            $this->booboo->register();
-        } catch (NoFormattersRegisteredException $e) {
+            $response = $handler->handle($request);
+        } catch (Throwable $throwable) {
+            foreach ($this->listeners as $listener) {
+                $listener($throwable, $request);
+            }
+
+            $response = (new Response())->withStatus(
+                filter_var($throwable->getCode(), FILTER_VALIDATE_INT, [
+                    'options' => [
+                        'min_range' => 400,
+                        'max_range' => 599
+                    ]
+                ]) ?: 500
+            );
+
+            if (env('APP_ENV') != 'production') {
+                $response->getBody()->write($throwable->__toString());
+            }
+
+            $response->getBody()->write($response->getReasonPhrase() ?: 'Unknown Error');
         }
 
-        return $handler->handle($request);
+        restore_error_handler();
+
+        return $response;
     }
 }

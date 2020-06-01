@@ -10,7 +10,7 @@ use App\Middleware\NotFoundHandlerMiddleware;
 use App\Middleware\RouteMiddleware;
 use App\Middleware\TrailingSlashMiddleware;
 use Borsch\Application\App;
-use Di\Container;
+use Borsch\Container\Container;
 
 /**
  * Setup you middleware pipeline.

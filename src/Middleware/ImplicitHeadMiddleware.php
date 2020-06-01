@@ -34,7 +34,7 @@ class ImplicitHeadMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!strtoupper($request->getMethod()) != 'HEAD') {
+        if (strtoupper($request->getMethod()) != 'HEAD') {
             return $handler->handle($request);
         }
 
@@ -52,7 +52,9 @@ class ImplicitHeadMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        $request->withAttribute(RouteResultInterface::class, $route_result)->withMethod('GET');
+        $request = $request
+            ->withAttribute(RouteResultInterface::class, $route_result)
+            ->withMethod('GET');
 
         $response = $handler->handle($request);
 
