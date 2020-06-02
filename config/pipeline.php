@@ -10,16 +10,14 @@ use App\Middleware\NotFoundHandlerMiddleware;
 use App\Middleware\RouteMiddleware;
 use App\Middleware\TrailingSlashMiddleware;
 use Borsch\Application\App;
-use Borsch\Container\Container;
 
 /**
  * Setup you middleware pipeline.
  * It works as FIFO, place your middleware as necessary.
  *
  * @param App $app
- * @param Container $container
  */
-return function (App $app, Container $container): void {
+return function (App $app): void {
     // This should be the first middleware to catch all Exceptions.
     $app->pipe(ErrorHandlerMiddleware::class);
 
