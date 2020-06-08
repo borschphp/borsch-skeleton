@@ -56,6 +56,8 @@
                     </p>
                     <hr />
                     <a href="https://github.com/borschphp" target="_blank">Github</a>
+                    &bullet;
+                    <a href="https://github.com/borschphp/borsch-skeleton/wiki" target="_blank">Wiki</a>
                 </div>
             </div>
         </div>

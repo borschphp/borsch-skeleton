@@ -8,7 +8,7 @@ framework with DI container, routing, database connection, environment variables
 ## Installation
 
 Via [composer](https://getcomposer.org/) :
-`composer create-project borschphp/borsch-skeleton [your-app-name]`
+`composer create-project borschphp/skeleton [your-app-name]`
 
 After installation, you can run the application in development with the command :
 `php -S 0.0.0.0:8080 -t ./public/ ./public/index.php`
@@ -19,7 +19,9 @@ You can then visit the two demo links :
 ## Usage
 
 The skeleton uses :
-* [PHP-DI](http://php-di.org)
+* [Borsch Container](https://github.com/borschphp/borsch-container)
+* [Borsch Router](https://github.com/borschphp/borsch-router)
+* [Borsch Request Handler](https://github.com/borschphp/borsch-requesthandler)
 * [Laminas Dicatoros](https://docs.laminas.dev/laminas-diactoros)
 * [Laminas Db](https://docs.laminas.dev/laminas-db).
 
@@ -43,8 +45,8 @@ define your app routes.
 
 ##### Container (config/container.php)
 
-The container creation is done here, and definitions are located in the folder _definitions_.  
-You can add your own definitions when needed, see [PHP-DI](http://php-di.org) documentation for more details.
+The container creation is done here with its definitions.  
+You can add your own definitions when needed.
 
 ##### Environment variable (config/env.ini)
 
