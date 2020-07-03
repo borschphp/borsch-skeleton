@@ -24,6 +24,7 @@
     "borschphp/requesthandler": "~0.1",
     "borschphp/router": "~0.1",
     "borschphp/smarty": "~0.1",
+    "borschphp/orm": "~0.1",
     "laminas/laminas-diactoros": "^2.3",
     "laminas/laminas-db": "^2.11",
     "monolog/monolog": "^2.0"
