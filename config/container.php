@@ -102,11 +102,19 @@ $container->set(TemplateRendererInterface::class, function () {
  * --------------------
  *
  * Borsch uses the laminas-db package, please check it out for more information :
- *     https://docs.laminas.dev/laminas-db/
- * You can update the database informations in the file config/env.ini.
+ *     https://docs.laminas.dev/laminas-db/adapter/
+ * You can update the database informations in the .env.bk file.
  */
 $container->set(AdapterInterface::class, function () {
-    return new Adapter(env('DATABASE'));
-});
+    return new Adapter([
+        'driver'   => env('DB_DRIVER'),
+        'database' => env('DB_NAME'),
+        'username' => env('DB_USER'),
+        'password' => env('DB_PWD'),
+        'hostname' => env('DB_HOST'),
+        'port' => env('DB_PORT'),
+        'charset' => env('DB_CHARSET')
+    ]);
+})->cache(true);
 
 return $container;

@@ -1,0 +1,4 @@
+vendor/
+.env.bk
+composer.lock
+storage/smarty/templates_c/*.tpl.php
