@@ -1,5 +1,5 @@
 .idea/
 vendor/
-.env.bk
+.env
 composer.lock
 storage/smarty/templates_c/*.tpl.php

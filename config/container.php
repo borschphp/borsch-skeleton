@@ -35,7 +35,7 @@ $container->set(ApplicationInterface::class, App::class);
 $container->set(RouterInterface::class, function () {
     $router = new FastRouteRouter();
     if (env('APP_ENV') == 'production') {
-        $router->setCacheFile(__DIR__.'/../../storage/smarty/routes.smarty.php');
+        $router->setCacheFile(__DIR__.'/../../storage/smarty/routes.cache.php');
     }
 
     return $router;
@@ -103,7 +103,7 @@ $container->set(TemplateRendererInterface::class, function () {
  *
  * Borsch uses the laminas-db package, please check it out for more information :
  *     https://docs.laminas.dev/laminas-db/adapter/
- * You can update the database informations in the .env.bk file.
+ * You can update the database information in the .env file.
  */
 $container->set(AdapterInterface::class, function () {
     return new Adapter([

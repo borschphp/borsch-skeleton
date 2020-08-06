@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Gets the value of an environment variable. Supports boolean, empty and null.
+ * Gets the value of an environment variable. Supports booleans, empty and null.
  *
  * @param string $key
  * @param mixed $default
