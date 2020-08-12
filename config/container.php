@@ -1,8 +1,10 @@
 <?php
 
-use App\Handler\HomeHandler;
+use App\Handler\UserHandler;
 use App\Listener\MonologListener;
 use App\Middleware\ErrorHandlerMiddleware;
+use App\Repository\InMemoryUserRepository;
+use App\Repository\UserRepositoryInterface;
 use Borsch\Application\App;
 use Borsch\Application\ApplicationInterface;
 use Borsch\Container\Container;
@@ -70,6 +72,14 @@ $container->set(ErrorHandlerMiddleware::class, function () {
  * As for pipeline middlewares, your routes handlers that have dependency must be listed here.
  * Our HomeHandler handler uses an instance of TemplateRendererInterface to display an HTML page, so it is listed below.
  */
-$container->set(HomeHandler::class);
+$container->set(UserHandler::class);
+
+/*
+ * Match the UserRepositoryInterface with InMemoryUserRepository so that it can be used in UserHandler upper.
+ */
+$container
+    ->set(UserRepositoryInterface::class, InMemoryUserRepository::class)
+    ->addParameter(null)
+    ->cache(true);
 
 return $container;

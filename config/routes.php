@@ -1,7 +1,7 @@
 <?php
 
-use App\Handler\ApiHandler;
 use App\Handler\HomeHandler;
+use App\Handler\UserHandler;
 use Borsch\Application\App;
 
 /**
@@ -10,5 +10,5 @@ use Borsch\Application\App;
  */
 return function (App $app): void {
     $app->get('/', HomeHandler::class, 'home');
-    $app->get('/api', ApiHandler::class, 'api');
+    $app->get('/user[/{id}]', UserHandler::class, 'user');
 };

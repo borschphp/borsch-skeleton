@@ -2,7 +2,6 @@
 
 namespace App\Handler;
 
-use Borsch\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -15,23 +14,15 @@ use Psr\Http\Server\RequestHandlerInterface;
 class HomeHandler implements RequestHandlerInterface
 {
 
-    /** @var TemplateRendererInterface */
-    protected $renderer;
-
     /**
-     * HomeHandler constructor.
-     * @param TemplateRendererInterface $renderer
-     */
-    public function __construct(TemplateRendererInterface $renderer)
-    {
-        $this->renderer = $renderer;
-    }
-
-    /**
-     * @inheritDoc
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render('home'));
+        return new HtmlResponse(sprintf(
+            'Hello %s !',
+            ($request->getQueryParams()['name'] ?? $request->getHeaderLine('X-Name')) ?: 'World'
+        ));
     }
 }
