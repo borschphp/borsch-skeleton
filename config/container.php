@@ -3,18 +3,12 @@
 use App\Handler\HomeHandler;
 use App\Listener\MonologListener;
 use App\Middleware\ErrorHandlerMiddleware;
-use App\Middleware\ImplicitHeadMiddleware;
-use App\Middleware\RouteMiddleware;
 use Borsch\Application\App;
 use Borsch\Application\ApplicationInterface;
 use Borsch\Container\Container;
 use Borsch\RequestHandler\RequestHandler;
 use Borsch\Router\FastRouteRouter;
 use Borsch\Router\RouterInterface;
-use Borsch\Smarty\Smarty;
-use Borsch\Template\TemplateRendererInterface;
-use Laminas\Db\Adapter\Adapter;
-use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Diactoros\ServerRequestFactory;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -68,8 +62,6 @@ $container->set(ErrorHandlerMiddleware::class, function () {
 
     return $error_handler;
 });
-$container->set(ImplicitHeadMiddleware::class);
-$container->set(RouteMiddleware::class);
 
 /*
  * Routes Handlers definitions
@@ -79,42 +71,5 @@ $container->set(RouteMiddleware::class);
  * Our HomeHandler handler uses an instance of TemplateRendererInterface to display an HTML page, so it is listed below.
  */
 $container->set(HomeHandler::class);
-
-/*
- * Template renderer definitions
- * -----------------------------
- *
- * Defining the TemplateRendererInterface here so our HomeHandler handler (see upper) can use it when instantiated.
- * The default Borsch Smarty renderer is used.
- * We cache it so that it is not re-created when fetched a second time.
- */
-$container->set(TemplateRendererInterface::class, function () {
-    $smarty = new Smarty();
-    $smarty->setTemplateDir(__DIR__.'/../resources/templates');
-    $smarty->setCompileDir(__DIR__.'/../storage/smarty/templates_c');
-    $smarty->setCacheDir(__DIR__.'/../storage/smarty/cache');
-
-    return $smarty;
-})->cache(true);
-
-/*
- * Database definitions
- * --------------------
- *
- * Borsch uses the laminas-db package, please check it out for more information :
- *     https://docs.laminas.dev/laminas-db/adapter/
- * You can update the database information in the .env file.
- */
-$container->set(AdapterInterface::class, function () {
-    return new Adapter([
-        'driver'   => env('DB_DRIVER'),
-        'database' => env('DB_NAME'),
-        'username' => env('DB_USER'),
-        'password' => env('DB_PWD'),
-        'hostname' => env('DB_HOST'),
-        'port' => env('DB_PORT'),
-        'charset' => env('DB_CHARSET')
-    ]);
-})->cache(true);
 
 return $container;

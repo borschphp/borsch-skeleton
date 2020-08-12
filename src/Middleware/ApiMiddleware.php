@@ -30,7 +30,8 @@ class ApiMiddleware implements MiddlewareInterface
         // then return a 403 Forbidden response.
         //
         // Note: getHeaderLine() always return a string, so for the sake of this example we compare the value to
-        // exactly null to that it never actually send a 403 Forbidden response.
+        // exactly null so that it never actually send a 403 Forbidden response.
+        //
         // Modify according to your needs.
         $credentials = $request->getHeaderLine('X-API-KEY');
         if ($credentials === null) {

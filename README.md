@@ -3,8 +3,8 @@
 <p align="center">Keep it simple.</p>
 <p align="center">
 <a href="//travis-ci.com/github/borschphp/borsch-application" rel="nofollow"><img src="https://travis-ci.com/borschphp/borsch-application.svg?branch=master" alt="Travis" style="max-width:100%;"></a>
-<a href="//packagist.org/packages/borschphp/application" rel="nofollow"><img src="https://poser.pugx.org/borschphp/application/v" alt="Version" style="max-width:100%;"></a>
-<a href="//packagist.org/packages/borschphp/application" rel="nofollow"><img src="https://poser.pugx.org/borschphp/application/license" alt="License" style="max-width:100%;"></a>
+<a href="//packagist.org/packages/borschphp/borsch-skeleton" rel="nofollow"><img src="https://poser.pugx.org/borschphp/borsch-skeleton/v" alt="Version" style="max-width:100%;"></a>
+<a href="//packagist.org/packages/borschphp/borsch-skeleton" rel="nofollow"><img src="https://poser.pugx.org/borschphp/borsch-skeleton/license" alt="License" style="max-width:100%;"></a>
 </p>
 <br/>
 <p align="center">
@@ -111,7 +111,7 @@ You can modify this in the `./config/container.php` file, in the `RouterInterfac
 Borsch framework is heavily inspired by [Mezzio](https://docs.mezzio.dev/mezzio/) and [Laravel](https://laravel.com/), 
 only it is a much simpler and lightweight implementation.
 
-Do not hesitate to check [Mezzio](https://docs.mezzio.dev/mezzio/) out :wink: .
+Do not hesitate to check [Mezzio](https://docs.mezzio.dev/mezzio/) and [Laravel](https://laravel.com/) out :wink: .
 
 ## License
 

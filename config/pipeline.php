@@ -1,6 +1,7 @@
 <?php
 
 use App\Middleware\ApiMiddleware;
+use App\Middleware\BodyParserMiddleware;
 use App\Middleware\DispatchMiddleware;
 use App\Middleware\ErrorHandlerMiddleware;
 use App\Middleware\ImplicitHeadMiddleware;
@@ -26,7 +27,10 @@ return function (App $app): void {
 
     // Middleware can be attached to specific paths, allowing you to mix and match
     // applications under a common domain.
-    $app->pipe('/api', ApiMiddleware::class);
+    $app->pipe('/api', [
+        ApiMiddleware::class,
+        BodyParserMiddleware::class
+    ]);
 
     // Register the routing middleware in the pipeline.
     // It will add the Borsch\Router\RouteResult request attribute.
