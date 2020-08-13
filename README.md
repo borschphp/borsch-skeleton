@@ -41,67 +41,6 @@ After installation, you can run the application in development with the command 
 `php -S 0.0.0.0:8080 -t ./public/ ./public/index.php`  
 You can then visit http://0.0.0.0:8080 .
 
-## Configuration
-
-##### Public directory
-
-After installing Borsch Skeleton, configure your web server's root to be the `public` directory.  
-The `index.php` in the entry point for all HTTP requests of your application.
-
-##### Environment file
-
-When installed via Composer `create-project` command line, a `.env` file is automatically generated in the root folder
-of your application.
-
-If you did not use `create-project` command line then copy the `.env.example` file and rename it as `.env`.  
-Typically: `cp .env.example .env`.
-
-Review the default environment variable, update them, **add a proper `APP_KEY` if not done yet during the `create-project`
-command**, add your own.
-
-##### Permissions
-
-Make sure directories within `storage` directory are writable by your web server or it will not run.
-
-## Container
-
-In the file `./config/container.php` you can find the application dependencies.  
-Usually you will need to add your own dependencies in the Pipeline and Handlers section, but you can or update anything else.
-
-## Pipeline
-
-The pipeline is the heart of your application and consist of a sequence of Middlewares..  
-Every request goes through the pipeline until a [PSR-7](https://www.php-fig.org/psr/psr-7/)
-Response is return.
-
-The default pipeline should be good as is and should not require much changes to comply to your
-need.  
-To ease your development, all Pipelines middlewares are located in your `./src/Middleware` folder so feel free
-to change everything as you need.
-
-The different steps that occurs in the pipeline :
-
-1. Error handler middleware
-2. Trailing slash middleware
-3. Segregated path middleware
-4. Routing middleware
-5. Implicit HEAD middleware
-6. Implicit OPTIONS middleware
-7. Method Not Allowed middleware
-8. Dispatched middleware
-9. Not Found Handler middleware
-
-The `./config/pipeline.php` file is well documented, have a look at it if you need more information.
-
-## Routing
-
-You can define your application's route in the file `./config/routes.php`.  
-Note that this skeleton uses a [nikic/FastRoute](https://github.com/nikic/FastRoute) implementation router, so you can 
-use the FastRoute pattern to define your app routes.
-
-By default, in a production environment, a cache file is generated in `./storage/smarty/routes.cache.php`.  
-You can modify this in the `./config/container.php` file, in the `RouterInterface::class` definition.
-
 ## Documentation
 
 An extended documentation is [available here](https://github.com/borschphp/borsch-skeleton/wiki).

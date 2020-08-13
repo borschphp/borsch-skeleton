@@ -10,5 +10,5 @@ use Borsch\Application\App;
  */
 return function (App $app): void {
     $app->get('/', HomeHandler::class, 'home');
-    $app->get('/user[/{id}]', UserHandler::class, 'user');
+    $app->get('/user[/{id:\d+}]', UserHandler::class, 'user');
 };
