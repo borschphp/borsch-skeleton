@@ -79,7 +79,6 @@ $container->set(UserHandler::class);
  */
 $container
     ->set(UserRepositoryInterface::class, InMemoryUserRepository::class)
-    ->addParameter(null)
     ->cache(true);
 
 return $container;

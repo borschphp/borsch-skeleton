@@ -2,13 +2,9 @@
 <h1 align="center">Borsch Skeleton</h1>
 <p align="center">Keep it simple.</p>
 <p align="center">
-<a href="//travis-ci.com/github/borschphp/borsch-application" rel="nofollow"><img src="https://travis-ci.com/borschphp/borsch-application.svg?branch=master" alt="Travis" style="max-width:100%;"></a>
+<a href="//travis-ci.com/github/borschphp/borsch-skeleton" rel="nofollow"><img src="https://travis-ci.com/borschphp/borsch-skeleton.svg?branch=master" alt="Travis" style="max-width:100%;"></a>
 <a href="//packagist.org/packages/borschphp/borsch-skeleton" rel="nofollow"><img src="https://poser.pugx.org/borschphp/borsch-skeleton/v" alt="Version" style="max-width:100%;"></a>
 <a href="//packagist.org/packages/borschphp/borsch-skeleton" rel="nofollow"><img src="https://poser.pugx.org/borschphp/borsch-skeleton/license" alt="License" style="max-width:100%;"></a>
-</p>
-<br/>
-<p align="center">
-<img src="https://www.dropbox.com/s/3t7hvu2qe9p4j3q/borschphp-carbon.png?raw=1" alt="Example" />
 </p>
 <br/>
 
@@ -47,12 +43,12 @@ You can then visit http://0.0.0.0:8080 .
 
 ## Configuration
 
-#### Public directory
+##### Public directory
 
 After installing Borsch Skeleton, configure your web server's root to be the `public` directory.  
 The `index.php` in the entry point for all HTTP requests of your application.
 
-#### Environment file
+##### Environment file
 
 When installed via Composer `create-project` command line, a `.env` file is automatically generated in the root folder
 of your application.
@@ -63,7 +59,7 @@ Typically: `cp .env.example .env`.
 Review the default environment variable, update them, **add a proper `APP_KEY` if not done yet during the `create-project`
 command**, add your own.
 
-#### Permissions
+##### Permissions
 
 Make sure directories within `storage` directory are writable by your web server or it will not run.
 
@@ -105,6 +101,10 @@ use the FastRoute pattern to define your app routes.
 
 By default, in a production environment, a cache file is generated in `./storage/smarty/routes.cache.php`.  
 You can modify this in the `./config/container.php` file, in the `RouterInterface::class` definition.
+
+## Documentation
+
+An extended documentation is [available here](https://github.com/borschphp/borsch-skeleton/wiki).
 
 ## Note
 

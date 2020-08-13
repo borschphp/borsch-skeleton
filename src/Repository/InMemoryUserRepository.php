@@ -3,23 +3,28 @@
 namespace App\Repository;
 
 use App\Model\User;
+use Borsch\Router\RouterInterface;
 use InvalidArgumentException;
 
 class InMemoryUserRepository implements UserRepositoryInterface
 {
 
-    /**
-     * @var User[]
-     */
+    /** @var RouterInterface */
+    private $router;
+
+    /** @var User[] */
     private $users = [];
 
     /**
      * InMemoryUserRepository constructor.
-     * @param User[]|null $users
+     *
+     * @param RouterInterface $router
      */
-    public function __construct(?array $users = null)
+    public function __construct(RouterInterface $router)
     {
-        $this->users = $users ?: [
+        $this->router = $router;
+
+        $this->users = [
             new User(1, 'Luke', 'Skywalker', 'Tatooine'),
             new User(2, 'Darth ', 'Vador', 'Tatooine'),
             new User(3, 'Leia', 'Organa', 'Alderaan'),
@@ -33,7 +38,15 @@ class InMemoryUserRepository implements UserRepositoryInterface
      */
     public function getAll(): array
     {
-        return array_values($this->users);
+        return array_values(array_map(function (User $user) {
+            $user->setLink(sprintf(
+                '%s%s',
+                rtrim(env('APP_URL'), '/ '),
+                $this->getUserUriById($user->getId())
+            ));
+
+            return $user;
+        }, $this->users));
     }
 
     /**
@@ -48,9 +61,18 @@ class InMemoryUserRepository implements UserRepositoryInterface
             }
         }
 
-        throw new InvalidArgumentException(sprintf(
-            'User with ID #%d is unknown...',
-            $id
-        ));
+        throw new InvalidArgumentException(
+            sprintf('User with ID #%d is unknown...', $id),
+            404
+        );
+    }
+
+    /**
+     * @param int $user_id
+     * @return string
+     */
+    public function getUserUriById(int $user_id): string
+    {
+        return $this->router->generateUri('user', ['id' => $user_id]);
     }
 }

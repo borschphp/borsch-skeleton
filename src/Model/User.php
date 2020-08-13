@@ -19,6 +19,9 @@ class User implements JsonSerializable
     /** @var string */
     protected $homeworld;
 
+    /** @var string */
+    protected $link;
+
     /**
      * User constructor.
      *
@@ -68,6 +71,22 @@ class User implements JsonSerializable
     }
 
     /**
+     * @param string $link
+     */
+    public function setLink(string $link): void
+    {
+        $this->link = $link;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLink(): string
+    {
+        return $this->link;
+    }
+
+    /**
      * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return array
      */
@@ -77,7 +96,8 @@ class User implements JsonSerializable
             'id' => $this->id,
             'firstname' => $this->firstname,
             'lastname' => $this->lastname,
-            'homeworld' => $this->homeworld
+            'homeworld' => $this->homeworld,
+            'link' => $this->link
         ];
     }
 }

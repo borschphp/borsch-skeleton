@@ -37,7 +37,7 @@ class BodyParserMiddleware implements MiddlewareInterface
                 break;
 
             case 'application/json':
-                $body = json_decode((string)$request->getBody());
+                $body = json_decode((string)$request->getBody(), true);
                 if (is_array($body)) {
                     $request = $request->withParsedBody($body);
                 }

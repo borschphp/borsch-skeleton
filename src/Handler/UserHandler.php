@@ -44,7 +44,7 @@ class UserHandler implements RequestHandlerInterface
                     [
                         'error' => $exception->getMessage()
                     ],
-                    404
+                    $exception->getCode()
                 );
             }
 

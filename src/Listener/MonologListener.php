@@ -86,6 +86,9 @@ class MonologListener
             case E_USER_DEPRECATED:
                 $this->logger->info($log);
                 break;
+
+            default:
+                $this->logger->debug($log);
         }
     }
 

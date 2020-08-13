@@ -27,6 +27,7 @@ class MethodNotAllowedMiddleware implements MiddlewareInterface
         }
 
         $response = new Response();
+
         return $response
             ->withStatus(405, 'Method Not Allowed')
             ->withHeader(
