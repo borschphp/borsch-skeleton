@@ -24,9 +24,6 @@
     "ext-libxml": "*",
     "ext-simplexml": "*",
     "borschphp/application": "~0.3",
-    "borschphp/container": "~0.3",
-    "borschphp/requesthandler": "~0.1",
-    "borschphp/router": "~0.1",
     "laminas/laminas-diactoros": "^2.3",
     "monolog/monolog": "^2.0",
     "vlucas/phpdotenv": "v5.1.0"

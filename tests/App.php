@@ -3,6 +3,7 @@
 namespace AppTest;
 
 use App\Middleware\BodyParserMiddleware;
+use App\Middleware\ContentLengthMiddleware;
 use App\Middleware\DispatchMiddleware;
 use App\Middleware\ErrorHandlerMiddleware;
 use App\Middleware\ImplicitHeadMiddleware;
@@ -62,6 +63,7 @@ class App extends TestCase
         // Middlewares pipeline
         $this->app->pipe(ErrorHandlerMiddleware::class);
         $this->app->pipe(TrailingSlashMiddleware::class);
+        $this->app->pipe(ContentLengthMiddleware::class);
 
         $this->app->pipe('/to/post', BodyParserMiddleware::class);
 

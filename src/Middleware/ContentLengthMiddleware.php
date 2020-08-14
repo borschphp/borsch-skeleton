@@ -2,20 +2,16 @@
 
 namespace App\Middleware;
 
-use Laminas\Diactoros\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class NotFoundHandlerMiddleware
- *
- * Generates a 404 Not Found response.
- *
+ * Class ContentLengthMiddleware
  * @package App\Middleware
  */
-class NotFoundHandlerMiddleware implements MiddlewareInterface
+class ContentLengthMiddleware implements MiddlewareInterface
 {
 
     /**
@@ -23,6 +19,13 @@ class NotFoundHandlerMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return new Response('php://memory', 404);
+        $response = $handler->handle($request);
+        $body_size = $response->getBody()->getSize();
+
+        if ($response->hasHeader('Content-Length') || $body_size === null) {
+            return $response;
+        }
+
+        return $response->withHeader('Content-Length', (string)$body_size);
     }
 }

@@ -47,7 +47,7 @@ An extended documentation is [available here](https://github.com/borschphp/borsc
 
 ## Note
 
-Borsch framework is heavily inspired by [Mezzio](https://docs.mezzio.dev/mezzio/) and [Laravel](https://laravel.com/), 
+Borsch Framework is heavily inspired by [Mezzio](https://docs.mezzio.dev/mezzio/) and [Laravel](https://laravel.com/), 
 only it is a much simpler and lightweight implementation.
 
 Do not hesitate to check [Mezzio](https://docs.mezzio.dev/mezzio/) and [Laravel](https://laravel.com/) out :wink: .

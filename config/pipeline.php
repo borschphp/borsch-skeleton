@@ -2,6 +2,7 @@
 
 use App\Middleware\ApiMiddleware;
 use App\Middleware\BodyParserMiddleware;
+use App\Middleware\ContentLengthMiddleware;
 use App\Middleware\DispatchMiddleware;
 use App\Middleware\ErrorHandlerMiddleware;
 use App\Middleware\ImplicitHeadMiddleware;
@@ -24,6 +25,7 @@ return function (App $app): void {
 
     // Pipe more middleware here that you want to execute on every request.
     $app->pipe(TrailingSlashMiddleware::class);
+    $app->pipe(ContentLengthMiddleware::class);
 
     // Middleware can be attached to specific paths, allowing you to mix and match
     // applications under a common domain.
