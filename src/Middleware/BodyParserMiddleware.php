@@ -15,6 +15,13 @@ use SimpleXMLElement;
 class BodyParserMiddleware implements MiddlewareInterface
 {
 
+    /** @var string[] */
+    protected $no_need_to_process_methods = [
+        'GET',
+        'HEAD',
+        'OPTIONS'
+    ];
+
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
@@ -22,6 +29,10 @@ class BodyParserMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        if (in_array($request->getMethod(), $this->no_need_to_process_methods)) {
+            return $handler->handle($request);
+        }
+
         $content_type = strtolower(trim($request->getHeaderLine('Content-Type')));
         if (!strlen($content_type)) {
             return $handler->handle($request);

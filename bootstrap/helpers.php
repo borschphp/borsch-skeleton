@@ -15,21 +15,16 @@ function env(string $key, $default = null)
         return $default;
     }
 
-    switch (strtolower($value)) {
+    $cleaned_value = trim(strtolower($value), '() ');
+    switch ($cleaned_value) {
         case 'true':
-        case '(true)':
-            return true;
-
         case 'false':
-        case '(false)':
-            return false;
+            return filter_var($cleaned_value, FILTER_VALIDATE_BOOLEAN);
 
         case 'empty':
-        case '(empty)':
             return '';
 
         case 'null':
-        case '(null)':
             return null;
     }
 
