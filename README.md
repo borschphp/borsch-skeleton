@@ -5,6 +5,7 @@
 <a href="//travis-ci.com/github/borschphp/borsch-skeleton" rel="nofollow"><img src="https://travis-ci.com/borschphp/borsch-skeleton.svg?branch=master" alt="Travis" style="max-width:100%;"></a>
 <a href="//packagist.org/packages/borschphp/borsch-skeleton" rel="nofollow"><img src="https://poser.pugx.org/borschphp/borsch-skeleton/v" alt="Version" style="max-width:100%;"></a>
 <a href="//packagist.org/packages/borschphp/borsch-skeleton" rel="nofollow"><img src="https://poser.pugx.org/borschphp/borsch-skeleton/license" alt="License" style="max-width:100%;"></a>
+<a href="//scrutinizer-ci.com/g/borschphp/borsch-skeleton/?branch=master" rel="nofollow"><img src="https://scrutinizer-ci.com/g/borschphp/borsch-skeleton/badges/quality-score.png?b=master" alt="Scrutinizer" style="max-width:100%;"></a>
 </p>
 <br/>
 

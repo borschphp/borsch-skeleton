@@ -52,7 +52,8 @@ $container->set(ServerRequestInterface::class, function () {
  * then add the necessary definitions below.
  */
 $container->set(ErrorHandlerMiddleware::class, function () {
-    $logger = new Logger(env('APP_NAME', 'Borsch'));
+    $name = env('APP_NAME', 'Borsch') ?: 'Borsch';
+    $logger = new Logger($name);
     $logger->pushHandler(new StreamHandler(sprintf(
         '%s/../storage/logs/%s.log',
         __DIR__,
