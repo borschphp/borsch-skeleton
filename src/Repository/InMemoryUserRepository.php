@@ -38,7 +38,7 @@ class InMemoryUserRepository implements UserRepositoryInterface
      */
     public function getAll(): array
     {
-        return array_values(array_map(function (User $user) {
+        return array_values(array_map(function(User $user) {
             $user->setLink(sprintf(
                 '%s%s',
                 rtrim(env('APP_URL'), '/ '),

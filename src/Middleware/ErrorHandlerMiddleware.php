@@ -35,7 +35,7 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline): void {
+        set_error_handler(function(int $errno, string $errstr, string $errfile, int $errline): void {
             if (!(error_reporting() & $errno)) {
                 // error_reporting does not include this error
                 return;

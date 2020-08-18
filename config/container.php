@@ -28,7 +28,7 @@ $container = new Container();
  * PSR-* instances, etc.
  */
 $container->set(ApplicationInterface::class, App::class);
-$container->set(RouterInterface::class, function () {
+$container->set(RouterInterface::class, function() {
     $router = new FastRouteRouter();
     if (env('APP_ENV') == 'production') {
         $router->setCacheFile(__DIR__.'/../../storage/smarty/routes.cache.php');
@@ -37,7 +37,7 @@ $container->set(RouterInterface::class, function () {
     return $router;
 })->cache(true);
 $container->set(RequestHandlerInterface::class, RequestHandler::class);
-$container->set(ServerRequestInterface::class, function () {
+$container->set(ServerRequestInterface::class, function() {
     return ServerRequestFactory::fromGlobals();
 });
 
@@ -51,7 +51,7 @@ $container->set(ServerRequestInterface::class, function () {
  * When you add a new MiddlewareInterface in the pipeline, and it requires dependencies in the constructor,
  * then add the necessary definitions below.
  */
-$container->set(ErrorHandlerMiddleware::class, function () {
+$container->set(ErrorHandlerMiddleware::class, function() {
     $name = env('APP_NAME', 'Borsch') ?: 'Borsch';
     $logger = new Logger($name);
     $logger->pushHandler(new StreamHandler(sprintf(
