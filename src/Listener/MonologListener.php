@@ -58,37 +58,18 @@ class MonologListener
     protected function handleErrorException(ErrorException $exception, ServerRequestInterface $request)
     {
         $log = $this->formatLog($exception, $request);
+        $severity = $exception->getSeverity();
 
-        switch ($exception->getSeverity()) {
-            case E_ERROR:
-            case E_RECOVERABLE_ERROR:
-            case E_CORE_ERROR:
-            case E_COMPILE_ERROR:
-            case E_USER_ERROR:
-            case E_PARSE:
-                $this->logger->error($log);
-                break;
-
-            case E_WARNING:
-            case E_USER_WARNING:
-            case E_CORE_WARNING:
-            case E_COMPILE_WARNING:
-                $this->logger->warning($log);
-                break;
-
-            case E_NOTICE:
-            case E_USER_NOTICE:
-                $this->logger->notice($log);
-                break;
-
-            case E_STRICT:
-            case E_DEPRECATED:
-            case E_USER_DEPRECATED:
-                $this->logger->info($log);
-                break;
-
-            default:
-                $this->logger->debug($log);
+        if ($this->isError($severity)) {
+            $this->logger->error($log);
+        } elseif ($this->isWarning($severity)) {
+            $this->logger->warning($log);
+        } elseif ($this->isNotice($severity)) {
+            $this->logger->notice($log);
+        } elseif ($this->isInformation($severity)) {
+            $this->logger->info($log);
+        } else {
+            $this->logger->debug($log);
         }
     }
 
@@ -107,5 +88,60 @@ class MonologListener
             PHP_EOL,
             $throwable->getTraceAsString()
         );
+    }
+
+    /**
+     * @param int $code
+     * @return bool
+     */
+    protected function isError(int $code): bool
+    {
+        return in_array($code, [
+            E_ERROR,
+            E_RECOVERABLE_ERROR,
+            E_CORE_ERROR,
+            E_COMPILE_ERROR,
+            E_USER_ERROR,
+            E_PARSE
+        ]);
+    }
+
+    /**
+     * @param int $code
+     * @return bool
+     */
+    protected function isWarning(int $code): bool
+    {
+        return in_array($code, [
+            E_WARNING,
+            E_USER_WARNING,
+            E_CORE_WARNING,
+            E_COMPILE_WARNING
+        ]);
+    }
+
+    /**
+     * @param int $code
+     * @return bool
+     */
+    protected function isNotice(int $code): bool
+    {
+        return in_array($code, [
+            E_NOTICE,
+            E_USER_NOTICE
+        ]);
+    }
+
+    /**
+     * @param int $code
+     * @return bool
+     */
+    protected function isInformation(int $code): bool
+    {
+        return in_array($code, [
+            E_STRICT,
+            E_DEPRECATED,
+            E_USER_DEPRECATED
+        ]);
     }
 }
