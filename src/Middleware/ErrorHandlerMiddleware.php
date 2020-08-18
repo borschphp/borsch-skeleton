@@ -21,44 +21,20 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
     protected $listeners = [];
 
     /**
-     * @param callable $listener
-     */
-    public function addListener(callable $listener): void
-    {
-        if (!in_array($listener, $this->listeners, true)) {
-            $this->listeners[] = $listener;
-        }
-    }
-
-    /**
-     * @inheritDoc
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        set_error_handler(function(int $errno, string $errstr, string $errfile, int $errline): void {
-            if (!(error_reporting() & $errno)) {
-                // error_reporting does not include this error
-                return;
-            }
-
-            throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-        });
-
         try {
+            $this->setErrorHandler();
+
             $response = $handler->handle($request);
         } catch (Throwable $throwable) {
-            foreach ($this->listeners as $listener) {
-                $listener($throwable, $request);
-            }
+            $this->callListeners($throwable, $request);
 
-            $response = (new Response())->withStatus(
-                filter_var($throwable->getCode(), FILTER_VALIDATE_INT, [
-                    'options' => [
-                        'min_range' => 400,
-                        'max_range' => 599
-                    ]
-                ]) ?: 500
-            );
+            $response = $this->getResponseWithStatusCode($throwable);
 
             if (env('APP_ENV') != 'production') {
                 $response->getBody()->write($throwable->__toString());
@@ -70,5 +46,60 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
         restore_error_handler();
 
         return $response;
+    }
+
+    /**
+     * @param callable $listener
+     * @return void
+     */
+    public function addListener(callable $listener): void
+    {
+        if (!in_array($listener, $this->listeners, true)) {
+            $this->listeners[] = $listener;
+        }
+    }
+
+    /**
+     * @return void
+     * @throws ErrorException
+     */
+    protected function setErrorHandler(): void
+    {
+        set_error_handler(function(int $errno, string $errstr, string $errfile, int $errline): void {
+            if (!(error_reporting() & $errno)) {
+                // error_reporting does not include this error
+                return;
+            }
+
+            throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        });
+    }
+
+    /**
+     * @param Throwable $throwable
+     * @param ServerRequestInterface $request
+     * @return void
+     */
+    protected function callListeners(Throwable $throwable, ServerRequestInterface $request): void
+    {
+        foreach ($this->listeners as $listener) {
+            $listener($throwable, $request);
+        }
+    }
+
+    /**
+     * @param Throwable $throwable
+     * @return ResponseInterface
+     */
+    protected function getResponseWithStatusCode(Throwable $throwable): ResponseInterface
+    {
+        return (new Response())->withStatus(
+            filter_var($throwable->getCode(), FILTER_VALIDATE_INT, [
+                'options' => [
+                    'min_range' => 400,
+                    'max_range' => 599
+                ]
+            ]) ?: 500
+        );
     }
 }
