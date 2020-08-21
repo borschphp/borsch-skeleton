@@ -8,6 +8,7 @@ use App\Repository\UserRepositoryInterface;
 use Borsch\Application\App;
 use Borsch\Application\ApplicationInterface;
 use Borsch\Container\Container;
+use Borsch\RequestHandler\ApplicationRequestHandlerInterface;
 use Borsch\RequestHandler\RequestHandler;
 use Borsch\Router\FastRouteRouter;
 use Borsch\Router\RouterInterface;
@@ -15,7 +16,6 @@ use Laminas\Diactoros\ServerRequestFactory;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 $container = new Container();
 
@@ -36,7 +36,7 @@ $container->set(RouterInterface::class, function() {
 
     return $router;
 })->cache(true);
-$container->set(RequestHandlerInterface::class, RequestHandler::class);
+$container->set(ApplicationRequestHandlerInterface::class, RequestHandler::class);
 $container->set(ServerRequestInterface::class, function() {
     return ServerRequestFactory::fromGlobals();
 });
