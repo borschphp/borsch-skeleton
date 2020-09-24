@@ -36,8 +36,8 @@
       "App\\": "src/"
     },
     "files": [
-      "bootstrap/env.php",
-      "bootstrap/helpers.php"
+      "bootstrap/helpers.php",
+      "bootstrap/env.php"
     ]
   },
   "autoload-dev": {
