@@ -23,8 +23,8 @@
     "ext-json": "*",
     "ext-libxml": "*",
     "ext-simplexml": "*",
-    "borschphp/application": "~0.7",
-    "laminas/laminas-diactoros": "^2.3",
+    "borschphp/application": "^0",
+    "laminas/laminas-diactoros": "^2.8",
     "monolog/monolog": "^2.0",
     "vlucas/phpdotenv": "v5.1.0"
   },

@@ -14,7 +14,7 @@ use App\Middleware\TrailingSlashMiddleware;
 use Borsch\Application\App;
 
 /**
- * Setup you middleware pipeline.
+ * Set up your middleware pipeline.
  * It works as FIFO, place your middleware as necessary.
  *
  * @param App $app

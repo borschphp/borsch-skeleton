@@ -31,7 +31,7 @@ $container->set(ApplicationInterface::class, App::class);
 $container->set(RouterInterface::class, function() {
     $router = new FastRouteRouter();
     if (env('APP_ENV') == 'production') {
-        $router->setCacheFile(__DIR__.'/../../storage/smarty/routes.cache.php');
+        $router->setCacheFile(__DIR__.'/../../storage/cache/routes.cache.php');
     }
 
     return $router;

@@ -15,7 +15,7 @@ function env(string $key, $default = null)
         return $default;
     }
 
-    $cleaned_value = trim(strtolower($value), '() ');
+    $cleaned_value = trim(strtolower($value), '() \n\r\t\v\x00');
     switch ($cleaned_value) {
         case 'true':
         case 'false':
@@ -28,5 +28,5 @@ function env(string $key, $default = null)
             return null;
     }
 
-    return trim($value, '"');
+    return trim($value, '"\'');
 }
