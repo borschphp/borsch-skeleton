@@ -1,0 +1,9 @@
+#!/usr/bin/php
+<?php
+
+require_once __DIR__.'/vendor/autoload.php';
+
+use Borsch\Chef\Chef;
+
+$chef = new Chef();
+$chef->run();

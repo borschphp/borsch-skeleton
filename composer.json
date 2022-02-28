@@ -24,6 +24,7 @@
     "ext-libxml": "*",
     "ext-simplexml": "*",
     "borschphp/application": "^0",
+    "borschphp/chef": "^0.1.0",
     "laminas/laminas-diactoros": "^2.8",
     "monolog/monolog": "^2.0",
     "vlucas/phpdotenv": "v5.1.0"
@@ -42,7 +43,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "AppTest\\": "tests"
+      "AppTest\\": "tests/"
     }
   },
   "scripts": {
