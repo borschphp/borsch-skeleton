@@ -11,6 +11,7 @@ use App\Middleware\MethodNotAllowedMiddleware;
 use App\Middleware\NotFoundHandlerMiddleware;
 use App\Middleware\RouteMiddleware;
 use App\Middleware\TrailingSlashMiddleware;
+use App\Middleware\UploadedFilesParserMiddleware;
 use Borsch\Application\App;
 
 /**
@@ -31,7 +32,8 @@ return function(App $app): void {
     // applications under a common domain.
     $app->pipe('/api', [
         ApiMiddleware::class,
-        BodyParserMiddleware::class
+        BodyParserMiddleware::class,
+        UploadedFilesParserMiddleware::class
     ]);
 
     // Register the routing middleware in the pipeline.
