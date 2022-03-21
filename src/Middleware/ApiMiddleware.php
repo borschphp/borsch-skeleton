@@ -28,7 +28,7 @@ class ApiMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // Example:
-        // If the client did not provide valid credentials to access the api resources,
+        // If the client did not provide valid credentials to access the /api resources,
         // then return a 403 Forbidden response.
         //
         // Note: getHeaderLine() always return a string, so for the sake of this example we compare the value to
@@ -41,6 +41,13 @@ class ApiMiddleware implements MiddlewareInterface
         }
 
         // Provided credentials are valid, let's continue.
+
+        // Maybe we want to add credentials information inside the request
+        $request = $request
+            ->withAttribute('api_key', $credentials ?: '0000-0000-0000-0000')
+            ->withAttribute('username', 'john.doe')
+            ->withAttribute('email', 'john.doe@gmail.com');
+
         return $handler->handle($request);
     }
 }
