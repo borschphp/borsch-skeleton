@@ -13,10 +13,10 @@
 
 Sometimes, you don't need an overkill solution like [Laravel](https://laravel.com/) or [Symfony](https://symfony.com/).
 
-`Borsch is a simple and efficient [PSR-15](https://www.php-fig.org/psr/psr-15/) micro framework made to kick start your
+Borsch is a simple and efficient [PSR-15](https://www.php-fig.org/psr/psr-15/) micro framework made to kick start your
 web app or API development by using the tools you prefer, and provides minimal structure and facilities to ease your
 development.
-`
+
 It natively features :
 
 * [Dependency Injection Container](https://github.com/borschphp/borsch-container)
