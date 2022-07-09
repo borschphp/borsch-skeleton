@@ -23,22 +23,18 @@ use Throwable;
 class MonologListener
 {
 
-    /** @var Logger */
-    protected $logger;
-
     /**
      * @param Logger $logger
      */
-    public function __construct(Logger $logger)
-    {
-        $this->logger = $logger;
-    }
+    public function __construct(
+        protected Logger $logger
+    ) {}
 
     /**
      * @param Throwable $throwable
      * @param ServerRequestInterface $request
      */
-    public function __invoke(Throwable $throwable, ServerRequestInterface $request)
+    public function __invoke(Throwable $throwable, ServerRequestInterface $request): void
     {
         if ($throwable instanceof ErrorException) {
             $this->handleErrorException($throwable, $request);
@@ -52,7 +48,7 @@ class MonologListener
      * @param ErrorException $exception
      * @param ServerRequestInterface $request
      */
-    protected function handleErrorException(ErrorException $exception, ServerRequestInterface $request)
+    protected function handleErrorException(ErrorException $exception, ServerRequestInterface $request): void
     {
         $log = $this->formatLog($exception, $request);
         $severity = $exception->getSeverity();

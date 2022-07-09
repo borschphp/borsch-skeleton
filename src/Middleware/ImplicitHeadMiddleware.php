@@ -2,13 +2,10 @@
 
 namespace App\Middleware;
 
-use Borsch\Router\RouteResultInterface;
-use Borsch\Router\RouterInterface;
+use Borsch\Router\{RouteResultInterface, RouterInterface};
 use Laminas\Diactoros\Stream;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Server\{MiddlewareInterface, RequestHandlerInterface};
 
 /**
  * Class ImplicitHeadMiddleware
@@ -17,17 +14,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 class ImplicitHeadMiddleware implements MiddlewareInterface
 {
 
-    /** @var RouterInterface */
-    protected $router;
-
     /**
      * ImplicitHeadMiddleware constructor.
      * @param RouterInterface $router
      */
-    public function __construct(RouterInterface $router)
-    {
-        $this->router = $router;
-    }
+    public function __construct(
+        protected RouterInterface $router
+    ) {}
 
     /**
      * @inheritDoc

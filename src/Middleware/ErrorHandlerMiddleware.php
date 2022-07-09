@@ -4,10 +4,8 @@ namespace App\Middleware;
 
 use ErrorException;
 use Laminas\Diactoros\Response;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Server\{MiddlewareInterface, RequestHandlerInterface};
 use Throwable;
 
 /**
@@ -17,8 +15,8 @@ use Throwable;
 class ErrorHandlerMiddleware implements MiddlewareInterface
 {
 
-    /** @var callable[] */
-    protected $listeners = [];
+    /** @var callable[] $listeners */
+    protected array $listeners = [];
 
     /**
      * @param ServerRequestInterface $request

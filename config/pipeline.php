@@ -1,17 +1,19 @@
 <?php
 
-use App\Middleware\ApiMiddleware;
-use App\Middleware\BodyParserMiddleware;
-use App\Middleware\ContentLengthMiddleware;
-use App\Middleware\DispatchMiddleware;
-use App\Middleware\ErrorHandlerMiddleware;
-use App\Middleware\ImplicitHeadMiddleware;
-use App\Middleware\ImplicitOptionsMiddleware;
-use App\Middleware\MethodNotAllowedMiddleware;
-use App\Middleware\NotFoundHandlerMiddleware;
-use App\Middleware\RouteMiddleware;
-use App\Middleware\TrailingSlashMiddleware;
-use App\Middleware\UploadedFilesParserMiddleware;
+use App\Middleware\{
+    ApiKeyValidatorMiddleware,
+    BodyParserMiddleware,
+    ContentLengthMiddleware,
+    DispatchMiddleware,
+    ErrorHandlerMiddleware,
+    ImplicitHeadMiddleware,
+    ImplicitOptionsMiddleware,
+    MethodNotAllowedMiddleware,
+    NotFoundHandlerMiddleware,
+    RouteMiddleware,
+    TrailingSlashMiddleware,
+    UploadedFilesParserMiddleware
+};
 use Borsch\Application\App;
 
 /**
@@ -28,14 +30,6 @@ return function(App $app): void {
     $app->pipe(TrailingSlashMiddleware::class);
     $app->pipe(ContentLengthMiddleware::class);
 
-    // Middleware can be attached to specific paths, allowing you to mix and match
-    // applications under a common domain.
-    $app->pipe('/api', [
-        ApiMiddleware::class,
-        BodyParserMiddleware::class,
-        UploadedFilesParserMiddleware::class
-    ]);
-
     // Register the routing middleware in the pipeline.
     // It will add the Borsch\Router\RouteResult request attribute.
     $app->pipe(RouteMiddleware::class);
@@ -49,10 +43,18 @@ return function(App $app): void {
     $app->pipe(ImplicitOptionsMiddleware::class);
     $app->pipe(MethodNotAllowedMiddleware::class);
 
+    // Middleware can be attached to specific paths, allowing you to mix and match
+    // applications under a common domain.
+    $app->pipe('/api', ApiKeyValidatorMiddleware::class);
+    $app->pipe('/api/peoples', [
+        BodyParserMiddleware::class,
+        UploadedFilesParserMiddleware::class
+    ]);
+
     // This will take care of generating the response of your matched route.
     $app->pipe(DispatchMiddleware::class);
 
     // If no Response is returned by any middleware, then send a 404 Not Found response.
-    // You  can provide other fallback middleware to execute.
+    // You can provide other fallback middleware to execute.
     $app->pipe(NotFoundHandlerMiddleware::class);
 };

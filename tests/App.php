@@ -2,41 +2,40 @@
 
 namespace AppTest;
 
-use App\Middleware\BodyParserMiddleware;
-use App\Middleware\ContentLengthMiddleware;
-use App\Middleware\DispatchMiddleware;
-use App\Middleware\ErrorHandlerMiddleware;
-use App\Middleware\ImplicitHeadMiddleware;
-use App\Middleware\ImplicitOptionsMiddleware;
-use App\Middleware\MethodNotAllowedMiddleware;
-use App\Middleware\NotFoundHandlerMiddleware;
-use App\Middleware\RouteMiddleware;
-use App\Middleware\TrailingSlashMiddleware;
-use AppTest\Mockup\BodyParserJsonHandler;
-use AppTest\Mockup\BodyParserUrlEncodedHandler;
-use AppTest\Mockup\BodyParserXmlHandler;
-use AppTest\Mockup\ExceptionGeneratorHandler;
-use AppTest\Mockup\HeadHandler;
-use AppTest\Mockup\RequestHeadersResponseHandler;
-use AppTest\Mockup\TestHandler;
-use Borsch\Application\App as BorschApp;
-use Borsch\Application\ApplicationInterface;
-use Borsch\Application\PipePathMiddleware;
+use App\Middleware\{BodyParserMiddleware,
+    ContentLengthMiddleware,
+    DispatchMiddleware,
+    ErrorHandlerMiddleware,
+    ImplicitHeadMiddleware,
+    ImplicitOptionsMiddleware,
+    MethodNotAllowedMiddleware,
+    NotFoundHandlerMiddleware,
+    RouteMiddleware,
+    TrailingSlashMiddleware};
+use AppTest\Mockup\{BodyParserJsonHandler,
+    BodyParserUrlEncodedHandler,
+    BodyParserXmlHandler,
+    ExceptionGeneratorHandler,
+    HeadHandler,
+    RequestHeadersResponseHandler,
+    TestHandler};
+use Borsch\Application\{App as BorschApp, ApplicationInterface};
 use Borsch\Container\Container;
 use Borsch\RequestHandler\RequestHandler;
-use Borsch\Router\FastRouteRouter;
-use Borsch\Router\RouterInterface;
+use Borsch\Router\{FastRouteRouter, RouterInterface};
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class App extends TestCase
 {
 
     /** @var ApplicationInterface */
-    protected $app;
+    protected ApplicationInterface $app;
 
     /** @var ContainerInterface */
-    protected $container;
+    protected ContainerInterface $container;
 
     /**
      * App constructor.
@@ -46,7 +45,6 @@ class App extends TestCase
         parent::__construct();
 
         $container = new Container();
-        $container->set(PipePathMiddleware::class);
         $container->set(RouteMiddleware::class);
         $container->set(DispatchMiddleware::class);
         $container->set(NotFoundHandlerMiddleware::class);
@@ -54,11 +52,12 @@ class App extends TestCase
         $container->set(RouterInterface::class, FastRouteRouter::class)->cache(true);
 
         $this->container = $container;
-        $this->app = new BorschApp(
-            new RequestHandler(),
-            $container->get(RouterInterface::class),
-            $this->container
-        );
+        $this->app = new class(new RequestHandler(), $container->get(RouterInterface::class), $container) extends BorschApp {
+            public function runAndGetResponse(ServerRequestInterface $server_request): ResponseInterface
+            {
+                return $this->request_handler->handle($server_request);
+            }
+        };
 
         // Middlewares pipeline
         $this->app->pipe(ErrorHandlerMiddleware::class);

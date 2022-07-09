@@ -11,10 +11,12 @@
 
 ## About Borsch Skeleton
 
-Borsch is a simple and efficient [PSR-15](https://www.php-fig.org/psr/psr-15/) micro framework made to kick start your
-app development by allowing you to develop using the tools you prefer, and provides minimal structure and facilities
-to ease your development.
+Sometimes, you don't need an overkill solution like [Laravel](https://laravel.com/) or [Symfony](https://symfony.com/).
 
+`Borsch is a simple and efficient [PSR-15](https://www.php-fig.org/psr/psr-15/) micro framework made to kick start your
+web app or API development by using the tools you prefer, and provides minimal structure and facilities to ease your
+development.
+`
 It natively features :
 
 * [Dependency Injection Container](https://github.com/borschphp/borsch-container)
@@ -30,7 +32,7 @@ Can be enriched with :
 * [Templating](https://github.com/borschphp/borsch-smarty)
 * Anything else you want 
 
-The framework is built around the DI Container, therefore everything is made around interfaces.  
+The framework is built around a [PSR-11](https://www.php-fig.org/psr/psr-11/) Container, therefore everything is made around interfaces.  
 If something is not at your taste, you can implement your own logic without having to modify everything.
 
 ## Get started

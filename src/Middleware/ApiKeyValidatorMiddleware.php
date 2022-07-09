@@ -3,10 +3,8 @@
 namespace App\Middleware;
 
 use Laminas\Diactoros\Response;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Server\{MiddlewareInterface, RequestHandlerInterface};
 
 /**
  * Class ApiMiddleware
@@ -17,7 +15,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package App\Middleware
  */
-class ApiMiddleware implements MiddlewareInterface
+class ApiKeyValidatorMiddleware implements MiddlewareInterface
 {
 
     /**
@@ -29,15 +27,15 @@ class ApiMiddleware implements MiddlewareInterface
     {
         // Example:
         // If the client did not provide valid credentials to access the /api resources,
-        // then return a 403 Forbidden response.
+        // then return a 401 Unauthorized response.
         //
-        // Note: getHeaderLine() always return a string, so for the sake of this example we compare the value to
-        // exactly null so that it never actually send a 403 Forbidden response.
+        // Note: ServerRequestInterface::getHeaderLine() always return a string, so for the sake of this example we
+        // compare the value to exactly null so that it never actually send a 403 Forbidden response.
         //
         // Modify according to your needs.
         $credentials = $request->getHeaderLine('X-API-KEY');
         if ($credentials === null) {
-            return new Response('php://memory', 403);
+            return new Response('php://memory', 401);
         }
 
         // Provided credentials are valid, let's continue.

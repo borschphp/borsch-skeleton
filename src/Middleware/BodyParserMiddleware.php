@@ -2,10 +2,8 @@
 
 namespace App\Middleware;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Server\{MiddlewareInterface, RequestHandlerInterface};
 use SimpleXMLElement;
 
 /**
@@ -59,9 +57,8 @@ class BodyParserMiddleware implements MiddlewareInterface
     protected function getContentType(ServerRequestInterface $request): string
     {
         $content_type = strtolower(trim($request->getHeaderLine('Content-Type')));
-        $content_type = explode(';', $content_type)[0];
 
-        return $content_type;
+        return explode(';', $content_type)[0];
     }
 
     /**
@@ -126,12 +123,10 @@ class BodyParserMiddleware implements MiddlewareInterface
      */
     protected function getXMLParsedBody(ServerRequestInterface $request): ServerRequestInterface
     {
-        $backup = libxml_disable_entity_loader(true);
         $backup_errors = libxml_use_internal_errors(true);
 
         $xml = simplexml_load_string((string)$request->getBody());
 
-        libxml_disable_entity_loader($backup);
         libxml_clear_errors();
         libxml_use_internal_errors($backup_errors);
 

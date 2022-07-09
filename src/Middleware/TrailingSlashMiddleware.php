@@ -3,10 +3,8 @@
 namespace App\Middleware;
 
 use Laminas\Diactoros\Response\RedirectResponse;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Server\{MiddlewareInterface, RequestHandlerInterface};
 
 /**
  * Class TrailingSlashMiddleware
@@ -24,7 +22,7 @@ class TrailingSlashMiddleware implements MiddlewareInterface
         $uri = $request->getUri();
         $path = $uri->getPath();
 
-        if ($path != '/' && substr($path, -1) == '/') {
+        if ($path != '/' && str_ends_with($path, '/')) {
             // Permanently redirect paths with a trailing slash to their non-trailing equivalent
             $uri = $uri->withPath(rtrim($path, '/'));
 

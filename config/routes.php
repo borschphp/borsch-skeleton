@@ -1,7 +1,6 @@
 <?php
 
-use App\Handler\HomeHandler;
-use App\Handler\UserHandler;
+use App\Handler\{HomeHandler, PeoplesHandler};
 use Borsch\Application\App;
 
 /**
@@ -10,5 +9,11 @@ use Borsch\Application\App;
  */
 return function(App $app): void {
     $app->get('/', HomeHandler::class, 'home');
-    $app->get('/user[/{id:\d+}]', UserHandler::class, 'user');
+
+    $app->match(
+        ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+        '/api/peoples[/{id:\d+}]',
+        PeoplesHandler::class,
+        'peoples'
+    );
 };

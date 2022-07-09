@@ -8,11 +8,14 @@ use App\Middleware\ErrorHandlerMiddleware;
 use App\Middleware\NotFoundHandlerMiddleware;
 use App\Middleware\RouteMiddleware;
 use AppTest\App;
+use Borsch\Application\App as BorschApp;
 use Borsch\RequestHandler\RequestHandler;
 use Borsch\Router\RouterInterface;
 use Laminas\Diactoros\ServerRequestFactory;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use TypeError;
 
 class ErrorHandlerMiddlewareTest extends App
@@ -46,11 +49,12 @@ class ErrorHandlerMiddlewareTest extends App
             return $error_handler;
         });
 
-        $app = new \Borsch\Application\App(
-            new RequestHandler(),
-            $this->container->get(RouterInterface::class),
-            $this->container
-        );
+        $app = new class(new RequestHandler(), $this->container->get(RouterInterface::class), $this->container) extends BorschApp {
+            public function runAndGetResponse(ServerRequestInterface $server_request): ResponseInterface
+            {
+                return $this->request_handler->handle($server_request);
+            }
+        };
 
         $app->pipe(ErrorHandlerMiddleware::class);
         $app->pipe(RouteMiddleware::class);

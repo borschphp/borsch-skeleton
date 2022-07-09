@@ -2,12 +2,9 @@
 
 namespace App\Middleware;
 
-use Borsch\Router\RouteResultInterface;
-use Borsch\Router\RouterInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Borsch\Router\{RouteResultInterface, RouterInterface};
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Server\{MiddlewareInterface, RequestHandlerInterface};
 
 /**
  * Class RouteMiddleware
@@ -16,17 +13,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 class RouteMiddleware implements MiddlewareInterface
 {
 
-    /** @var RouterInterface */
-    protected $router;
-
     /**
      * RouteMiddleware constructor.
      * @param RouterInterface $router
      */
-    public function __construct(RouterInterface $router)
-    {
-        $this->router = $router;
-    }
+    public function __construct(
+        protected RouterInterface $router
+    ) {}
 
     /**
      * @inheritDoc

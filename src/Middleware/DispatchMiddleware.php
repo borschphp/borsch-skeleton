@@ -3,10 +3,10 @@
 namespace App\Middleware;
 
 use Borsch\Router\RouteResultInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\{Message\ResponseInterface,
+    Message\ServerRequestInterface,
+    Server\MiddlewareInterface,
+    Server\RequestHandlerInterface};
 
 /**
  * Class DispatchMiddleware

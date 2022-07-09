@@ -2,13 +2,9 @@
 
 namespace App\Middleware;
 
-use Laminas\Diactoros\Stream;
-use Laminas\Diactoros\UploadedFile;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\UploadedFileInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Laminas\Diactoros\{Stream, UploadedFile};
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface, UploadedFileInterface};
+use Psr\Http\Server\{MiddlewareInterface, RequestHandlerInterface};
 
 /**
  * Class UploadedFilesParserMiddleware
@@ -40,7 +36,7 @@ class UploadedFilesParserMiddleware implements MiddlewareInterface
      * @param array $uploaded_files
      * @return UploadedFileInterface|UploadedFileInterface[]
      */
-    protected function getUploadedFileLeaves(array $uploaded_files)
+    protected function getUploadedFileLeaves(array $uploaded_files): UploadedFileInterface|array
     {
         $new_file = [];
 

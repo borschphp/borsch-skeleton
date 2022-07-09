@@ -1,17 +1,17 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once app_path('vendor/autoload.php');
 
-$environment_file = __DIR__.'/../config/environment.php';
+$environment_file = config_path('environment.php');
 
-// If environment file exists, load it so that it wont be necessary to parse and load .env file at every call.
+// If environment file exists, load it so that it won't be necessary to parse and load .env file at every call.
 if (file_exists($environment_file)) {
     $environment = require_once $environment_file;
     $_ENV = array_merge($_ENV, $environment);
     return;
 }
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/..');
+$dotenv = Dotenv\Dotenv::createImmutable(app_path());
 $environment = $dotenv->load();
 
 // In production, save the environment in a file so that it wont be necessary to parse and load .env file at every call.

@@ -1,20 +1,19 @@
 <?php
 
-use App\Handler\UserHandler;
-use App\Listener\MonologListener;
-use App\Middleware\ErrorHandlerMiddleware;
-use App\Repository\InMemoryUserRepository;
-use App\Repository\UserRepositoryInterface;
-use Borsch\Application\App;
-use Borsch\Application\ApplicationInterface;
-use Borsch\Container\Container;
-use Borsch\RequestHandler\ApplicationRequestHandlerInterface;
-use Borsch\RequestHandler\RequestHandler;
-use Borsch\Router\FastRouteRouter;
-use Borsch\Router\RouterInterface;
+use App\{Handler\PeoplesHandler,
+    Listener\MonologListener,
+    Middleware\ErrorHandlerMiddleware,
+    Repository\PeopleRepositoryInterface,
+    Repository\SQLitePeopleRepository};
+use Borsch\{Application\App,
+    Application\ApplicationInterface,
+    Container\Container,
+    RequestHandler\ApplicationRequestHandlerInterface,
+    RequestHandler\RequestHandler,
+    Router\FastRouteRouter,
+    Router\RouterInterface};
 use Laminas\Diactoros\ServerRequestFactory;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
+use Monolog\{Handler\StreamHandler, Logger};
 use Psr\Http\Message\ServerRequestInterface;
 
 $container = new Container();
@@ -22,64 +21,78 @@ $container = new Container();
 /*
  * Application definitions
  * -----------------------
- *
- * Main Borsch App definitions.
- * Here you can inject the basic dependency like the App instance, Router instance,
- * PSR-* instances, etc.
+ * Main Borsch App definitions (like the App instance, Router instance, PSR-* instances, etc).
  */
+
 $container->set(ApplicationInterface::class, App::class);
-$container->set(RouterInterface::class, function() {
+$container->set(RouterInterface::class, function () {
     $router = new FastRouteRouter();
     if (env('APP_ENV') == 'production') {
-        $router->setCacheFile(__DIR__.'/../../storage/cache/routes.cache.php');
+        $router->setCacheFile(cache_path('routes.cache.php'));
     }
 
     return $router;
 })->cache(true);
 $container->set(ApplicationRequestHandlerInterface::class, RequestHandler::class);
-$container->set(ServerRequestInterface::class, function() {
-    return ServerRequestFactory::fromGlobals();
-});
+$container->set(ServerRequestInterface::class, fn() => ServerRequestFactory::fromGlobals());
+
+/*
+ * Log & Monitoring definitions
+ * ----------------------------
+ * A default Logger is defined, it can be used in our middlewares, handlers or any other stuff as well.
+ */
+
+$container->set(Logger::class, function () {
+    $name = env('APP_NAME', 'Borsch') ?: 'Borsch';
+    $logger = new Logger($name);
+    $logger->pushHandler(new StreamHandler(logs_path(sprintf(
+        '%s.log',
+        env('LOG_CHANNEL', 'app')
+    ))));
+
+    return $logger;
+})-> cache(true);
 
 /*
  * Pipeline Middlewares definitions
  * --------------------------------
- *
  * Here we configure ErrorHandlerMiddleware with a Monolog listener so that our exceptions will be logged.
- *
- * ImplicitHeadMiddleware and RouteMiddleware have a constructor that requires dependency.
- * When you add a new MiddlewareInterface in the pipeline, and it requires dependencies in the constructor,
- * then add the necessary definitions below.
  */
-$container->set(ErrorHandlerMiddleware::class, function() {
-    $name = env('APP_NAME', 'Borsch') ?: 'Borsch';
-    $logger = new Logger($name);
-    $logger->pushHandler(new StreamHandler(sprintf(
-        '%s/../storage/logs/%s.log',
-        __DIR__,
-        env('LOG_CHANNEL', 'app')
-    )));
 
-    $error_handler = new ErrorHandlerMiddleware();
-    $error_handler->addListener(new MonologListener($logger));
-
-    return $error_handler;
-});
+$container
+    ->set(ErrorHandlerMiddleware::class)
+    ->addMethod('addListener', [$container->get(MonologListener::class)]);
 
 /*
  * Routes Handlers definitions
  * ---------------------------
- *
  * As for pipeline middlewares, your routes handlers that have dependency must be listed here.
- * Our HomeHandler handler uses an instance of TemplateRendererInterface to display an HTML page, so it is listed below.
  */
-$container->set(UserHandler::class);
+
+$container->set(PeoplesHandler::class);
+
+/*
+ * Database
+ * --------
+ * This skeleton implements a simple CRUD API that stores and updates a SQLite database via PDO.
+ */
+
+$container->set(PDO::class, function () {
+    $pdo = new PDO('sqlite:'.storage_path('database.sqlite'));
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+
+    return $pdo;
+})->cache(true);
 
 /*
  * Match the UserRepositoryInterface with InMemoryUserRepository so that it can be used in UserHandler upper.
  */
+
 $container
-    ->set(UserRepositoryInterface::class, InMemoryUserRepository::class)
+    ->set(PeopleRepositoryInterface::class, SQLitePeopleRepository::class)
     ->cache(true);
+
 
 return $container;
