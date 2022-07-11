@@ -28,7 +28,7 @@
     "borschphp/chef": "^1",
     "laminas/laminas-diactoros": "^2",
     "monolog/monolog": "^2",
-    "vlucas/phpdotenv": "v5.1.0"
+    "vlucas/phpdotenv": "^v5.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^9"
