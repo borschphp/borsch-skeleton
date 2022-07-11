@@ -189,7 +189,7 @@ class RouteMiddlewareTest extends App
         $this->assertEquals(TestHandler::class.'::handle', (string)$response->getBody());
     }
 
-    public function testProcessWithMatchingMethodsPOST()
+    public function testProcessWithMatchingMethodsPost()
     {
         $server_request = (new ServerRequestFactory())
             ->createServerRequest('POST', 'https://example.com/to/match');
@@ -198,7 +198,7 @@ class RouteMiddlewareTest extends App
         $this->assertEquals(TestHandler::class.'::handle', (string)$response->getBody());
     }
 
-    public function testProcessWithMatchingMethodsPUT()
+    public function testProcessWithMatchingMethodsPut()
     {
         $server_request = (new ServerRequestFactory())
             ->createServerRequest('PUT', 'https://example.com/to/match');
