@@ -33,8 +33,8 @@ jobs:
       run: composer install --prefer-dist --no-progress
     
     # Create temp .env file to run test suite
-    - name: Create temp .env file
-      run: touch .env
+    - name: Copy environment file
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     - name: Run test suite
