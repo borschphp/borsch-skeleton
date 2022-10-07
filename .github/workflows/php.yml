@@ -33,8 +33,9 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
 
+      # --ignore-platform-reqs used for PHP 8.2 because laminas/diactoros does not have compatible package yet.
       - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+        run: composer install --prefer-dist --no-interaction --no-progress --ignore-platform-reqs
 
       - name: Copy environment file
         run: cp .env.example .env
