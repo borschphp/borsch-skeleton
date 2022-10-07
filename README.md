@@ -41,6 +41,13 @@ Via [composer](https://getcomposer.org/) :
 
 After installation, you can run the application in development with the command :  
 `php -S 0.0.0.0:8080 -t ./public/ ./public/index.php`  
+
+Or you can use `docker-compose` to run the app with docker :  
+`docker-compose up -d`
+
+Or you can also use `lando` to run the app with docker :  
+`lando start`
+
 You can then visit http://0.0.0.0:8080 .
 
 ## Documentation

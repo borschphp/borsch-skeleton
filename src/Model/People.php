@@ -154,7 +154,7 @@ class People implements JsonSerializable
      * @return array
      * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             'id' => $this->id,
