@@ -6,7 +6,7 @@ use Borsch\Application\ApplicationInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-(function () {
+(static function () {
     /** @var ContainerInterface $container */
     $container = (require_once __DIR__.'/../config/container.php');
 

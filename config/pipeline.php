@@ -22,7 +22,7 @@ use Borsch\Application\App;
  *
  * @param App $app
  */
-return function(App $app): void {
+return static function(App $app): void {
     // This should be the first middleware to catch all Exceptions.
     $app->pipe(ErrorHandlerMiddleware::class);
 

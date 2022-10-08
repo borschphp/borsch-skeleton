@@ -1,4 +1,4 @@
-<p align="center"><img src="https://www.dropbox.com/s/bmgwjfhr6i5cah2/borschphp.color.png?raw=1" alt="Logo" height="120" /></p>
+<p align="center"><img src="https://www.dropbox.com/s/981geehhoahpv2u/logo.png?raw=1" alt="Logo" height="120" /></p>
 <h1 align="center">Borsch Skeleton</h1>
 <p align="center">Keep it simple.</p>
 <p align="center">

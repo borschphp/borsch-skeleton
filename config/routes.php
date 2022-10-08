@@ -7,7 +7,7 @@ use Borsch\Application\App;
  * @param App $app
  * @see https://github.com/nikic/FastRoute
  */
-return function(App $app): void {
+return static function(App $app): void {
     $app->get('/', HomeHandler::class, 'home');
 
     $app->match(
