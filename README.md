@@ -8,6 +8,11 @@
 </p>
 <br/>
 
+## Note
+
+This fork is made to be deployed to [railway.app](https://railway.app).  
+It adds a Dockerfile and some Apache configuration files.
+
 ## About Borsch Skeleton
 
 Sometimes, you don't need an overkill solution like [Laravel](https://laravel.com/) or [Symfony](https://symfony.com/).
