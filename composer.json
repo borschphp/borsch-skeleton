@@ -51,7 +51,7 @@
   "scripts": {
     "post-create-project-cmd": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-      "BORSCH_TEMP_KEYGEN=`date +%s | sha256sum | base64 | head -c 32`;sed -i \"s/APP_KEY=/APP_KEY=$BORSCH_TEMP_KEYGEN/g\" .env"
+      "BORSCH_TEMP_KEYGEN=`openssl rand -base64 32`;sed -i \"s|APP_KEY=|APP_KEY=$BORSCH_TEMP_KEYGEN|g\" .env"
     ],
     "serve": "php -S 0.0.0.0:8080 -t ./public/ ./public/index.php",
     "optimize": "composer install --prefer-dist --optimize-autoloader --no-dev",
