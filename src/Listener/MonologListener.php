@@ -74,11 +74,10 @@ class MonologListener
     protected function formatLog(Throwable $throwable, ServerRequestInterface $request): string
     {
         return sprintf(
-            '%s %s => %s%s%s',
+            '%s %s => %s Stacktrace: %s',
             $request->getMethod(),
             (string)$request->getUri(),
             $throwable->getMessage(),
-            PHP_EOL,
             $throwable->getTraceAsString()
         );
     }

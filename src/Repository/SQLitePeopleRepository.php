@@ -39,6 +39,9 @@ class SQLitePeopleRepository implements PeopleRepositoryInterface
         $statement->execute([$id]);
 
         $result = $statement->fetch();
+        if (!is_array($result) || !count($result)) {
+            return null;
+        }
 
         return $this->hydrate($result);
     }

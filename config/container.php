@@ -1,10 +1,12 @@
 <?php
 
-use App\{Handler\PeoplesHandler,
+use App\{Formatter\JsonFormatter,
+    Handler\PeoplesHandler,
     Listener\MonologListener,
     Middleware\ErrorHandlerMiddleware,
     Repository\PeopleRepositoryInterface,
-    Repository\SQLitePeopleRepository};
+    Repository\SQLitePeopleRepository,
+    Template\BasicTemplateEngine};
 use Borsch\{Application\App,
     Application\ApplicationInterface,
     Container\Container,
@@ -43,7 +45,7 @@ $container->set(ServerRequestInterface::class, fn() => ServerRequestFactory::fro
  */
 
 $container->set(Logger::class, function () {
-    $name = env('APP_NAME', 'Borsch') ?: 'Borsch';
+    $name = env('APP_NAME', 'App');
     $logger = new Logger($name);
     $logger->pushHandler(new StreamHandler(logs_path(sprintf(
         '%s.log',
@@ -61,7 +63,8 @@ $container->set(Logger::class, function () {
 
 $container
     ->set(ErrorHandlerMiddleware::class)
-    ->addMethod('addListener', [$container->get(MonologListener::class)]);
+    ->addMethod('addListener', [$container->get(MonologListener::class)])
+    ->addMethod('setFormatter', [$container->get(JsonFormatter::class)]);
 
 /*
  * Routes Handlers definitions
@@ -94,5 +97,16 @@ $container
     ->set(PeopleRepositoryInterface::class, SQLitePeopleRepository::class)
     ->cache(true);
 
+/*
+ * Template engine
+ */
+
+$container->set(
+    BasicTemplateEngine::class,
+    fn() => (new BasicTemplateEngine())
+        ->setTemplateDir(storage_path('views'))
+        ->setCacheDir(cache_path('views'))
+        ->useCache(env('APP_ENV') == 'production')
+)->cache(true);
 
 return $container;

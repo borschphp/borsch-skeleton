@@ -1,7 +1,6 @@
 <?php
 
-use App\Middleware\{
-    ApiKeyValidatorMiddleware,
+use App\Middleware\{ApiKeyValidatorMiddleware,
     BodyParserMiddleware,
     ContentLengthMiddleware,
     DispatchMiddleware,
@@ -12,8 +11,7 @@ use App\Middleware\{
     NotFoundHandlerMiddleware,
     RouteMiddleware,
     TrailingSlashMiddleware,
-    UploadedFilesParserMiddleware
-};
+    UploadedFilesParserMiddleware};
 use Borsch\Application\App;
 
 /**
@@ -27,6 +25,7 @@ return static function(App $app): void {
     $app->pipe(ErrorHandlerMiddleware::class);
 
     // Pipe more middleware here that you want to execute on every request.
+    // $app->pipe(LogMiddleware::class);
     $app->pipe(TrailingSlashMiddleware::class);
     $app->pipe(ContentLengthMiddleware::class);
 
