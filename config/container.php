@@ -1,6 +1,6 @@
 <?php
 
-use App\{Formatter\JsonFormatter,
+use App\{Formatter\HtmlFormatter,
     Handler\PeoplesHandler,
     Listener\MonologListener,
     Middleware\ErrorHandlerMiddleware,
@@ -64,7 +64,7 @@ $container->set(Logger::class, function () {
 $container
     ->set(ErrorHandlerMiddleware::class)
     ->addMethod('addListener', [$container->get(MonologListener::class)])
-    ->addMethod('setFormatter', [$container->get(JsonFormatter::class)]);
+    ->addMethod('setFormatter', [$container->get(HtmlFormatter::class)]);
 
 /*
  * Routes Handlers definitions
