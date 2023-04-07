@@ -40,7 +40,7 @@ Via [composer](https://getcomposer.org/) :
 `composer create-project borschphp/borsch-skeleton [your-app-name]`
 
 After installation, you can run the application in development with the command :  
-`php -S 0.0.0.0:8080 -t ./public/ ./public/index.php`  
+`php -S 0.0.0.0:8080 -t ./public/ ./public/server.php`  
 
 Or you can use `docker-compose` to run the app with docker :  
 `docker-compose up -d`
