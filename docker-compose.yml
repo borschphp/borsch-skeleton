@@ -14,7 +14,7 @@ services:
   borsch:
     image: php:8-alpine
     working_dir: /var/www
-    command: php -S 0.0.0.0:8080 -t ./public/ ./public/index.php
+    command: php -S 0.0.0.0:8080 -t ./public/ ./public/server.php
     environment:
       docker: "true"
     ports:

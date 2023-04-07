@@ -18,6 +18,9 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
     /** @var callable[] $listeners */
     protected array $listeners = [];
 
+    /** @var callable $formatter */
+    protected $formatter;
+
     /**
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
@@ -32,13 +35,10 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
         } catch (Throwable $throwable) {
             $this->callListeners($throwable, $request);
 
-            $response = $this->getResponseWithStatusCode($throwable);
-
-            if (env('APP_ENV') != 'production') {
-                $response->getBody()->write($throwable->__toString());
-            }
-
-            $response->getBody()->write($response->getReasonPhrase() ?: 'Unknown Error');
+            $response = ($this->formatter)(
+                $this->getResponseWithStatusCode($throwable),
+                $throwable
+            );
         }
 
         restore_error_handler();
@@ -55,6 +55,11 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
         if (!in_array($listener, $this->listeners, true)) {
             $this->listeners[] = $listener;
         }
+    }
+
+    public function setFormatter(callable $formatter): void
+    {
+        $this->formatter = $formatter;
     }
 
     /**

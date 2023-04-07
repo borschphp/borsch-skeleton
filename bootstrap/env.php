@@ -1,7 +1,5 @@
 <?php
 
-require_once app_path('vendor/autoload.php');
-
 $environment_file = config_path('environment.php');
 
 // If environment file exists, load it so that it won't be necessary to parse and load .env file at every call.

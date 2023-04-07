@@ -2,6 +2,7 @@
 
 namespace App\Handler;
 
+use App\Template\BasicTemplateEngine;
 use Borsch\Router\RouterInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\{Message\ResponseInterface, Message\ServerRequestInterface, Server\RequestHandlerInterface};
@@ -18,6 +19,7 @@ class HomeHandler implements RequestHandlerInterface
      */
     public function __construct(
         protected RouterInterface $router,
+        protected BasicTemplateEngine $engine
     ) {}
 
     /**
@@ -26,10 +28,11 @@ class HomeHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse(sprintf(
-            '<h3>Hello %s !</h3><p>Check <a href="%s">Peoples API here</a>.</p>',
-            ($request->getQueryParams()['name'] ?? $request->getHeaderLine('X-Name')) ?: 'World',
-            $this->router->generateUri('peoples')
-        ));
+        $this->engine->assign([
+            'name' => ($request->getQueryParams()['name'] ?? $request->getHeaderLine('X-Name')) ?: 'World',
+            'url' => $this->router->generateUri('peoples')
+        ]);
+
+        return new HtmlResponse($this->engine->render('home.tpl'));
     }
 }

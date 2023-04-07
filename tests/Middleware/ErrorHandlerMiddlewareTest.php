@@ -2,6 +2,7 @@
 
 namespace AppTest\Middleware;
 
+use App\Formatter\JsonFormatter;
 use App\Listener\MonologListener;
 use App\Middleware\DispatchMiddleware;
 use App\Middleware\ErrorHandlerMiddleware;
@@ -44,10 +45,9 @@ class ErrorHandlerMiddlewareTest extends App
         $logger = new Logger('Borsch');
         $logger->pushHandler(new StreamHandler($log_file));
         $error_handler->addListener(new MonologListener($logger));
+        $error_handler->setFormatter(new JsonFormatter());
 
-        $this->container->set(ErrorHandlerMiddleware::class, function () use ($error_handler) {
-            return $error_handler;
-        });
+        $this->container->set(ErrorHandlerMiddleware::class, fn() => $error_handler);
 
         $app = new class(new RequestHandler(), $this->container->get(RouterInterface::class), $this->container) extends BorschApp {
             public function runAndGetResponse(ServerRequestInterface $server_request): ResponseInterface
