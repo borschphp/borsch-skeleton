@@ -6,6 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Borsch-Skeleton</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="icon" type="image/png" href="/images/logo.png" />
     </head>
     <body class="bg-slate-50">
         <div class="grid h-screen place-items-center">
