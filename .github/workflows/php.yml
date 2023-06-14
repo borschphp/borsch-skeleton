@@ -33,6 +33,9 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
 
+      - name: Allow Composer plugin pestphp/pest-plugin
+        run: composer config --no-plugins allow-plugins.pestphp/pest-plugin true
+
       # --ignore-platform-reqs used for PHP 8.2 because laminas/diactoros does not have compatible package yet.
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction --no-progress --ignore-platform-reqs
@@ -41,4 +44,4 @@ jobs:
         run: cp .env.example .env
 
       - name: Run test suite
-        run: composer run-script test
+        run:  ./vendor/bin/pest tests
