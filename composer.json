@@ -63,7 +63,7 @@
       "php -S 0.0.0.0:8080 -t ./public/ ./public/server.php"
     ],
     "optimize": "composer install --prefer-dist --optimize-autoloader --no-dev",
-    "test": "./vendor/bin/pest",
-    "test-win": ".\\vendor\\bin\\pest"
+    "test": "./vendor/bin/pest tests",
+    "test-win": ".\\vendor\\bin\\pest tests"
   }
 }
