@@ -26,7 +26,7 @@
     "ext-simplexml": "*",
     "borschphp/application": "^1",
     "borschphp/chef": "^1",
-    "laminas/laminas-diactoros": "^2",
+    "laminas/laminas-diactoros": "^3",
     "monolog/monolog": "^2",
     "vlucas/phpdotenv": "^v5.1"
   },
