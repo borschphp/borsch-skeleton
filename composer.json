@@ -64,6 +64,18 @@
     ],
     "optimize": "composer install --prefer-dist --optimize-autoloader --no-dev",
     "test": "./vendor/bin/pest tests",
-    "test-win": ".\\vendor\\bin\\pest tests"
+    "test-win": ".\\vendor\\bin\\pest tests",
+    "prod": "composer production",
+    "dev": "composer development",
+    "production": [
+      "rm -f config/environment.php storage/cache/routes.cache.php",
+      "sed -i \"s|APP_ENV=.*|APP_ENV=production|g\" .env",
+      "sed -i \"s|APP_DEBUG=.*|APP_DEBUG=false|g\" .env"
+    ],
+    "development": [
+      "rm -f config/environment.php storage/cache/routes.cache.php",
+      "sed -i \"s|APP_ENV=.*|APP_ENV=development|g\" .env",
+      "sed -i \"s|APP_DEBUG=.*|APP_DEBUG=true|g\" .env"
+    ]
   }
 }
