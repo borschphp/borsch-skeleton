@@ -79,7 +79,7 @@ class BasicTemplateEngine
 
                     $code = preg_replace(
                         [
-                            '~\{\s*\*.+?\*\s*}~',  // comments
+                            '~\{\*[\s\S]+?\*}~',  // comments
                             '~\{%\s*(.+?)\s*}~',   // commands (foreach(): endforeach;)
                             '~\{!!\s*(.+?)\s*}~',  // unescaped vars
                             '~\{\s*(.+?)\s*}~'     // escaped vars (default)
@@ -88,7 +88,7 @@ class BasicTemplateEngine
                             '',
                             '<?php $1 ?>',
                             '<?php echo $1 ?>',
-                            '<?php echo htmlspecialchars($1, ENT_QUOTES) ?>'
+                            '<?php echo htmlspecialchars($1, ENT_QUOTES|ENT_SUBSTITUTE, \'UTF-8\') ?>'
                         ],
                         $code
                     );
@@ -96,10 +96,13 @@ class BasicTemplateEngine
                     file_put_contents($cache_file, $code);
                 }
 
-                extract($this->parameters);
-
                 ob_start();
-                include $cache_file;
+
+                (function ($file) {
+                    extract($this->parameters);
+                    include $file;
+                })($cache_file);
+
                 return ob_get_clean();
             }
         }

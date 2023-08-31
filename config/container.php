@@ -81,6 +81,13 @@ $container->set(PeoplesHandler::class);
  */
 
 $container->set(PDO::class, function () {
+    // For MySQL with connexion information from .env file
+    //$pdo = new PDO(
+    //    'mysql:host='.env('DB_HOST').';port='.env('DB_PORT').';dbname='.env('DB_DATABASE').';charset=utf8mb4',
+    //    env('DB_USERNAME'),
+    //    env('DB_PASSWORD')
+    //);
+
     $pdo = new PDO('sqlite:'.storage_path('database.sqlite'));
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
