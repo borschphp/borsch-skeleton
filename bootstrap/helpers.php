@@ -20,7 +20,7 @@ function env(string $key, mixed $default = null): mixed
         'true', 'false', 'yes', 'no' => filter_var($cleaned_value, FILTER_VALIDATE_BOOLEAN),
         'empty' => '',
         'null' => null,
-        default => trim($cleaned_value, '"\'')
+        default => trim($value)
     };
 }
 
