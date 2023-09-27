@@ -10,10 +10,10 @@ if (file_exists($environment_file)) {
 }
 
 $dotenv = Dotenv\Dotenv::createImmutable(app_path());
-$environment = $dotenv->load();
+$environment = $dotenv->safeLoad();
 
 // In production, save the environment in a file so that it won't be necessary to parse and load .env file at every call.
-if (env('APP_ENV') == 'production') {
+if (env('APP_ENV') == 'production' && count($environment)) {
     $file = new SplFileObject($environment_file, 'w');
     $file->fwrite('<?php'.PHP_EOL.PHP_EOL.'return '.var_export($environment, true).';'.PHP_EOL);
     $file = null;

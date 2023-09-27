@@ -9,18 +9,18 @@
  */
 function env(string $key, mixed $default = null): mixed
 {
-    $value = $_ENV[$key] ?? false;
+    $value = $_ENV[$key] ?? $_SERVER[$key] ?? false;
 
     if ($value === false) {
         return $default;
     }
 
-    $cleaned_value = trim(strtolower($value), '() \n\r\t\v\x00');
+    $cleaned_value = trim(strtolower($value), "() \n\r\t\v\x00");
     return match ($cleaned_value) {
-        'true', 'false' => filter_var($cleaned_value, FILTER_VALIDATE_BOOLEAN),
+        'true', 'false', 'yes', 'no' => filter_var($cleaned_value, FILTER_VALIDATE_BOOLEAN),
         'empty' => '',
         'null' => null,
-        default => trim($value, '"\''),
+        default => trim($value)
     };
 }
 
