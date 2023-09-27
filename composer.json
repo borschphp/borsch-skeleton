@@ -1,7 +1,7 @@
 {
   "name": "borschphp/borsch-skeleton",
   "description": "A Borsch Framework skeleton application to kick start development.",
-  "homepage": "http://github.com/borschphp/borsck-skeleton",
+  "homepage": "https://github.com/borschphp/borsck-skeleton",
   "license": "MIT",
   "keywords": [
     "borsch",
