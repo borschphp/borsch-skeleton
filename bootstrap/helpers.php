@@ -15,12 +15,12 @@ function env(string $key, mixed $default = null): mixed
         return $default;
     }
 
-    $cleaned_value = trim(strtolower($value), '() \n\r\t\v\x00');
+    $cleaned_value = trim(strtolower($value), "() \n\r\t\v\x00");
     return match ($cleaned_value) {
         'true', 'false', 'yes', 'no' => filter_var($cleaned_value, FILTER_VALIDATE_BOOLEAN),
         'empty' => '',
         'null' => null,
-        default => trim($value, '"\''),
+        default => trim($cleaned_value, '"\'')
     };
 }
 

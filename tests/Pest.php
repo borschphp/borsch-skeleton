@@ -119,3 +119,15 @@ uses()
         $this->server_request_to_exception = $factory->createServerRequest('GET', 'https://example.com/to/exception');
     })
     ->in('Unit/Middleware');
+
+uses()
+    ->beforeEach(function () {
+        $_ENV['TEST1'] = 'true';
+        $_ENV['TEST2'] = 'yes';
+        $_ENV['TEST3'] = 'false';
+        $_ENV['TEST4'] = 'no';
+        $_ENV['TEST5'] = 'empty';
+        $_ENV['TEST6'] = 'null';
+        $_ENV['TEST7'] = 'a value   ';
+    })
+    ->in('Unit/Bootstrap/HelpersTest.php');
