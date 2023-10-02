@@ -28,7 +28,7 @@
                                         />
                                     </form>
                                 <?php else: ?>
-                                    <h1 class="text-5xl font-bold">Hello, <?php echo htmlspecialchars($name, ENT_QUOTES) ?> !</h1>
+                                    <h1 class="text-5xl font-bold">Hello, <?php echo htmlspecialchars($name, ENT_QUOTES|ENT_SUBSTITUTE, 'UTF-8') ?> !</h1>
                                 <?php endif; ?>
                             </div>
                             <p class="p-8">
@@ -61,8 +61,8 @@
                         </a>
                     </div>
                     <div class="w-1/2 text-right">
-                        App <?php echo htmlspecialchars(env('APP_NAME'), ENT_QUOTES) ?> <?php echo htmlspecialchars(env('APP_VERSION'), ENT_QUOTES) ?> (PHP v<?php echo htmlspecialchars(phpversion(), ENT_QUOTES) ?>)<br>
-                        Rendered in <?php echo htmlspecialchars(round(microtime(true) - __START_TIME__, 5), ENT_QUOTES) ?> seconds
+                        App <?php echo htmlspecialchars(env('APP_NAME'), ENT_QUOTES|ENT_SUBSTITUTE, 'UTF-8') ?> <?php echo htmlspecialchars(env('APP_VERSION'), ENT_QUOTES|ENT_SUBSTITUTE, 'UTF-8') ?> (PHP v<?php echo htmlspecialchars(phpversion(), ENT_QUOTES|ENT_SUBSTITUTE, 'UTF-8') ?>)<br>
+                        Rendered in <?php echo htmlspecialchars(round(microtime(true) - __START_TIME__, 5), ENT_QUOTES|ENT_SUBSTITUTE, 'UTF-8') ?> seconds
                     </div>
                 </div>
             </div>
