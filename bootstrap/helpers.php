@@ -25,6 +25,16 @@ function env(string $key, mixed $default = null): mixed
 }
 
 /**
+ * Indicates if the current application environment is "production".
+ *
+ * @return bool
+ */
+function isProduction(): bool
+{
+    return env('APP_ENV') == 'production';
+}
+
+/**
  * Returns the path to the root app directory, appended with extra path.
  *
  * @param string ...$paths

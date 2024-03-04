@@ -21,11 +21,10 @@ class JsonFormatter
                 'message' => $throwable->getMessage(),
                 'date' => date('c')
             ],
-            fn($key) => env('APP_ENV') != 'production' || $key != 'message',
+            fn($key) => (!isProduction()) || $key != 'message',
             ARRAY_FILTER_USE_KEY
         )));
 
-        return $response
-            ->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json');
     }
 }
