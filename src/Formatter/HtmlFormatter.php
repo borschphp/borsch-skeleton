@@ -19,8 +19,8 @@ class HtmlFormatter
             date('c'),
             $response->getStatusCode(),
             $response->getReasonPhrase(),
-            env('APP_ENV') != 'production' ? ('<strong>Error:</strong> '.$throwable->getMessage()) : '',
-            env('APP_ENV') != 'production' ? ('<strong>Stacktrace:</strong><br>'.nl2br($throwable->getTraceAsString())) : ''
+            !isProduction() ? ('<strong>Error:</strong> '.$throwable->getMessage()) : '',
+            !isProduction() ? ('<strong>Stacktrace:</strong><br>'.nl2br($throwable->getTraceAsString())) : ''
         ));
 
         return $response

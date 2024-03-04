@@ -16,6 +16,7 @@ class PeoplesHandler implements RequestHandlerInterface
 
     /**
      * @param PDO $pdo
+     * @param PeopleRepositoryInterface $people_repository
      */
     public function __construct(
         protected PDO $pdo,

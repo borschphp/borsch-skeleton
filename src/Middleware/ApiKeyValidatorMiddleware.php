@@ -42,7 +42,7 @@ class ApiKeyValidatorMiddleware implements MiddlewareInterface
 
         // Maybe we want to add credentials information inside the request
         $request = $request
-            ->withAttribute('api_key', $credentials ?: '0000-0000-0000-0000')
+            ->withAttribute('api_key', $credentials)
             ->withAttribute('username', 'john.doe')
             ->withAttribute('email', 'john.doe@gmail.com');
 

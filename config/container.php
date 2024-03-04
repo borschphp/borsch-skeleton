@@ -29,7 +29,7 @@ $container = new Container();
 $container->set(ApplicationInterface::class, App::class);
 $container->set(RouterInterface::class, function () {
     $router = new FastRouteRouter();
-    if (env('APP_ENV') == 'production') {
+    if (isProduction()) {
         $router->setCacheFile(cache_path('routes.cache.php'));
     }
 
@@ -44,16 +44,13 @@ $container->set(ServerRequestInterface::class, fn() => ServerRequestFactory::fro
  * A default Logger is defined, it can be used in our middlewares, handlers or any other stuff as well.
  */
 
-$container->set(Logger::class, function () {
-    $name = env('APP_NAME', 'App');
-    $logger = new Logger($name);
-    $logger->pushHandler(new StreamHandler(logs_path(sprintf(
-        '%s.log',
-        env('LOG_CHANNEL', 'app')
-    ))));
-
-    return $logger;
-})-> cache(true);
+$container
+    ->set(
+        Logger::class,
+        fn() => (new Logger(env('APP_NAME', 'App')))
+            ->pushHandler(new StreamHandler(logs_path(env('LOG_CHANNEL', 'app').'.log')))
+    )
+    -> cache(true);
 
 /*
  * Pipeline Middlewares definitions
@@ -113,7 +110,7 @@ $container->set(
     fn() => (new BasicTemplateEngine())
         ->setTemplateDir(storage_path('views'))
         ->setCacheDir(cache_path('views'))
-        ->useCache(env('APP_ENV') == 'production')
+        ->useCache(isProduction())
 )->cache(true);
 
 return $container;
