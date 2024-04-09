@@ -39,22 +39,64 @@ If something is not at your taste, you can implement your own logic without havi
 Via [composer](https://getcomposer.org/) :  
 `composer create-project borschphp/borsch-skeleton [your-app-name]`
 
-After installation, you can run the application in development with the command :  
-`php -S 0.0.0.0:8080 -t ./public/ ./public/server.php`  
+## Web servers
+
+Instructions below will start a server on http://0.0.0.0:8080.
+
+### PHP Built-in web server
+
+After installation, you can run the application in development with the command :
+
+```bash
+php -S 0.0.0.0:8080 -t ./public/ ./public/server.php
+# or use the shortcut
+composer serve
+```  
+
+### Docker Compose
 
 Or you can use `docker-compose` to run the app with docker :  
-`docker-compose up -d`
 
-Or you can also use `lando` to run the app with docker :  
-`lando start`
+```bash
+docker-compose up -d
+```
 
-You can then visit http://0.0.0.0:8080 .
+### Lando
+
+Or you can also use [lando](https://lando.dev/) to run the app with docker :  
+
+```bash
+lando start
+```
+
+### FrankenPHP
+
+You can spin up a [FrankenPHP](https://frankenphp.dev/docs/worker/) docker container of the app with :
+
+```bash
+docker run \
+    -v $PWD:/app \
+    -p 80:8080 -p 443:443 -p 443:443/udp \
+    dunglas/frankenphp
+```
+
+#### Worker
+
+A script is available at `public/worker.php` to run the app with a [FrankenPHP](https://frankenphp.dev/docs/worker/) worker :
+
+```bash
+docker run \
+    -e FRANKENPHP_CONFIG="worker ./public/worker.php" \
+    -v $PWD:/app \
+    -p 80:8080 -p 443:443 -p 443:443/udp \
+    dunglas/frankenphp
+```
 
 ## Documentation
 
 An extended documentation is [available here](https://github.com/borschphp/borsch-skeleton/wiki).
 
-## Note
+## Notes
 
 Borsch Framework is heavily inspired by [Mezzio](https://docs.mezzio.dev/mezzio/) and [Laravel](https://laravel.com/), 
 only it is a much simpler and lightweight implementation.
