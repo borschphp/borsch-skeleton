@@ -31,16 +31,29 @@
                                     <h1 class="text-5xl font-bold">Hello, {$name} !</h1>
                                 {% endif; }
                             </div>
-                            <p class="p-8">
-                                <span class="underline">Simple and efficient</span> PSR-15 micro framework.
-                            </p>
-                            <a
-                                    href="https://borsch-documentation.onrender.com"
-                                    target="_blank"
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded"
-                            >
-                                Documentation
-                            </a>
+                            <div class="mb-10">
+                                <p class="p-8">
+                                    <span class="underline">Simple and efficient</span> PSR-15 micro framework.
+                                </p>
+                                <a
+                                        href="https://borsch-documentation.onrender.com"
+                                        target="_blank"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-4 rounded"
+                                >
+                                    Documentation
+                                </a>
+                            </div>
+                            <div class="border-gray border-t-2 pt-8 px-8">
+                                <p>Check out the API:</p>
+                                <ul>
+                                    <li>
+                                        <a href="/api/peoples" target="_blank" class="text-blue-600">/api/peoples</a>
+                                    </li>
+                                    <li>
+                                        <a href="/api/peoples/1" target="_blank" class="text-blue-600">/api/peoples/1</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
