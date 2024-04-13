@@ -35,6 +35,6 @@ class NotFoundHandlerMiddleware implements MiddlewareInterface
             );
         }
 
-        return new HtmlResponse($this->engine->render('404.tpl'));
+        return new HtmlResponse($this->engine->render('404.tpl'), 404);
     }
 }

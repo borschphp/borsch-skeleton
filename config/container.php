@@ -5,7 +5,6 @@ use App\{Handler\PeoplesHandler,
     Middleware\ErrorHandlerMiddleware,
     Repository\PeopleRepositoryInterface,
     Repository\SQLitePeopleRepository,
-    Template\BasicTemplateEngine,
     Template\LatteEngine};
 use Borsch\{Application\App,
     Application\ApplicationInterface,
