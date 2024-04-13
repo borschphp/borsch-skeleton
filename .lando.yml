@@ -1,6 +1,6 @@
 # Lando configuration file, used to spin up a local dev server.
 # It uses:
-#   - PHP 8.0
+#   - PHP 8.1
 #   - MariaDb (default to 10.3)
 #   - PHPMyAdmin
 # For more information about Lando, see https://docs.lando.dev
