@@ -1,6 +1,6 @@
 <?php
 
-use App\Handler\{HomeHandler, PeoplesHandler};
+use App\Handler\{HealthCheckHandler, HomeHandler, PeoplesHandler};
 use Borsch\Application\App;
 
 /**
@@ -16,4 +16,7 @@ return static function(App $app): void {
         PeoplesHandler::class,
         'peoples'
     );
+
+    // Health checks
+    $app->get('/healthcheck', HealthCheckHandler::class, 'healthcheck');
 };
