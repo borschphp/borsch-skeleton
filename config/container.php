@@ -1,19 +1,19 @@
 <?php
 
-use App\{Formatter\HtmlFormatter,
-    Handler\PeoplesHandler,
+use App\{Handler\PeoplesHandler,
     Listener\MonologListener,
     Middleware\ErrorHandlerMiddleware,
     Repository\PeopleRepositoryInterface,
     Repository\SQLitePeopleRepository,
-    Template\BasicTemplateEngine};
+    Template\LatteEngine};
 use Borsch\{Application\App,
     Application\ApplicationInterface,
     Container\Container,
     RequestHandler\ApplicationRequestHandlerInterface,
     RequestHandler\RequestHandler,
     Router\FastRouteRouter,
-    Router\RouterInterface};
+    Router\RouterInterface,
+    Template\TemplateRendererInterface};
 use Laminas\Diactoros\ServerRequestFactory;
 use Monolog\{Handler\StreamHandler, Logger};
 use Psr\Http\Message\ServerRequestInterface;
@@ -60,8 +60,7 @@ $container
 
 $container
     ->set(ErrorHandlerMiddleware::class)
-    ->addMethod('addListener', [$container->get(MonologListener::class)])
-    ->addMethod('setFormatter', [$container->get(HtmlFormatter::class)]);
+    ->addMethod('addListener', [$container->get(MonologListener::class)]);
 
 /*
  * Routes Handlers definitions
@@ -105,12 +104,8 @@ $container
  * Template engine
  */
 
-$container->set(
-    BasicTemplateEngine::class,
-    fn() => (new BasicTemplateEngine())
-        ->setTemplateDir(storage_path('views'))
-        ->setCacheDir(cache_path('views'))
-        ->useCache(isProduction())
-)->cache(true);
+$container
+    ->set(TemplateRendererInterface::class, LatteEngine::class)
+    ->cache(true);
 
 return $container;

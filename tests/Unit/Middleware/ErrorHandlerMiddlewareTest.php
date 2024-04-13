@@ -14,7 +14,3 @@ it('can process valid listener', function () {
 it('cannot add invalid listener', function () {
     $this->app->getContainer()->get(ErrorHandlerMiddleware::class)->addListener(null);
 })->throws(TypeError::class);
-
-it('cannot add invalid formatter', function () {
-    $this->app->getContainer()->get(ErrorHandlerMiddleware::class)->setFormatter(null);
-})->throws(TypeError::class);

@@ -2,6 +2,7 @@
 
 namespace App\Handler;
 
+use App\Exception\ProblemDetailsException;
 use App\Repository\PeopleRepositoryInterface;
 use Laminas\Diactoros\{Response, Response\JsonResponse};
 use PDO;
@@ -45,6 +46,7 @@ class PeoplesHandler implements RequestHandlerInterface
      *
      * @param int|null $id
      * @return ResponseInterface
+     * @throws ProblemDetailsException
      */
     protected function getPeoples(?int $id = null): ResponseInterface
     {
@@ -53,7 +55,10 @@ class PeoplesHandler implements RequestHandlerInterface
             $this->people_repository->getAll();
 
         if (!$peoples) {
-            return new Response(status: 404);
+            throw new ProblemDetailsException(
+                sprintf('Unable to retrieve Peoples with id: %s', $id),
+                404
+            );
         }
 
         return new JsonResponse($peoples);

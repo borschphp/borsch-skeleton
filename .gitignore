@@ -1,7 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/phpstorm,phpunit,composer,dotenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=phpstorm,phpunit,composer,dotenv
 
-index.php
+./index.php
 
 ### Composer ###
 composer.phar
@@ -9,6 +9,7 @@ composer.phar
 
 ### Cache ###
 /storage/cache/views/*.php
+/storage/cache/logs/*.log
 
 # Commit your application's lock file https://getcomposer.org/doc/01-basic-usage.md#commit-your-composer-lock-file-to-version-control
 # You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file

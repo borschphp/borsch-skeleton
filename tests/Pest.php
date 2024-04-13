@@ -1,6 +1,5 @@
 <?php
 
-use App\Formatter\HtmlFormatter;
 use App\Listener\MonologListener;
 use App\Middleware\BodyParserMiddleware;
 use App\Middleware\ContentLengthMiddleware;
@@ -12,12 +11,14 @@ use App\Middleware\MethodNotAllowedMiddleware;
 use App\Middleware\NotFoundHandlerMiddleware;
 use App\Middleware\RouteMiddleware;
 use App\Middleware\TrailingSlashMiddleware;
+use App\Template\LatteEngine;
 use AppTest\Mock\TestHandler;
 use Borsch\Application\App as BorschApp;
 use Borsch\Container\Container;
 use Borsch\RequestHandler\RequestHandler;
 use Borsch\Router\FastRouteRouter;
 use Borsch\Router\RouterInterface;
+use Borsch\Template\TemplateRendererInterface;
 use Laminas\Diactoros\ServerRequestFactory;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -74,8 +75,9 @@ uses()
         );
         $container
             ->set(ErrorHandlerMiddleware::class)
-            ->addMethod('addListener', [$container->get(MonologListener::class)])
-            ->addMethod('setFormatter', [$container->get(HtmlFormatter::class)]);
+            ->addMethod('addListener', [$container->get(MonologListener::class)]);
+        $container
+            ->set(TemplateRendererInterface::class, LatteEngine::class);
 
         $this->container = $container;
         $this->app = new class(new RequestHandler(), $container->get(RouterInterface::class), $container) extends BorschApp {
