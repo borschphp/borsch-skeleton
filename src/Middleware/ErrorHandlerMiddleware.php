@@ -2,6 +2,8 @@
 
 namespace App\Middleware;
 
+use App\Formatter\HtmlFormatter;
+use App\Formatter\JsonFormatter;
 use ErrorException;
 use Laminas\Diactoros\Response;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -35,9 +37,14 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
         } catch (Throwable $throwable) {
             $this->callListeners($throwable, $request);
 
-            $response = ($this->formatter)(
+            $formatter = str_starts_with($request->getUri()->getPath(), '/api/') ?
+                new JsonFormatter() : // ProblemDetails
+                new HtmlFormatter();  // Whoops
+
+            $response = $formatter(
                 $this->getResponseWithStatusCode($throwable),
-                $throwable
+                $throwable,
+                $request
             );
         }
 
@@ -55,11 +62,6 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
         if (!in_array($listener, $this->listeners, true)) {
             $this->listeners[] = $listener;
         }
-    }
-
-    public function setFormatter(callable $formatter): void
-    {
-        $this->formatter = $formatter;
     }
 
     /**

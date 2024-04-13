@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Borsch-Skeleton</title>
+        <title>Borsch-Skeleton - Home</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="icon" type="image/png" href="/images/logo.png" />
     </head>
@@ -16,7 +16,7 @@
                     <div class="text-center">
                         <div class="max-w-none">
                             <div class="border-gray border-b-2 pb-8 px-8">
-                                {% if ($name == 'World'): }
+                                {if $name == 'World'}
                                     <h1 class="text-5xl font-bold mb-2">Hello there.</h1>
                                     <form method="GET">
                                         <input
@@ -27,9 +27,9 @@
                                                 autocomplete="false"
                                         />
                                     </form>
-                                {% else: }
+                                {else}
                                     <h1 class="text-5xl font-bold">Hello, {$name} !</h1>
-                                {% endif; }
+                                {/if}
                             </div>
                             <div class="mb-10">
                                 <p class="p-8">

@@ -2,8 +2,8 @@
 
 namespace App\Handler;
 
-use App\Template\BasicTemplateEngine;
 use Borsch\Router\RouterInterface;
+use Borsch\Template\TemplateRendererInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\{Message\ResponseInterface, Message\ServerRequestInterface, Server\RequestHandlerInterface};
 
@@ -16,11 +16,11 @@ class HomeHandler implements RequestHandlerInterface
 
     /**
      * @param RouterInterface $router
-     * @param BasicTemplateEngine $engine
+     * @param TemplateRendererInterface $engine
      */
     public function __construct(
         protected RouterInterface $router,
-        protected BasicTemplateEngine $engine
+        protected TemplateRendererInterface $engine
     ) {}
 
     /**
