@@ -94,7 +94,7 @@ docker run \
 
 ## Documentation
 
-An extended documentation is [available here](https://github.com/borschphp/borsch-skeleton/wiki).
+An extended documentation is [available here](https://borschphp.github.io/borsch-skeleton-docs/#/).
 
 ## Notes
 
