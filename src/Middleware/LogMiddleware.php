@@ -24,17 +24,17 @@ class LogMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->logger->info(strtr('Request: {method} {uri}', [
-            '{method}' => $request->getMethod(),
-            '{uri}' => (string)$request->getUri()
-        ]));
-
         $response = $handler->handle($request);
 
-        $this->logger->info(strtr('Response: {status} {reason}', [
-            '{status}' => $response->getStatusCode(),
-            '{reason}' => $response->getReasonPhrase()
-        ]));
+        $message = 'Request: {method} {uri} | Response: {status} {reason}';
+        $context = [
+            'method' => $request->getMethod(),
+            'uri' => (string)$request->getUri(),
+            'status' => $response->getStatusCode(),
+            'reason' => $response->getReasonPhrase()
+        ];
+
+        $this->logger->info($message, $context);
 
         return $response;
     }
