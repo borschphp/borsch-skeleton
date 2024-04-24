@@ -15,7 +15,7 @@ use Borsch\{Application\App,
     Router\RouterInterface,
     Template\TemplateRendererInterface};
 use Laminas\Diactoros\ServerRequestFactory;
-use Monolog\{Handler\StreamHandler, Logger};
+use Monolog\{Handler\StreamHandler, Logger, Processor\PsrLogMessageProcessor};
 use Psr\Http\Message\ServerRequestInterface;
 
 $container = new Container();
@@ -48,7 +48,11 @@ $container
     ->set(
         Logger::class,
         fn() => (new Logger(env('APP_NAME', 'App')))
-            ->pushHandler(new StreamHandler(logs_path(env('LOG_CHANNEL', 'app').'.log')))
+            ->pushHandler(new StreamHandler(
+                logs_path(env('LOG_CHANNEL', 'app').'.log'),
+                constant(Logger::class.'::'.env('LOG_LEVEL', 'DEBUG'))
+            ))
+            ->pushProcessor(new PsrLogMessageProcessor(removeUsedContextFields: true))
     )
     -> cache(true);
 

@@ -7,6 +7,10 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 (static function () {
+    // Warning, see: https://www.php.net/manual/en/timezones.others.php
+    // do not use any of the timezones listed here (besides UTC)
+    date_default_timezone_set(env('TIMEZONE', 'UTC'));
+
     /** @var ContainerInterface $container */
     $container = (require_once __DIR__.'/../config/container.php');
 
