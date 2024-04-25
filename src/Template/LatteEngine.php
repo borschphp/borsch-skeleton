@@ -15,6 +15,7 @@ class LatteEngine extends AbstractTemplateRenderer
     public function __construct()
     {
         $this->latte = new Engine();
+        $this->latte->setTempDirectory(cache_path('views'));
         $this->latte->setLoader(new FileLoader(storage_path('views')));
         $this->latte->setAutoRefresh(!isProduction());
     }
