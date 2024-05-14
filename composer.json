@@ -31,7 +31,8 @@
     "vlucas/phpdotenv": "^v5.1",
     "filp/whoops": "^2",
     "borschphp/template": "^0",
-    "latte/latte": "^3"
+    "latte/latte": "^3",
+    "borschphp/cache": "^1.0"
   },
   "require-dev": {
     "pestphp/pest": "^2.6"

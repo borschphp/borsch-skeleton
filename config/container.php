@@ -1,6 +1,7 @@
 <?php
 
-use App\{Handler\PeoplesHandler,
+use App\{CachePool\SQLiteCacheItemPool,
+    Handler\PeoplesHandler,
     Listener\MonologListener,
     Middleware\ErrorHandlerMiddleware,
     Repository\PeopleRepositoryInterface,
@@ -8,6 +9,7 @@ use App\{Handler\PeoplesHandler,
     Template\LatteEngine};
 use Borsch\{Application\App,
     Application\ApplicationInterface,
+    Cache\Cache,
     Container\Container,
     RequestHandler\ApplicationRequestHandlerInterface,
     RequestHandler\RequestHandler,
@@ -17,6 +19,7 @@ use Borsch\{Application\App,
 use Laminas\Diactoros\ServerRequestFactory;
 use Monolog\{Handler\StreamHandler, Logger, Processor\PsrLogMessageProcessor};
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\SimpleCache\CacheInterface;
 
 $container = new Container();
 
@@ -81,13 +84,6 @@ $container->set(PeoplesHandler::class);
  */
 
 $container->set(PDO::class, function () {
-    // For MySQL with connexion information from .env file
-    //$pdo = new PDO(
-    //    'mysql:host='.env('DB_HOST').';port='.env('DB_PORT').';dbname='.env('DB_DATABASE').';charset=utf8mb4',
-    //    env('DB_USERNAME'),
-    //    env('DB_PASSWORD')
-    //);
-
     $pdo = new PDO('sqlite:'.storage_path('database.sqlite'));
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -111,5 +107,14 @@ $container
 $container
     ->set(TemplateRendererInterface::class, LatteEngine::class)
     ->cache(true);
+
+/*
+ * Cache
+ */
+
+$container->set(
+    CacheInterface::class,
+    fn(SQliteCacheItemPool $pool, Logger $logger) => new Cache($pool, $logger)
+)->cache(true);
 
 return $container;
