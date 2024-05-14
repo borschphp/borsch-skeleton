@@ -8,7 +8,23 @@ use Exception;
 use PDO;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use function unserialize;
 
+/**
+ * PSR-6 CachePool implementation to work with the embedded SQLite database.
+ * Its main purpose is to be used in the PSR-16 Simple Cache implementation shipped with this skeleton.
+ * This class is configured and set in the container.
+ *
+ * In case you deleted the cache table, here is the schema:
+ *
+ * create table cache (
+ *     key  TEXT not null constraint cache_pk primary key,
+ *     item TEXT not null
+ * );
+ *
+ * @see config/container.php
+ * @see vendor/borschphp/cache/src/Cache/Cache.php
+ */
 class SQLiteCacheItemPool implements CacheItemPoolInterface
 {
 
@@ -89,7 +105,7 @@ class SQLiteCacheItemPool implements CacheItemPoolInterface
             unset($this->items[$key]);
         }
 
-        $statement = $this->pdo->prepare('DELETE FROM `cache` WHERE `key` = ? LIMIT 1');
+        $statement = $this->pdo->prepare('DELETE FROM `cache` WHERE `key` = ?');
         $statement->execute([$key]);
 
         return true;
