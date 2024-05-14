@@ -26,6 +26,7 @@ $app = $container->get(ApplicationInterface::class);
 
 (require_once __DIR__ . '/../config/pipeline.php')($app);
 (require_once __DIR__ . '/../config/routes.php')($app);
+(require_once __DIR__ . '/../config/api.php')($app);
 
 $handler = static function () use ($app, $container) {
     $request = $container->get(ServerRequestInterface::class);
