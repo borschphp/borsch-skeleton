@@ -1,6 +1,6 @@
 <?php
 
-use App\Handler\{HealthCheckHandler, HomeHandler, PeoplesHandler};
+use App\Handler\{HomeHandler};
 use Borsch\Application\App;
 
 /**
@@ -9,14 +9,4 @@ use Borsch\Application\App;
  */
 return static function(App $app): void {
     $app->get('/', HomeHandler::class, 'home');
-
-    $app->match(
-        ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-        '/api/peoples[/{id:\d+}]',
-        PeoplesHandler::class,
-        'peoples'
-    );
-
-    // Health checks
-    $app->get('/healthcheck', HealthCheckHandler::class, 'healthcheck');
 };
