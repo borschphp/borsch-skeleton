@@ -1,120 +1,16 @@
 <?php
 
-use App\{CachePool\SQLiteCacheItemPool,
-    Handler\PeoplesHandler,
-    Listener\MonologListener,
-    Middleware\ErrorHandlerMiddleware,
-    Repository\PeopleRepositoryInterface,
-    Repository\SQLitePeopleRepository,
-    Template\LatteEngine};
-use Borsch\{Application\App,
-    Application\ApplicationInterface,
-    Cache\Cache,
-    Container\Container,
-    RequestHandler\ApplicationRequestHandlerInterface,
-    RequestHandler\RequestHandler,
-    Router\FastRouteRouter,
-    Router\RouterInterface,
-    Template\TemplateRendererInterface};
-use Laminas\Diactoros\ServerRequestFactory;
-use Monolog\{Handler\StreamHandler, Logger, Processor\PsrLogMessageProcessor};
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\SimpleCache\CacheInterface;
+use Borsch\Container\Container;
 
 $container = new Container();
 
-/*
- * Application definitions
- * -----------------------
- * Main Borsch App definitions (like the App instance, Router instance, PSR-* instances, etc).
- */
-
-$container->set(ApplicationInterface::class, App::class);
-$container->set(RouterInterface::class, function () {
-    $router = new FastRouteRouter();
-    if (isProduction()) {
-        $router->setCacheFile(cache_path('routes.cache.php'));
-    }
-
-    return $router;
-})->cache(true);
-$container->set(ApplicationRequestHandlerInterface::class, RequestHandler::class);
-$container->set(ServerRequestInterface::class, fn() => ServerRequestFactory::fromGlobals());
-
-/*
- * Log & Monitoring definitions
- * ----------------------------
- * A default Logger is defined, it can be used in our middlewares, handlers or any other stuff as well.
- */
-
-$container
-    ->set(
-        Logger::class,
-        fn() => (new Logger(env('APP_NAME', 'App')))
-            ->pushHandler(new StreamHandler(
-                logs_path(env('LOG_CHANNEL', 'app').'.log'),
-                constant(Logger::class.'::'.env('LOG_LEVEL', 'DEBUG'))
-            ))
-            ->pushProcessor(new PsrLogMessageProcessor(removeUsedContextFields: true))
-    )
-    -> cache(true);
-
-/*
- * Pipeline Middlewares definitions
- * --------------------------------
- * Here we configure ErrorHandlerMiddleware with a Monolog listener so that our exceptions will be logged.
- */
-
-$container
-    ->set(ErrorHandlerMiddleware::class)
-    ->addMethod('addListener', [$container->get(MonologListener::class)]);
-
-/*
- * Routes Handlers definitions
- * ---------------------------
- * As for pipeline middlewares, your routes handlers that have dependency must be listed here.
- */
-
-$container->set(PeoplesHandler::class);
-
-/*
- * Database
- * --------
- * This skeleton implements a simple CRUD API that stores and updates a SQLite database via PDO.
- */
-
-$container->set(PDO::class, function () {
-    $pdo = new PDO('sqlite:'.storage_path('database.sqlite'));
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-
-    return $pdo;
-})->cache(true);
-
-/*
- * Match the UserRepositoryInterface with InMemoryUserRepository so that it can be used in UserHandler upper.
- */
-
-$container
-    ->set(PeopleRepositoryInterface::class, SQLitePeopleRepository::class)
-    ->cache(true);
-
-/*
- * Template engine
- */
-
-$container
-    ->set(TemplateRendererInterface::class, LatteEngine::class)
-    ->cache(true);
-
-/*
- * Cache
- */
-
-$container->set(
-    CacheInterface::class,
-    fn(SQliteCacheItemPool $pool, Logger $logger) => new Cache($pool, $logger)
-)->cache(true);
+(require_once __DIR__.'/containers/app.container.php')($container);
+(require_once __DIR__.'/containers/logs.container.php')($container);
+(require_once __DIR__.'/containers/routes.container.php')($container);
+(require_once __DIR__.'/containers/pipeline.container.php')($container);
+(require_once __DIR__.'/containers/repositories.container.php')($container);
+(require_once __DIR__.'/containers/template.container.php')($container);
+(require_once __DIR__.'/containers/database.container.php')($container);
+(require_once __DIR__.'/containers/cache.container.php')($container);
 
 return $container;
