@@ -7,7 +7,7 @@ it('can process valid listener', function () {
 
     expect($this->log_file)->toBeFile()
         ->and(file_get_contents($this->log_file))->toContain(
-            'Borsch-Skeleton.CRITICAL: GET https://example.com/to/exception => Pest for testz!'
+            'App.CRITICAL: GET https://example.com/to/exception => Pest for testz!'
         );
 });
 
