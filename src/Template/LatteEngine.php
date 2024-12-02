@@ -20,6 +20,11 @@ class LatteEngine extends AbstractTemplateRenderer
         $this->latte->setAutoRefresh(!isProduction());
     }
 
+    /**
+     * @param string $name
+     * @param array<string, mixed> $params
+     * @return string
+     */
     public function render(string $name, array $params = []): string
     {
         $namespace_template = explode('::', $name);

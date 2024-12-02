@@ -34,9 +34,11 @@ class ApiKeyValidatorMiddleware implements MiddlewareInterface
         //
         // Modify according to your needs.
         $credentials = $request->getHeaderLine('X-API-KEY');
+        /*
         if ($credentials === null) {
             return new Response('php://memory', 401);
         }
+        */
 
         // Provided credentials are valid, let's continue.
 

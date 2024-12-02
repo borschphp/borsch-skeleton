@@ -35,7 +35,8 @@
     "borschphp/cache": "^1.0"
   },
   "require-dev": {
-    "pestphp/pest": "^3.0"
+    "pestphp/pest": "^3.0",
+    "phpstan/phpstan": "^2.0"
   },
   "autoload": {
     "psr-4": {
@@ -68,6 +69,7 @@
     ],
     "optimize": "composer install --prefer-dist --optimize-autoloader --no-dev",
     "test": "./vendor/bin/pest tests",
+    "phpstan": "./vendor/bin/phpstan analyse src",
     "test-win": ".\\vendor\\bin\\pest tests",
     "prod": "composer production",
     "dev": "composer development",

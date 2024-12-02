@@ -46,6 +46,9 @@ class SQLitePeopleRepository implements PeopleRepositoryInterface
         return $this->hydrate($result);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function create($body): People
     {
         $statement = $this->pdo->prepare(
@@ -60,6 +63,9 @@ class SQLitePeopleRepository implements PeopleRepositoryInterface
         return $this->getById($id);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function update(int $id, array $body): People
     {
         $query = 'UPDATE `peoples`';
@@ -100,7 +106,7 @@ class SQLitePeopleRepository implements PeopleRepositoryInterface
     }
 
     /**
-     * @param array $data
+     * @param array{'id': int, 'name': string, 'height': int, 'birth_year': string, 'gender': string, 'created_at': string, 'updated_at': string, 'link': string} $data
      * @return People
      * @throws ReflectionException
      */
