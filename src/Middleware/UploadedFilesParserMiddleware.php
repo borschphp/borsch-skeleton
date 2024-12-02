@@ -20,7 +20,7 @@ class UploadedFilesParserMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!count($_FILES ?? [])) {
+        if (!count($_FILES)) {
             return $handler->handle($request);
         }
 
@@ -33,7 +33,7 @@ class UploadedFilesParserMiddleware implements MiddlewareInterface
     }
 
     /**
-     * @param array $uploaded_files
+     * @param array{'tmp_name': string|string[], 'size': int|int[], 'error': int|int[], 'name': string|string[], 'type': string|string[]} $uploaded_files
      * @return UploadedFileInterface|UploadedFileInterface[]
      */
     protected function getUploadedFileLeaves(array $uploaded_files): UploadedFileInterface|array

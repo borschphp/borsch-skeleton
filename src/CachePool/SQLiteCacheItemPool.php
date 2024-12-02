@@ -8,6 +8,7 @@ use Exception;
 use PDO;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\Cache\InvalidArgumentException;
 use function unserialize;
 
 /**
@@ -30,6 +31,7 @@ class SQLiteCacheItemPool implements CacheItemPoolInterface
 
     use HasKeyValidation;
 
+    /** @var CacheItemInterface[]  */
     protected array $items = [];
 
     public function __construct(
@@ -62,6 +64,10 @@ class SQLiteCacheItemPool implements CacheItemPoolInterface
         return new CacheItem($key);
     }
 
+    /**
+     * @return CacheItemInterface[]
+     * @throws InvalidArgumentException
+     */
     public function getItems(array $keys = []): iterable
     {
         $items = [];

@@ -19,14 +19,14 @@ interface PeopleRepositoryInterface
     public function getById(int $id): ?People;
 
     /**
-     * @param array $body
+     * @param array{'name': string, 'height': string, 'birth_year': int, 'gender': string} $body
      * @return People
      */
     public function create(array $body): People;
 
     /**
      * @param int $id
-     * @param array $body
+     * @param array{'name': string, 'height': string, 'birth_year': int, 'gender': string} $body
      * @return People
      */
     public function update(int $id, array $body): People;

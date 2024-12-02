@@ -70,10 +70,10 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
      */
     protected function setErrorHandler(): void
     {
-        set_error_handler(function(int $errno, string $errstr, string $errfile, int $errline): void {
+        set_error_handler(function(int $errno, string $errstr, string $errfile, int $errline): bool {
             if (!(error_reporting() & $errno)) {
                 // error_reporting does not include this error
-                return;
+                return true;
             }
 
             throw new ErrorException($errstr, 0, $errno, $errfile, $errline);

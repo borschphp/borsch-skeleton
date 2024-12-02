@@ -151,10 +151,10 @@ class People implements JsonSerializable
     }
 
     /**
-     * @return array
+     * @return array{'id': int, 'name': string, 'height': int, 'birth_year': string, 'gender': string, 'created_at': string, 'updated_at': string, 'link': string}
      * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
      */
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,

@@ -37,7 +37,8 @@ class PeoplesHandler implements RequestHandlerInterface
             'GET' => $this->getPeoples($id),
             'POST' => $this->createPeoples($body),
             'PUT', 'PATCH' => $this->updatePeoples($id, $body),
-            'DELETE' => $this->deletePeoples($id)
+            'DELETE' => $this->deletePeoples($id),
+            default => new Response(status: 405)
         };
     }
 
@@ -67,7 +68,7 @@ class PeoplesHandler implements RequestHandlerInterface
     /**
      * Creates a new people and returns it.
      *
-     * @param array $body
+     * @param array{'name': string, 'height': string, 'birth_year': int, 'gender': string} $body
      * @return ResponseInterface
      */
     protected function createPeoples(array $body): ResponseInterface
@@ -81,7 +82,7 @@ class PeoplesHandler implements RequestHandlerInterface
      * Updates an existing people and returns it.
      *
      * @param int $id
-     * @param array $body
+     * @param array{'name': string, 'height': string, 'birth_year': int, 'gender': string} $body
      * @return ResponseInterface
      */
     protected function updatePeoples(int $id, array $body): ResponseInterface
