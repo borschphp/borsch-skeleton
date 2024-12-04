@@ -130,6 +130,14 @@ class MonologListener
      */
     protected function isInformation(int $code): bool
     {
+        // If PHP version is 8.4 then do not include E_STRICT because it is deprecated (throws exception)
+        if (version_compare(PHP_VERSION, '8.4', '>=')) {
+            return in_array($code, [
+                E_DEPRECATED,
+                E_USER_DEPRECATED
+            ]);
+        }
+
         return in_array($code, [
             E_STRICT,
             E_DEPRECATED,

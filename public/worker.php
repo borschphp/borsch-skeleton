@@ -3,7 +3,7 @@
  * This script was made to be used in the "worker mode" of FrankenPHP.
  * For more details, see the documentation : https://frankenphp.dev/docs/worker/ .
  * ```bash
- * docker run -e FRANKENPHP_CONFIG="worker ./public/worker.php" -v $PWD:/app -p 80:8080 -p 443:443 -p 443:443/udp dunglas/frankenphp
+ * docker run -e FRANKENPHP_CONFIG="worker ./public/worker.php" -v $PWD:/app -p 80:8080 -p 443:443 -p 443:443/udp --tty dunglas/frankenphp
  * ```
  */
 
