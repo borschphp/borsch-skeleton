@@ -104,13 +104,15 @@ it('can handle error exception with severity E_USER_NOTICE', function () {
         );
 });
 
-it('can handle error exception with severity E_STRICT', function () {
-    ($this->listener)(new ErrorException('Not Found', 404, E_STRICT), $this->server_request);
-    expect($this->log_file)->toBeFile()
-        ->and(file_get_contents($this->log_file))->toContain(
-            'Borsch.INFO: GET https://example.com/to/dispatch => Not Found'
-        );
-});
+if (version_compare(PHP_VERSION, '8.4', '<')) {
+    it('can handle error exception with severity E_STRICT', function () {
+        ($this->listener)(new ErrorException('Not Found', 404, E_STRICT), $this->server_request);
+        expect($this->log_file)->toBeFile()
+            ->and(file_get_contents($this->log_file))->toContain(
+                'Borsch.INFO: GET https://example.com/to/dispatch => Not Found'
+            );
+    });
+}
 
 it('can handle error exception with severity E_DEPRECATED', function () {
     ($this->listener)(new ErrorException('Not Found', 404, E_DEPRECATED), $this->server_request);
