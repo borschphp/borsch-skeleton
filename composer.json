@@ -67,10 +67,13 @@
       "Composer\\Config::disableProcessTimeout",
       "php -S 0.0.0.0:8080 -t ./public/ ./public/server.php"
     ],
+    "franken": [
+      "Composer\\Config::disableProcessTimeout",
+      "docker run -e FRANKENPHP_CONFIG=\"worker ./public/worker.php\" -v $PWD:/app -p 8080:8080 -p 443:443 -p 443:443/udp --tty dunglas/frankenphp"
+    ],
     "optimize": "composer install --prefer-dist --optimize-autoloader --no-dev",
     "test": "./vendor/bin/pest tests",
     "phpstan": "./vendor/bin/phpstan analyse src",
-    "test-win": ".\\vendor\\bin\\pest tests",
     "prod": "composer production",
     "dev": "composer development",
     "production": [

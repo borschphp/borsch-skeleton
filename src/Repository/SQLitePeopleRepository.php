@@ -117,7 +117,7 @@ class SQLitePeopleRepository implements PeopleRepositoryInterface
 
         $people->setLink(sprintf(
             '%s%s',
-            rtrim(env('APP_URL'), '/'),
+            rtrim(env('APP_URL', ''), '/'),
             $this->router->generateUri('peoples', $data)
         ));
 
