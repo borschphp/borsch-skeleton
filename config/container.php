@@ -4,6 +4,8 @@ use Borsch\Container\Container;
 
 $container = new Container();
 
+// TODO: use RecursiveDirectoryIterator and RecursiveIteratorIterator to include all files in the `containers` folder instead of listing them here
+
 (require_once __DIR__.'/containers/app.container.php')($container);
 (require_once __DIR__.'/containers/logs.container.php')($container);
 (require_once __DIR__.'/containers/routes.container.php')($container);

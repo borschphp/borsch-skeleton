@@ -35,6 +35,7 @@
     "borschphp/cache": "^1.0"
   },
   "require-dev": {
+    "composer/composer": "^2.8",
     "pestphp/pest": "^3.0",
     "phpstan/phpstan": "^2.0"
   },
@@ -63,6 +64,7 @@
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
       "BORSCH_TEMP_KEYGEN=`openssl rand -base64 32`;sed -i \"s|APP_KEY=|APP_KEY=$BORSCH_TEMP_KEYGEN|g\" .env"
     ],
+    "configure": "App\\Installer::configure",
     "serve": [
       "Composer\\Config::disableProcessTimeout",
       "php -S 0.0.0.0:8080 -t ./public/ ./public/server.php"
