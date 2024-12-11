@@ -1,12 +1,12 @@
 <?php
 
 use App\Handler\{HomeHandler};
-use Borsch\Application\App;
+use Borsch\Application\Application;
 
 /**
- * @param App $app
+ * @param Application $app
  * @see https://github.com/nikic/FastRoute
  */
-return static function(App $app): void {
+return static function(Application $app): void {
     $app->get('/', HomeHandler::class, 'home');
 };

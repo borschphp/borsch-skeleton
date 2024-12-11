@@ -12,20 +12,20 @@ use App\Middleware\{ApiKeyValidatorMiddleware,
     RouteMiddleware,
     TrailingSlashMiddleware,
     UploadedFilesParserMiddleware};
-use Borsch\Application\App;
+use Borsch\Application\Application;
 
 /**
  * Set up your middleware pipeline.
  * It works as FIFO, place your middleware as necessary.
  *
- * @param App $app
+ * @param Application $app
  */
-return static function(App $app): void {
+return static function(Application $app): void {
     // This should be the first middleware to catch all Exceptions.
     $app->pipe(ErrorHandlerMiddleware::class);
 
     // Pipe more middleware here that you want to execute on every request.
-    // $app->pipe(\App\Middleware\LogMiddleware::class);
+    $app->pipe(\App\Middleware\LogMiddleware::class);
     $app->pipe(TrailingSlashMiddleware::class);
     $app->pipe(ContentLengthMiddleware::class);
 

@@ -1,17 +1,17 @@
 <?php
 
-use Borsch\{Application\App,
+use Borsch\{Application\Application,
     Application\ApplicationInterface,
     Container\Container,
-    RequestHandler\ApplicationRequestHandlerInterface,
     RequestHandler\RequestHandler,
+    RequestHandler\RequestHandlerInterface,
     Router\FastRouteRouter,
     Router\RouterInterface};
 use Laminas\Diactoros\ServerRequestFactory;
 use Psr\Http\Message\ServerRequestInterface;
 
 return static function(Container $container): void {
-    $container->set(ApplicationInterface::class, App::class);
+    $container->set(ApplicationInterface::class, Application::class);
     $container->set(RouterInterface::class, function () {
         $router = new FastRouteRouter();
         if (isProduction()) {
@@ -20,6 +20,6 @@ return static function(Container $container): void {
 
         return $router;
     })->cache(true);
-    $container->set(ApplicationRequestHandlerInterface::class, RequestHandler::class);
+    $container->set(RequestHandlerInterface::class, RequestHandler::class);
     $container->set(ServerRequestInterface::class, fn() => ServerRequestFactory::fromGlobals());
 };

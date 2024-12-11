@@ -24,7 +24,8 @@
     "ext-libxml": "*",
     "ext-pdo": "*",
     "ext-simplexml": "*",
-    "borschphp/application": "^1",
+    "borschphp/application": "^2",
+    "borschphp/container": "^1",
     "borschphp/chef": "^1",
     "laminas/laminas-diactoros": "^3",
     "monolog/monolog": "^2 || ^3",
@@ -36,7 +37,8 @@
   },
   "require-dev": {
     "pestphp/pest": "^3.0",
-    "phpstan/phpstan": "^2.0"
+    "phpstan/phpstan": "^2.0",
+    "jakub-onderka/php-console-color": "*"
   },
   "autoload": {
     "psr-4": {

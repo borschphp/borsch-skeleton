@@ -1,14 +1,14 @@
 <?php
 
 use App\Handler\{HealthCheckHandler, PeoplesHandler};
-use Borsch\Application\App;
+use Borsch\Application\Application;
 
 /**
- * @param App $app
+ * @param Application $app
  * @see https://github.com/nikic/FastRoute
  */
-return static function(App $app): void {
-    $app->group('/api', function (App $app) {
+return static function(Application $app): void {
+    $app->group('/api', function (Application $app) {
         $app->match(
             ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
             '/peoples[/{id:\d+}]',
