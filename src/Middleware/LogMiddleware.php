@@ -2,8 +2,9 @@
 
 namespace App\Middleware;
 
-use JakubOnderka\PhpConsoleColor\ConsoleColor;
 use Monolog\Logger;
+use PHP_Parallel_Lint\PhpConsoleColor\ConsoleColor;
+use PHP_Parallel_Lint\PhpConsoleColor\InvalidStyleException;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\{MiddlewareInterface, RequestHandlerInterface};
 
@@ -19,9 +20,7 @@ class LogMiddleware implements MiddlewareInterface
     ) {}
 
     /**
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
+     * @throws InvalidStyleException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -31,6 +30,7 @@ class LogMiddleware implements MiddlewareInterface
         if (!defined('STDOUT')) {
             define('STDOUT', fopen('php://stdout', 'w'));
         }
+
         $console_color = new ConsoleColor();
         $message = '{ip}:{port} [{status}]: {method} {uri}';
 
