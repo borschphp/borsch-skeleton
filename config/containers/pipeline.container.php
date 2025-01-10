@@ -2,10 +2,10 @@
 
 use App\Listener\MonologListener;
 use App\Middleware\ErrorHandlerMiddleware;
-use Borsch\Container\Container;
+use League\Container\Container;
 
 return static function(Container $container): void {
     $container
-        ->set(ErrorHandlerMiddleware::class)
-        ->addMethod('addListener', [$container->get(MonologListener::class)]);
+        ->add(ErrorHandlerMiddleware::class)
+        ->addMethodCall('addListener', [$container->get(MonologListener::class)]);
 };

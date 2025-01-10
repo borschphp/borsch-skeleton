@@ -1,10 +1,12 @@
 <?php
 
+use Borsch\Router\RouterInterface;
+use League\Container\Container;
 use App\Repository\{PeopleRepositoryInterface, SQLitePeopleRepository};
-use Borsch\Container\Container;
 
 return static function(Container $container): void {
     $container
-        ->set(PeopleRepositoryInterface::class, SQLitePeopleRepository::class)
-        ->cache(true);
+        ->add(PeopleRepositoryInterface::class, SQLitePeopleRepository::class)
+        ->addArgument(PDO::class)
+        ->addArgument(RouterInterface::class);
 };

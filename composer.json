@@ -25,7 +25,6 @@
     "ext-pdo": "*",
     "ext-simplexml": "*",
     "borschphp/application": "^2",
-    "borschphp/container": "^1",
     "borschphp/chef": "^1",
     "laminas/laminas-diactoros": "^3",
     "monolog/monolog": "^2 || ^3",
@@ -33,7 +32,8 @@
     "filp/whoops": "^2",
     "borschphp/template": "^0",
     "latte/latte": "^3",
-    "borschphp/cache": "^1.0"
+    "borschphp/cache": "^1.0",
+    "league/container": "^4"
   },
   "require-dev": {
     "pestphp/pest": "^3.0",

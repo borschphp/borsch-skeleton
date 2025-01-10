@@ -2,11 +2,11 @@
 
 use App\Listener\MonologListener;
 use App\Middleware\ErrorHandlerMiddleware;
-use Borsch\Container\Container;
 use Monolog\{Handler\StreamHandler, Level, Logger, Processor\PsrLogMessageProcessor};
+use League\Container\Container;
 
 return static function(Container $container): void {
-    $container->set(Logger::class, function (): Logger {
+    $container->add(Logger::class, function (): Logger {
         $name = env('APP_NAME', 'App');
 
         $handlers = [
@@ -20,9 +20,9 @@ return static function(Container $container): void {
         $datetime_zone = new DateTimeZone(env('TIMEZONE', 'UTC'));
 
         return new Logger($name, $handlers, $processors, $datetime_zone);
-    })-> cache(true);
+    });
 
     $container
-        ->set(ErrorHandlerMiddleware::class)
-        ->addMethod('addListener', [$container->get(MonologListener::class)]);
+        ->add(ErrorHandlerMiddleware::class)
+        ->addMethodCall('addListener', [$container->get(MonologListener::class)]);
 };
