@@ -7,26 +7,45 @@ use Borsch\{Application\Application,
     Router\FastRouteRouter,
     Router\RouterInterface};
 use Laminas\Diactoros\ServerRequestFactory;
-use League\Container\Container;
+use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
 use Psr\Http\Message\ServerRequestInterface;
 
 return static function(Container $container): void {
-    $container
-        ->add(ApplicationInterface::class, Application::class)
-        ->addArgument(RequestHandlerInterface::class)
-        ->addArgument(RouterInterface::class)
-        ->addArgument($container);
+    $container->addServiceProvider(new class extends AbstractServiceProvider {
 
-    $container->add(RouterInterface::class, function () {
-        $router = new FastRouteRouter();
-        if (isProduction()) {
-            $router->setCacheFile(cache_path('routes.cache.php'));
+        public function provides(string $id): bool
+        {
+            return in_array($id, [
+                ApplicationInterface::class,
+                RouterInterface::class,
+                RequestHandlerInterface::class,
+                ServerRequestInterface::class
+            ]);
         }
 
-        return $router;
+        public function register(): void
+        {
+            $this
+                ->getContainer()
+                ->add(ApplicationInterface::class, Application::class)
+                ->addArgument(RequestHandlerInterface::class)
+                ->addArgument(RouterInterface::class)
+                ->addArgument($this->getContainer());
+
+            $this
+                ->getContainer()
+                ->add(RouterInterface::class, function () {
+                    $router = new FastRouteRouter();
+                    if (isProduction()) {
+                        $router->setCacheFile(cache_path('routes.cache.php'));
+                    }
+
+                    return $router;
+                });
+
+            $this->getContainer()->add(RequestHandlerInterface::class, RequestHandler::class);
+
+            $this->getContainer()->add(ServerRequestInterface::class, fn() => ServerRequestFactory::fromGlobals())->setShared(false);
+        }
     });
-
-    $container->add(RequestHandlerInterface::class, RequestHandler::class);
-
-    $container->add(ServerRequestInterface::class, fn() => ServerRequestFactory::fromGlobals())->setShared(false);
 };
