@@ -1,7 +1,5 @@
 <?php
 
-use App\Listener\MonologListener;
-use App\Middleware\ErrorHandlerMiddleware;
 use Monolog\{Handler\StreamHandler, Level, Logger, Processor\PsrLogMessageProcessor};
 use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
 
@@ -12,7 +10,6 @@ return static function(Container $container): void {
         {
             return in_array($id, [
                 Logger::class,
-                ErrorHandlerMiddleware::class
             ]);
         }
 
@@ -33,11 +30,6 @@ return static function(Container $container): void {
 
                 return new Logger($name, $handlers, $processors, $datetime_zone);
             });
-
-            $this
-                ->getContainer()
-                ->add(ErrorHandlerMiddleware::class)
-                ->addMethodCall('addListener', [$this->getContainer()->get(MonologListener::class)]);
         }
     });
 };

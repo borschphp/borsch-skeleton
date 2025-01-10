@@ -1,6 +1,6 @@
 <?php
 
-use App\Middleware\{ApiKeyValidatorMiddleware,
+use Borsch\Middleware\{ApiKeyValidatorMiddleware,
     BodyParserMiddleware,
     ContentLengthMiddleware,
     DispatchMiddleware,

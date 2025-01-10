@@ -2,7 +2,7 @@
 
 namespace App\Listener;
 
-use App\Middleware\ErrorHandlerMiddleware;
+use Borsch\Middleware\ErrorHandlerMiddleware;
 use ErrorException;
 use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface;

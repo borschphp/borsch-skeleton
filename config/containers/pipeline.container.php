@@ -1,7 +1,7 @@
 <?php
 
 use App\Listener\MonologListener;
-use App\Middleware\ErrorHandlerMiddleware;
+use Borsch\Middleware\ErrorHandlerMiddleware;
 use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
 
 return static function(Container $container): void {
