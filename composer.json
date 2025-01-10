@@ -33,8 +33,7 @@
     "filp/whoops": "^2",
     "borschphp/template": "^0",
     "latte/latte": "^3",
-    "borschphp/cache": "^1.0",
-    "php-parallel-lint/php-console-color": "^1.0"
+    "borschphp/cache": "^1.0"
   },
   "require-dev": {
     "pestphp/pest": "^3.0",

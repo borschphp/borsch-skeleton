@@ -25,7 +25,7 @@ return static function(Application $app): void {
     $app->pipe(ErrorHandlerMiddleware::class);
 
     // Pipe more middleware here that you want to execute on every request.
-    $app->pipe(\App\Middleware\LogMiddleware::class);
+    // $app->pipe(\App\Middleware\LogMiddleware::class);
     $app->pipe(TrailingSlashMiddleware::class);
     $app->pipe(ContentLengthMiddleware::class);
 
