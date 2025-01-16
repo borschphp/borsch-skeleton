@@ -2,8 +2,8 @@
 
 namespace App\Handler;
 
-use App\Exception\ProblemDetailsException;
 use App\Repository\PeopleRepositoryInterface;
+use Borsch\Exception\ProblemDetailsException;
 use Laminas\Diactoros\{Response, Response\JsonResponse};
 use PDO;
 use Psr\Http\{Message\ResponseInterface, Message\ServerRequestInterface, Server\RequestHandlerInterface};
