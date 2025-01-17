@@ -1,7 +1,6 @@
 <?php
 
-use Borsch\Middleware\{ApiKeyValidatorMiddleware,
-    BodyParserMiddleware,
+use Borsch\Middleware\{BodyParserMiddleware,
     ContentLengthMiddleware,
     DispatchMiddleware,
     ErrorHandlerMiddleware,
@@ -43,7 +42,6 @@ return static function(Application $app): void {
 
     // Middleware can be attached to specific paths, allowing you to mix and match
     // applications under a common domain.
-    $app->pipe('/api', ApiKeyValidatorMiddleware::class);
     $app->pipe('/api/peoples', [
         BodyParserMiddleware::class,
         UploadedFilesParserMiddleware::class

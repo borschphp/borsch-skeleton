@@ -1,8 +1,11 @@
 <?php
 
 use App\Listener\MonologListener;
-use Borsch\Middleware\ErrorHandlerMiddleware;
+use Borsch\Formatter\{FormatterInterface, HtmlFormatter, JsonFormatter};
+use Borsch\Middleware\{ErrorHandlerMiddleware, NotFoundHandlerMiddleware};
 use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
+use Laminas\Diactoros\Response\{HtmlResponse, JsonResponse};
+use Psr\Http\Message\{RequestInterface, ResponseInterface, ServerRequestInterface};
 
 return static function(Container $container): void {
     $container->addServiceProvider(new class extends AbstractServiceProvider {
@@ -10,7 +13,9 @@ return static function(Container $container): void {
         public function provides(string $id): bool
         {
             return in_array($id, [
-                ErrorHandlerMiddleware::class
+                FormatterInterface::class,
+                ErrorHandlerMiddleware::class,
+                NotFoundHandlerMiddleware::class
             ]);
         }
 
@@ -18,8 +23,43 @@ return static function(Container $container): void {
         {
             $this
                 ->getContainer()
+                ->add(FormatterInterface::class, fn(): FormatterInterface => new class implements FormatterInterface {
+
+                    public function format(ResponseInterface $response, Throwable $throwable, RequestInterface $request): ResponseInterface
+                    {
+                        $formatter = str_starts_with($request->getUri()->getPath(), '/api') ? new JsonFormatter() : new HtmlFormatter(isProduction());
+
+                        return $formatter->format($response, $throwable, $request);
+                    }
+                });
+
+            $this
+                ->getContainer()
                 ->add(ErrorHandlerMiddleware::class)
-                ->addMethodCall('addListener', [$this->getContainer()->get(MonologListener::class)]);
+                ->addArgument($this->getContainer()->get(FormatterInterface::class))
+                ->addArgument([$this->getContainer()->get(MonologListener::class)]);
+
+            $this
+                ->getContainer()
+                ->add(NotFoundHandlerMiddleware::class)
+                ->addArgument(static function (ServerRequestInterface $request): ResponseInterface {
+                    if (str_starts_with($request->getUri()->getPath(), '/api')) {
+                        return new JsonResponse(
+                            [
+                                'type' => 'https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4',
+                                'title' => 'Not Found',
+                                'status' => 404,
+                                'instance' => $request->getUri()->getPath()
+                            ],
+                            404
+                        );
+                    }
+
+                    return new HtmlResponse(
+                        '<h1>404 Not Found</h1>',
+                        404
+                    );
+                });
         }
     });
 };
