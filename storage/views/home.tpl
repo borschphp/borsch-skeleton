@@ -43,17 +43,6 @@
                                     Documentation
                                 </a>
                             </div>
-                            <div class="border-gray border-t-2 pt-8 px-8">
-                                <p>Check out the API:</p>
-                                <ul>
-                                    <li>
-                                        <a href="/api/peoples" target="_blank" class="text-blue-600">/api/peoples</a>
-                                    </li>
-                                    <li>
-                                        <a href="/api/peoples/1" target="_blank" class="text-blue-600">/api/peoples/1</a>
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
