@@ -31,7 +31,6 @@
     "laminas/laminas-diactoros": "^3",
     "monolog/monolog": "^2 || ^3",
     "vlucas/phpdotenv": "^v5.1",
-    "filp/whoops": "^2",
     "league/container": "^4"
   },
   "require-dev": {
@@ -73,18 +72,6 @@
     ],
     "optimize": "composer install --prefer-dist --optimize-autoloader --no-dev",
     "test": "./vendor/bin/pest tests",
-    "phpstan": "./vendor/bin/phpstan analyse src",
-    "prod": "composer production",
-    "dev": "composer development",
-    "production": [
-      "rm -f config/environment.php storage/cache/routes.cache.php",
-      "sed -i \"s|APP_ENV=.*|APP_ENV=production|g\" .env",
-      "sed -i \"s|APP_DEBUG=.*|APP_DEBUG=false|g\" .env"
-    ],
-    "development": [
-      "rm -f config/environment.php storage/cache/routes.cache.php",
-      "sed -i \"s|APP_ENV=.*|APP_ENV=development|g\" .env",
-      "sed -i \"s|APP_DEBUG=.*|APP_DEBUG=true|g\" .env"
-    ]
+    "phpstan": "./vendor/bin/phpstan analyse src"
   }
 }
