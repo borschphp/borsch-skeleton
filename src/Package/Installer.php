@@ -3,7 +3,11 @@
 namespace App\Package;
 
 use Composer\Composer;
+use Composer\Factory;
 use Composer\IO\IOInterface;
+use Composer\Json\JsonFile;
+use Composer\Package\Link;
+use Composer\Package\RootPackageInterface;
 use Composer\Script\Event;
 
 class Installer
@@ -12,13 +16,30 @@ class Installer
     private const INSTALL_MINIMAL = 'minimal';
     private const INSTALL_FULL = 'full';
 
+    private string $project_root;
+    private JsonFile $composer_json_file;
+    private array $composer_definition;
+    private RootPackageInterface $composer_root_package;
+    /** @var Link[] */
+    private array $composer_root_requires;
+    /** @var Link[] */
+    private array $composer_root_dev_requires;
+
     private string $installation_type;
 
-    public function __construct(
-        private IOInterface $io,
-        private Composer $composer,
-        ?string $projectRoot = null
-    ) {}
+    public function __construct(private IOInterface $io, private Composer $composer)
+    {
+        $composer_file = Factory::getComposerFile();
+
+        $this->project_root = $project_root ?? realpath(dirname($composer_file));
+        $this->project_root = rtrim($this->project_root, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+
+        $this->composer_json_file = new JsonFile($composer_file);
+        $this->composer_definition = $this->composer_json_file->read();
+        $this->composer_root_package = $this->composer->getPackage();
+        $this->composer_root_requires = $this->composer_root_package->getRequires();
+        $this->composer_root_dev_requires = $this->composer_root_package->getDevRequires();
+    }
 
     public static function install(Event $event): void
     {
