@@ -18,6 +18,7 @@ class Installer
 
     private string $project_root;
     private JsonFile $composer_json_file;
+    /** @var array<string, string>  */
     private array $composer_definition;
     private RootPackageInterface $composer_root_package;
     /** @var Link[] */
@@ -48,6 +49,7 @@ class Installer
         $installer->io->write('<info>Setting up optional packages</info>');
 
         $installer->installation_type = $installer->getInstallationType();
+        $installer->setupApplication();
     }
 
     private function getInstallationType(): string
@@ -70,6 +72,25 @@ class Installer
                 default:
                     $this->io->write('<error>Invalid answer</error>');
             }
+        }
+    }
+
+    private function setupApplication(): void
+    {
+        if ($this->installation_type === self::INSTALL_MINIMAL) {
+            $this->io->write('<info>Removing front handlers</info>');
+            unlink($this->project_root.'src/Handler/HomeHandler.php');
+            $this->io->write('<info>Removing templates files and configuration</info>');
+            unlink($this->project_root.'config/containers/template.container.php');
+            copy($this->project_root.'src/Package/Sources/container.php', $this->project_root.'config/container.php');
+            rmdir($this->project_root.'storage/cache/views');
+            unlink($this->project_root.'storage/views/404.tpl');
+            unlink($this->project_root.'storage/views/500.tpl');
+            unlink($this->project_root.'storage/views/home.tpl');
+            rmdir($this->project_root.'storage/views');
+            $this->io->write('<info>Removing latte from composer.json</info>');
+            unset($this->composer_definition['require']['borschphp/latte']);
+            $this->composer_json_file->write($this->composer_definition);
         }
     }
 }
