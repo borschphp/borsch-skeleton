@@ -18,38 +18,38 @@ class Installer
 
     private string $project_root;
     private JsonFile $composer_json_file;
-    /** @var array<string, string>  */
+    /**
+     * @var array{
+     *     require: array<string, string>,
+     *     require-dev: array<string, string>,
+     *     ...
+     * }
+     */
     private array $composer_definition;
-    private RootPackageInterface $composer_root_package;
-    /** @var Link[] */
-    private array $composer_root_requires;
-    /** @var Link[] */
-    private array $composer_root_dev_requires;
-
     private string $installation_type;
 
-    public function __construct(private IOInterface $io, private Composer $composer)
+    public function __construct(private IOInterface $io)
     {
         $composer_file = Factory::getComposerFile();
 
-        $this->project_root = $project_root ?? realpath(dirname($composer_file));
+        $this->project_root = realpath(dirname($composer_file));
         $this->project_root = rtrim($this->project_root, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 
         $this->composer_json_file = new JsonFile($composer_file);
         $this->composer_definition = $this->composer_json_file->read();
-        $this->composer_root_package = $this->composer->getPackage();
-        $this->composer_root_requires = $this->composer_root_package->getRequires();
-        $this->composer_root_dev_requires = $this->composer_root_package->getDevRequires();
     }
 
     public static function install(Event $event): void
     {
-        $installer = new self($event->getIO(), $event->getComposer());
+        $installer = new self($event->getIO());
 
         $installer->io->write('<info>Setting up optional packages</info>');
 
         $installer->installation_type = $installer->getInstallationType();
         $installer->setupApplication();
+        $installer->cleanup();
+
+        $installer->io->write('<info>Installation completed</info>');
     }
 
     private function getInstallationType(): string
@@ -92,5 +92,16 @@ class Installer
             unset($this->composer_definition['require']['borschphp/latte']);
             $this->composer_json_file->write($this->composer_definition);
         }
+    }
+
+    private function cleanup(): void
+    {
+        $this->io->write('<info>Cleaning up</info>');
+        unset($this->composer_definition['require-dev']['composer/composer']);
+        $this->composer_json_file->write($this->composer_definition);
+        unlink($this->project_root.'src/Package/Installer.php');
+        unlink($this->project_root.'src/Package/Sources/container.php');
+        rmdir($this->project_root.'src/Package/Sources');
+        rmdir($this->project_root.'src/Package');
     }
 }
