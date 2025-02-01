@@ -1,7 +1,5 @@
 <?php
 
-use App\Handler\PeoplesHandler;
-use App\Repository\PeopleRepositoryInterface;
 use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
 
 return static function(Container $container): void {
@@ -9,18 +7,11 @@ return static function(Container $container): void {
 
         public function provides(string $id): bool
         {
-            return in_array($id, [
-                PeoplesHandler::class
-            ]);
+            return in_array($id, []);
         }
 
         public function register(): void
         {
-            $this
-                ->getContainer()
-                ->add(PeoplesHandler::class)
-                ->addArgument(PDO::class)
-                ->addArgument(PeopleRepositoryInterface::class);
         }
     });
 };

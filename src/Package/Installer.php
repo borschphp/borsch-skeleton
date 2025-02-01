@@ -2,12 +2,9 @@
 
 namespace App\Package;
 
-use Composer\Composer;
 use Composer\Factory;
 use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
-use Composer\Package\Link;
-use Composer\Package\RootPackageInterface;
 use Composer\Script\Event;
 
 class Installer
