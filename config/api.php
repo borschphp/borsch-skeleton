@@ -1,7 +1,8 @@
 <?php
 
-use App\Handler\{HealthCheckHandler};
+use App\Handler\{AlbumHandler, HealthCheckHandler};
 use Borsch\Application\Application;
+use Borsch\Application\Server\HttpMethods;
 
 /**
  * @param Application $app
@@ -9,6 +10,8 @@ use Borsch\Application\Application;
  */
 return static function(Application $app): void {
     $app->group('/api', function (Application $app) {
+        $app->any('/albums[/{id:\d+}]', AlbumHandler::class, 'albums');
+
         // Health checks
         $app->get('/healthcheck', HealthCheckHandler::class, 'healthcheck');
     });
