@@ -42,7 +42,7 @@ return static function(Application $app): void {
 
     // Middleware can be attached to specific paths, allowing you to mix and match
     // applications under a common domain.
-    $app->pipe('/api/peoples', [
+    $app->pipe('/api', [
         BodyParserMiddleware::class,
         UploadedFilesParserMiddleware::class
     ]);

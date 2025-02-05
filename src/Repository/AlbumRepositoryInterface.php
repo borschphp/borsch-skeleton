@@ -14,8 +14,10 @@ interface AlbumRepositoryInterface
 
     public function find(int $id): ?Album;
 
-    public function create(array $data): bool;
+    /** @param array{title: string, artist_id: int} $data */
+    public function create(array $data): int;
 
+    /** @param array{title?: string, artist_id?: int} $data */
     public function update(int $id, array $data): bool;
 
     public function delete(int $id): bool;

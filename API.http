@@ -1,0 +1,31 @@
+﻿# Dont forget to run `composer serve` before sending requests
+
+@base_url = http://localhost:8080
+
+### GET request to fetch all albums
+GET {{base_url}}/api/albums
+
+### GET request to fetch album by id
+GET {{base_url}}/api/albums/1
+
+### POST request to create a new album for AC/DC (with an error in the album title)
+POST {{base_url}}/api/albums
+Content-Type: application/json
+
+{
+  "title": "Back in Back",
+  "artist_id": 1
+}
+
+> {% client.global.set("new_album_id", response.body.id); %}
+
+### PUT request to update an album (fix album title)
+PUT {{base_url}}/api/albums/{{new_album_id}}
+Content-Type: application/json
+
+{
+  "title": "Back in Black"
+}
+
+### DELETE request to delete an album
+DELETE {{base_url}}/api/albums/{{new_album_id}}
