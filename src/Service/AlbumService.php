@@ -2,8 +2,9 @@
 
 namespace App\Service;
 
-use App\Model\Album;
+use App\Model\Artist;
 use App\Repository\AlbumRepository;
+use InvalidArgumentException;
 use RuntimeException;
 
 readonly class AlbumService
@@ -13,13 +14,13 @@ readonly class AlbumService
         private AlbumRepository $repository
     ) {}
 
-    /** @return Album[] */
+    /** @return Artist[] */
     public function all(): array
     {
         return $this->repository->all();
     }
 
-    public function find(int $id): ?Album
+    public function find(int $id): ?Artist
     {
         $album = $this->repository->find($id);
         if ($album === null) {
@@ -30,8 +31,12 @@ readonly class AlbumService
     }
 
     /** @param array{title: string, artist_id: int} $data */
-    public function create(array $data): Album
+    public function create(array $data): Artist
     {
+        if (!isset($data['title'], $data['artist_id'])) {
+            throw new InvalidArgumentException('Missing data, "title" and "artist_id" fields are required');
+        }
+
         $id = $this->repository->create($data);
         if ($id === 0) {
             throw new RuntimeException('Album could not be created', 500);
@@ -41,8 +46,12 @@ readonly class AlbumService
     }
 
     /** @param array{title?: string, artist_id?: int} $data */
-    public function update(int $id, array $data): Album
+    public function update(int $id, array $data): Artist
     {
+        if (!isset($data['title']) && !isset($data['artist_id'])) {
+            throw new InvalidArgumentException('Missing data, "title" and/or "artist_id" fields are required');
+        }
+
         $album = $this->repository->find($id);
         if ($album === null) {
             throw new RuntimeException('Album does not exist', 404);

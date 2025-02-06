@@ -15,7 +15,7 @@ class AlbumHandler implements RequestHandlerInterface
 {
 
     public function __construct(
-        private AlbumService $service
+        private readonly AlbumService $service
     ) {}
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -28,7 +28,7 @@ class AlbumHandler implements RequestHandlerInterface
             'POST' => $this->createAlbum($body),
             'PUT', 'PATCH' => $this->updateAlbum($id, $body),
             'DELETE' => $this->deleteAlbum($id),
-            default => new EmptyResponse(405),
+            default => new EmptyResponse(405)
         };
     }
 

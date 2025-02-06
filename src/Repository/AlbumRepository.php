@@ -2,28 +2,28 @@
 
 namespace App\Repository;
 
-use App\Model\Album;
+use App\Model\Artist;
 use InvalidArgumentException;
 use PDO;
 use RuntimeException;
 
-class AlbumRepository implements AlbumRepositoryInterface
+readonly class AlbumRepository implements AlbumRepositoryInterface
 {
 
     public function __construct(
         private PDO $pdo
     ) {}
 
-    /** @return Album[] */
+    /** @return Artist[] */
     public function all(): array
     {
         return $this
             ->pdo
             ->query('SELECT AlbumId AS id, Title AS title, ArtistId as artist_id FROM albums')
-            ->fetchAll(PDO::FETCH_CLASS, Album::class);
+            ->fetchAll(PDO::FETCH_CLASS, Artist::class);
     }
 
-    public function find(int $id): ?Album
+    public function find(int $id): ?Artist
     {
         $stmt = $this
             ->pdo
@@ -31,15 +31,11 @@ class AlbumRepository implements AlbumRepositoryInterface
 
         $stmt->execute([$id]);
 
-        return $stmt->fetchObject(Album::class) ?: null;
+        return $stmt->fetchObject(Artist::class) ?: null;
     }
 
     public function create(array $data): int
     {
-        if (!isset($data['title'], $data['artist_id'])) {
-            throw new InvalidArgumentException('Missing data, "title" and "artist_id" fields are required');
-        }
-
         $stmt = $this
             ->pdo
             ->prepare('INSERT INTO albums (Title, ArtistId) VALUES (?, ?)');
