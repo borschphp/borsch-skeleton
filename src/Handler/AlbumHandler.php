@@ -4,6 +4,7 @@ namespace App\Handler;
 
 use App\Service\AlbumService;
 use Laminas\Diactoros\Response\{EmptyResponse, JsonResponse};
+use OpenApi\Attributes as OA;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -32,6 +33,39 @@ class AlbumHandler implements RequestHandlerInterface
         };
     }
 
+    #[OA\Get(
+        path: '/albums',
+        tags: ['Albums'],
+        responses: [
+            new OA\Response(
+                response: '200',
+                description: 'Get all albums',
+                content: new OA\JsonContent(type: 'array', items: new OA\Items(ref: '#/components/schemas/Album'))
+            ),
+            new OA\Response(response: '500', description: 'Internal server error')
+        ],
+    )]
+    #[OA\Get(
+        path: '/albums/{id}',
+        tags: ['Albums'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                description: 'Album ID to retrieve',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer', format: 'int32')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: '200',
+                description: 'Get a specific album',
+                content: new OA\JsonContent(ref: '#/components/schemas/Album')
+            ),
+            new OA\Response(response: '500', description: 'Internal server error')
+        ]
+    )]
     private function getAlbums(?int $id = null): ResponseInterface
     {
         return new JsonResponse(

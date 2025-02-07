@@ -1,6 +1,6 @@
 <?php
 
-use App\Handler\{AlbumHandler, ArtistHandler, HealthCheckHandler};
+use App\Handler\{AlbumHandler, ArtistHandler, HealthCheckHandler, OpenApiHandler};
 use Borsch\Application\Application;
 
 /**
@@ -9,6 +9,10 @@ use Borsch\Application\Application;
  */
 return static function(Application $app): void {
     $app->group('/api', function (Application $app) {
+        if (!isProduction()) {
+            $app->get('/openapi', OpenApiHandler::class, 'openapi');
+        }
+
         $app->any('/albums[/{id:\d+}]', AlbumHandler::class, 'albums');
         $app->any('/artists[/{id:\d+}]', ArtistHandler::class, 'artists');
 

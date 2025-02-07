@@ -2,10 +2,13 @@
 
 namespace App\Model;
 
+use OpenApi\Attributes as OA;
+
+#[OA\Schema]
 class Album
 {
 
-    public int $id;
-    public string $title;
-    public int $artist_id;
+    #[OA\Property] public int $id;
+    #[OA\Property] public string $title;
+    #[OA\Property] public int $artist_id;
 }

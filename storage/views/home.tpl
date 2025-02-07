@@ -43,6 +43,23 @@
                                     Documentation
                                 </a>
                             </div>
+                            <div class="border-gray border-t-2 pt-8 px-8">
+                                <p>Check out the API:</p>
+                                <ul>
+                                    <li>
+                                        <a href="/api/albums" target="_blank" class="text-blue-600">/api/albums</a>
+                                    </li>
+                                    <li>
+                                        <a href="/api/albums/1" target="_blank" class="text-blue-600">/api/albums/1</a>
+                                    </li>
+                                    <li>
+                                        <a href="/api/artists" target="_blank" class="text-blue-600">/api/artists</a>
+                                    </li>
+                                    <li>
+                                        <a href="/api/artists/1" target="_blank" class="text-blue-600">/api/artists/1</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
