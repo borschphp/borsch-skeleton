@@ -8,7 +8,12 @@ use OpenApi\Attributes as OA;
 class Album
 {
 
-    #[OA\Property] public int $id;
-    #[OA\Property] public string $title;
-    #[OA\Property] public int $artist_id;
+    #[OA\Property(example: 42, nullable: false)]
+    public int $id;
+
+    #[OA\Property(example: 'Minha História', nullable: false)]
+    public string $title;
+
+    #[OA\Property(example: 57, nullable: false)]
+    public int $artist_id;
 }

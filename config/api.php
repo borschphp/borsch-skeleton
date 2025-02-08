@@ -10,7 +10,7 @@ use Borsch\Application\Application;
 return static function(Application $app): void {
     $app->group('/api', function (Application $app) {
         if (!isProduction()) {
-            $app->get('/openapi', OpenApiHandler::class, 'openapi');
+            $app->get('/openapi[.{format:json|yml|yaml}]', OpenApiHandler::class, 'openapi');
         }
 
         $app->any('/albums[/{id:\d+}]', AlbumHandler::class, 'albums');

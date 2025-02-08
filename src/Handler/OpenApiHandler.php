@@ -20,12 +20,19 @@ class OpenApiHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $format = $request->getAttribute('format', 'yaml');
+        $openapi = Generator::scan([__ROOT_DIR__.'/src']);
+        $definition = match ($format) {
+            'json' => $openapi->toJson(),
+            default => $openapi->toYaml(),
+        };
+
         $stream_factory  = new StreamFactory();
 
         return new Response(
-            $stream_factory->createStream(Generator::scan([__ROOT_DIR__.'/src'])->toYaml()),
+            $stream_factory->createStream($definition),
             200,
-            ['Content-Type' => 'text/yaml']
+            ['Content-Type' => 'text/'.$format]
         );
     }
 }

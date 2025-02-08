@@ -53,22 +53,6 @@ php -S 0.0.0.0:8080 -t ./public/ ./public/server.php
 composer serve
 ```  
 
-### Docker Compose
-
-Or you can use `docker-compose` to run the app with docker :  
-
-```bash
-docker-compose up -d
-```
-
-### Lando
-
-Or you can also use [lando](https://lando.dev/) to run the app with docker :  
-
-```bash
-lando start
-```
-
 ### FrankenPHP
 
 You can spin up a [FrankenPHP](https://frankenphp.dev/docs/worker/) docker container of the app with :
