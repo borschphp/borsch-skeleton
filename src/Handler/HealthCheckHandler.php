@@ -10,7 +10,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  * Class HealthCheckHandler
  * @package App\Handler
  */
-class HealthCheckHandler implements RequestHandlerInterface
+readonly class HealthCheckHandler implements RequestHandlerInterface
 {
 
     /**

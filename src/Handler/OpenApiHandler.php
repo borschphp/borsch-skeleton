@@ -15,7 +15,7 @@ use Psr\Http\Server\RequestHandlerInterface;
     contact: new OA\Contact('John Doe', email: 'john.doe@example.com'),
 )]
 #[OA\Server(url: 'http://localhost:8080/api')]
-class OpenApiHandler implements RequestHandlerInterface
+readonly class OpenApiHandler implements RequestHandlerInterface
 {
 
     public function handle(ServerRequestInterface $request): ResponseInterface

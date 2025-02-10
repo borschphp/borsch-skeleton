@@ -11,7 +11,7 @@ use Psr\Http\{Message\ResponseInterface, Message\ServerRequestInterface, Server\
  * Class HomeHandler
  * @package App\Handler
  */
-class HomeHandler implements RequestHandlerInterface
+readonly class HomeHandler implements RequestHandlerInterface
 {
 
     /**
