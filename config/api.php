@@ -1,6 +1,6 @@
 <?php
 
-use App\Handler\{AlbumHandler, ArtistHandler, HealthCheckHandler, OpenApiHandler};
+use App\Handler\{AlbumHandler, ArtistHandler, HealthCheckHandler, OpenApiHandler, SwaggerHandler};
 use Borsch\Application\Application;
 
 /**
@@ -10,7 +10,10 @@ use Borsch\Application\Application;
 return static function(Application $app): void {
     $app->group('/api', function (Application $app) {
         if (!isProduction()) {
+            // Swagger/Redoc
             $app->get('/openapi[.{format:json|yml|yaml}]', OpenApiHandler::class, 'openapi');
+            $app->get('/swagger', SwaggerHandler::class, 'swagger');
+            $app->get('/redoc', SwaggerHandler::class, 'redoc');
         }
 
         $app->any('/albums[/{id:\d+}]', AlbumHandler::class, 'albums');

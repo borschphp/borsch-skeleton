@@ -89,6 +89,7 @@ readonly class AlbumHandler implements RequestHandlerInterface
         );
     }
 
+    /** @param array{"title": string, "artist_id": int} $body */
     #[OA\Post(
         path: '/albums',
         description: 'Create a new album (there is no check on the `artist_id` existence)',
@@ -113,7 +114,6 @@ readonly class AlbumHandler implements RequestHandlerInterface
             new OA\Response(response: '500', description: 'Internal server error')
         ]
     )]
-    /** @param array{title: string, artist_id: int} $body */
     private function createAlbum(array $body): ResponseInterface
     {
         $new_album = $this->service->create($body);
@@ -121,6 +121,7 @@ readonly class AlbumHandler implements RequestHandlerInterface
         return new JsonResponse($new_album, 201);
     }
 
+    /** @param array{title?: string, artist_id?: int} $body */
     #[OA\Put(
         path: '/albums/{id}',
         description: 'Update an album by ID',
@@ -156,7 +157,6 @@ readonly class AlbumHandler implements RequestHandlerInterface
             new OA\Response(response: '500', description: 'Internal server error')
         ]
     )]
-    /** @param array{title?: string, artist_id?: int} $body */
     private function updateAlbum(int $id, array $body): ResponseInterface
     {
         $updated_album = $this->service->update($id, $body);

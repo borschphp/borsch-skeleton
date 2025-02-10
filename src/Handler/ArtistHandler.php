@@ -89,6 +89,7 @@ readonly class ArtistHandler implements RequestHandlerInterface
         );
     }
 
+    /** @param array{name: string} $body */
     #[OA\Post(
         path: '/artists',
         description: 'Create a new artist',
@@ -110,7 +111,6 @@ readonly class ArtistHandler implements RequestHandlerInterface
             new OA\Response(response: '500', description: 'Internal server error')
         ]
     )]
-    /** @param array{name: string} $body */
     private function createArtist(array $body): ResponseInterface
     {
         $new_artist = $this->service->create($body);
@@ -118,6 +118,7 @@ readonly class ArtistHandler implements RequestHandlerInterface
         return new JsonResponse($new_artist, 201);
     }
 
+    /** @param array{name: string} $body */
     #[OA\Put(
         path: '/artists/{id}',
         description: 'Update an artist',
@@ -150,7 +151,6 @@ readonly class ArtistHandler implements RequestHandlerInterface
             new OA\Response(response: '500', description: 'Internal server error')
         ]
     )]
-    /** @param array{name: string} $body */
     private function updateArtist(int $id, array $body): ResponseInterface
     {
         $updated_artist = $this->service->update($id, $body);
