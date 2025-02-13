@@ -7,7 +7,7 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
-readonly class SwaggerHandler implements RequestHandlerInterface
+readonly class RedocHandler implements RequestHandlerInterface
 {
 
     public function __construct(
