@@ -8,7 +8,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="icon" type="image/png" href="/images/logo.png" />
     </head>
-    <body class="bg-purple-100">
+    <body class="bg-purple-50">
         <div class="grid h-screen place-items-center">
             <div>
                 <img src="/images/logo.png"  class="h-48 mx-auto" alt="Logo" />
