@@ -76,7 +76,10 @@ class Installer
     {
         if ($this->installation_type === self::INSTALL_MINIMAL) {
             $this->io->write('<info>Removing front handlers</info>');
+
             unlink($this->project_root.'src/Handler/HomeHandler.php');
+            copy($this->project_root.'src/Package/Sources/routes.php', $this->project_root.'config/routes.php');
+
             $this->io->write('<info>Removing templates files and configuration</info>');
             unlink($this->project_root.'config/containers/template.container.php');
             copy($this->project_root.'src/Package/Sources/container.php', $this->project_root.'config/container.php');
@@ -84,6 +87,7 @@ class Installer
             unlink($this->project_root.'storage/views/500.tpl');
             unlink($this->project_root.'storage/views/home.tpl');
             rmdir($this->project_root.'storage/views');
+
             $this->io->write('<info>Removing latte from composer.json</info>');
             unset($this->composer_definition['require']['borschphp/latte']);
             $this->composer_json_file->write($this->composer_definition);
