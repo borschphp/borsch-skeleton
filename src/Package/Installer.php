@@ -101,6 +101,7 @@ class Installer
         $this->composer_json_file->write($this->composer_definition);
         unlink($this->project_root.'src/Package/Installer.php');
         unlink($this->project_root.'src/Package/Sources/container.php');
+        unlink($this->project_root.'src/Package/Sources/routes.php');
         rmdir($this->project_root.'src/Package/Sources');
         rmdir($this->project_root.'src/Package');
     }
