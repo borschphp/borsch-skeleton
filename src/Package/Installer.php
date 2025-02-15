@@ -80,7 +80,6 @@ class Installer
             $this->io->write('<info>Removing templates files and configuration</info>');
             unlink($this->project_root.'config/containers/template.container.php');
             copy($this->project_root.'src/Package/Sources/container.php', $this->project_root.'config/container.php');
-            rmdir($this->project_root.'storage/cache/views');
             unlink($this->project_root.'storage/views/404.tpl');
             unlink($this->project_root.'storage/views/500.tpl');
             unlink($this->project_root.'storage/views/home.tpl');
