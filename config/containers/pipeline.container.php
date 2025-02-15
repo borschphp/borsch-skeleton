@@ -44,15 +44,7 @@ return static function(Container $container): void {
                 ->add(NotFoundHandlerMiddleware::class)
                 ->addArgument(static function (ServerRequestInterface $request): ResponseInterface {
                     if (str_starts_with($request->getUri()->getPath(), '/api')) {
-                        return new JsonResponse(
-                            [
-                                'type' => 'https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4',
-                                'title' => 'Not Found',
-                                'status' => 404,
-                                'instance' => $request->getUri()->getPath()
-                            ],
-                            404
-                        );
+                        throw new RuntimeException('Not found', 404);
                     }
 
                     return new HtmlResponse(
