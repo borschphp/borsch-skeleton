@@ -31,13 +31,13 @@
     "laminas/laminas-diactoros": "^3",
     "monolog/monolog": "^2 || ^3",
     "vlucas/phpdotenv": "^v5.1",
-    "league/container": "^4"
+    "league/container": "^4",
+    "zircote/swagger-php": "^5.0"
   },
   "require-dev": {
     "pestphp/pest": "^3.0",
     "phpstan/phpstan": "^2.0",
-    "composer/composer": "^2.8",
-    "zircote/swagger-php": "^5.0"
+    "composer/composer": "^2.8"
   },
   "autoload": {
     "psr-4": {
