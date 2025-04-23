@@ -1,0 +1,58 @@
+﻿# Dont forget to run `composer serve` before sending requests
+
+@base_url = http://localhost:8080
+
+### GET request to fetch all artists
+GET {{base_url}}/api/artists
+
+### GET request to fetch all albums
+GET {{base_url}}/api/albums
+
+### GET request to fetch artist by id
+GET {{base_url}}/api/artists/1
+
+### GET request to fetch album by id
+GET {{base_url}}/api/albums/1
+
+### POST request to create a new artist
+POST {{base_url}}/api/artists
+Content-Type: application/json
+
+{
+  "name": "The Week-end"
+}
+
+> {% client.global.set("new_artist_id", response.body.id); %}
+
+### PUT request to update an artist
+PUT {{base_url}}/api/artists/{{new_artist_id}}
+Content-Type: application/json
+
+{
+  "name": "The Weeknd"
+}
+
+### POST request to create a new album
+POST {{base_url}}/api/albums
+Content-Type: application/json
+
+{
+  "title": "Hurry Up Two More Rows",
+  "artist_id": {{new_artist_id}}
+}
+
+> {% client.global.set("new_album_id", response.body.id); %}
+
+### PUT request to update an album (fix album title)
+PUT {{base_url}}/api/albums/{{new_album_id}}
+Content-Type: application/json
+
+{
+  "title": "Hurry Up Tomorrow"
+}
+
+### DELETE request to delete an album
+DELETE {{base_url}}/api/albums/{{new_album_id}}
+
+### DELETE request to delete an artist
+DELETE {{base_url}}/api/artists/{{new_artist_id}}

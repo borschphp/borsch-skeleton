@@ -1,8 +1,17 @@
 <?php
 
-use App\Handler\PeoplesHandler;
-use Borsch\Container\Container;
+use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
 
 return static function(Container $container): void {
-    $container->set(PeoplesHandler::class);
+    $container->addServiceProvider(new class extends AbstractServiceProvider {
+
+        public function provides(string $id): bool
+        {
+            return in_array($id, []);
+        }
+
+        public function register(): void
+        {
+        }
+    });
 };

@@ -1,11 +1,57 @@
 <?php
 
 use App\Listener\MonologListener;
-use App\Middleware\ErrorHandlerMiddleware;
-use Borsch\Container\Container;
+use Borsch\Formatter\{FormatterInterface, HtmlFormatter, JsonFormatter};
+use Borsch\Middleware\{ErrorHandlerMiddleware, NotFoundHandlerMiddleware};
+use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
+use Laminas\Diactoros\Response\{HtmlResponse, JsonResponse};
+use Psr\Http\Message\{RequestInterface, ResponseInterface, ServerRequestInterface};
 
 return static function(Container $container): void {
-    $container
-        ->set(ErrorHandlerMiddleware::class)
-        ->addMethod('addListener', [$container->get(MonologListener::class)]);
+    $container->addServiceProvider(new class extends AbstractServiceProvider {
+
+        public function provides(string $id): bool
+        {
+            return in_array($id, [
+                FormatterInterface::class,
+                ErrorHandlerMiddleware::class,
+                NotFoundHandlerMiddleware::class
+            ]);
+        }
+
+        public function register(): void
+        {
+            $this
+                ->getContainer()
+                ->add(FormatterInterface::class, fn(): FormatterInterface => new class implements FormatterInterface {
+
+                    public function format(ResponseInterface $response, Throwable $throwable, RequestInterface $request): ResponseInterface
+                    {
+                        $formatter = str_starts_with($request->getUri()->getPath(), '/api') ? new JsonFormatter() : new HtmlFormatter(isProduction());
+
+                        return $formatter->format($response, $throwable, $request);
+                    }
+                });
+
+            $this
+                ->getContainer()
+                ->add(ErrorHandlerMiddleware::class)
+                ->addArgument($this->getContainer()->get(FormatterInterface::class))
+                ->addArgument([$this->getContainer()->get(MonologListener::class)]);
+
+            $this
+                ->getContainer()
+                ->add(NotFoundHandlerMiddleware::class)
+                ->addArgument(static function (ServerRequestInterface $request): ResponseInterface {
+                    if (str_starts_with($request->getUri()->getPath(), '/api')) {
+                        throw new RuntimeException('Not found', 404);
+                    }
+
+                    return new HtmlResponse(
+                        '<h1>404 Not Found</h1>',
+                        404
+                    );
+                });
+        }
+    });
 };

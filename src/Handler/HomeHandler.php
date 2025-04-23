@@ -11,7 +11,7 @@ use Psr\Http\{Message\ResponseInterface, Message\ServerRequestInterface, Server\
  * Class HomeHandler
  * @package App\Handler
  */
-class HomeHandler implements RequestHandlerInterface
+readonly class HomeHandler implements RequestHandlerInterface
 {
 
     /**
@@ -30,8 +30,7 @@ class HomeHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->engine->assign([
-            'name' => ($request->getQueryParams()['name'] ?? $request->getHeaderLine('X-Name')) ?: 'World',
-            'url' => $this->router->generateUri('peoples')
+            'name' => ($request->getQueryParams()['name'] ?? $request->getHeaderLine('X-Name')) ?: 'World'
         ]);
 
         return new HtmlResponse($this->engine->render('home.tpl'));

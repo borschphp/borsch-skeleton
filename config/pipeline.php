@@ -1,7 +1,6 @@
 <?php
 
-use App\Middleware\{ApiKeyValidatorMiddleware,
-    BodyParserMiddleware,
+use Borsch\Middleware\{BodyParserMiddleware,
     ContentLengthMiddleware,
     DispatchMiddleware,
     ErrorHandlerMiddleware,
@@ -12,20 +11,19 @@ use App\Middleware\{ApiKeyValidatorMiddleware,
     RouteMiddleware,
     TrailingSlashMiddleware,
     UploadedFilesParserMiddleware};
-use Borsch\Application\App;
+use Borsch\Application\Application;
 
 /**
  * Set up your middleware pipeline.
  * It works as FIFO, place your middleware as necessary.
  *
- * @param App $app
+ * @param Application $app
  */
-return static function(App $app): void {
+return static function(Application $app): void {
     // This should be the first middleware to catch all Exceptions.
     $app->pipe(ErrorHandlerMiddleware::class);
 
     // Pipe more middleware here that you want to execute on every request.
-    // $app->pipe(\App\Middleware\LogMiddleware::class);
     $app->pipe(TrailingSlashMiddleware::class);
     $app->pipe(ContentLengthMiddleware::class);
 
@@ -44,8 +42,7 @@ return static function(App $app): void {
 
     // Middleware can be attached to specific paths, allowing you to mix and match
     // applications under a common domain.
-    $app->pipe('/api', ApiKeyValidatorMiddleware::class);
-    $app->pipe('/api/peoples', [
+    $app->pipe('/api', [
         BodyParserMiddleware::class,
         UploadedFilesParserMiddleware::class
     ]);

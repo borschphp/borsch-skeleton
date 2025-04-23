@@ -1,8 +1,11 @@
 <?php
 
-use Borsch\Container\Container;
+use League\Container\{Container, ReflectionContainer};
 
 $container = new Container();
+
+$container->defaultToShared();
+$container->delegate(new ReflectionContainer(true));
 
 (require_once __DIR__.'/containers/app.container.php')($container);
 (require_once __DIR__.'/containers/logs.container.php')($container);
@@ -11,6 +14,5 @@ $container = new Container();
 (require_once __DIR__.'/containers/repositories.container.php')($container);
 (require_once __DIR__.'/containers/template.container.php')($container);
 (require_once __DIR__.'/containers/database.container.php')($container);
-(require_once __DIR__.'/containers/cache.container.php')($container);
 
 return $container;

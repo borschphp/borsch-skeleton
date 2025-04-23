@@ -1,14 +1,26 @@
 <?php
 
-use Borsch\Container\Container;
+use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
 
 return static function(Container $container): void {
-    $container->set(PDO::class, function () {
-        $pdo = new PDO('sqlite:'.storage_path('database.sqlite'));
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+    $container->addServiceProvider(new class extends AbstractServiceProvider {
 
-        return $pdo;
-    })->cache(true);
+        public function provides(string $id): bool
+        {
+            return in_array($id, [
+                PDO::class
+            ]);
+        }
+
+        public function register(): void
+        {
+            $this
+                ->getContainer()
+                ->add(PDO::class)
+                ->addArgument('sqlite:'.storage_path('database.sqlite'))
+                ->addMethodCall('setAttribute', [PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION])
+                ->addMethodCall('setAttribute', [PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC])
+                ->addMethodCall('setAttribute', [PDO::ATTR_EMULATE_PREPARES, false]);
+        }
+    });
 };
