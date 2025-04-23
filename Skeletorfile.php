@@ -37,7 +37,6 @@ return function (Skeletor $skeletor) {
                 'borschphp/latte' => null,
             ],
         ]);
-
     }
 
     $skeletor->outro('Installation complete');
