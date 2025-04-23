@@ -36,7 +36,8 @@
   },
   "require-dev": {
     "pestphp/pest": "^3.0",
-    "phpstan/phpstan": "^2.0"
+    "phpstan/phpstan": "^2.0",
+    "aniftyco/skeletor": "^0.1.1"
   },
   "autoload": {
     "psr-4": {
@@ -61,6 +62,7 @@
   "scripts": {
     "pre-install-cmd": "App\\Package\\Installer::install",
     "post-create-project-cmd": [
+      "NiftyCo\\Skeletor\\Runner::execute",
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
       "BORSCH_TEMP_KEYGEN=`openssl rand -base64 32`;sed -i \"s|APP_KEY=|APP_KEY=$BORSCH_TEMP_KEYGEN|g\" .env"
     ],
