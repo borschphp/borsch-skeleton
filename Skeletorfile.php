@@ -33,7 +33,12 @@ return function (Skeletor $skeletor) {
             $skeletor->removeFile('storage/views/404.tpl');
             $skeletor->removeFile('storage/views/500.tpl');
             $skeletor->removeFile('storage/views/home.tpl');
-            $skeletor->removeDirectory('storage/views');
+            // There is an issue with `Skeletor::removeDirectory(string $filename);` because it internally uses `rmdir`
+            // which has a parameter named `$path` and not `$filename`.
+            // Because of the use of `get_defined_vars()`, `rmdir` receives a parameter named `$filename` instead of
+            // `$path` and that generates an error.
+            // $skeletor->removeDirectory('storage/views');
+            @rmdir('storage/views');
 
             return true;
         }, 'Removed template files and configuration', 'Unable to completely remove template files and configuration');
