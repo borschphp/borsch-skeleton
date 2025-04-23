@@ -11,32 +11,42 @@ return function (Skeletor $skeletor) {
     ], 'FULL');
 
     if ($installation_type === 'MINIMAL') {
-        $skeletor->log('Removing front handlers');
-        $skeletor->removeFile('src/Handler/HomeHandler.php');
-        $skeletor->pregReplaceInFile(
-            '/\s\$app->[\s\S].+/',
-            '',
-            'config/routes.php'
-        );
+        $skeletor->spin('Removing front handlers', function () use ($skeletor) {
+            $skeletor->removeFile('src/Handler/HomeHandler.php');
+            $skeletor->pregReplaceInFile(
+                '/\s\$app->[\s\S].+/',
+                '',
+                'config/routes.php'
+            );
 
-        $skeletor->log('Removing template files and configuration');
-        $skeletor->removeFile('config/containers/template.container.php');
-        $skeletor->pregReplaceInFile(
-            '/\n[\s\S].+template[\s\S].+;/',
-            '',
-            'config/container.php'
-        );
-        $skeletor->removeFile('storage/views/404.tpl');
-        $skeletor->removeFile('storage/views/500.tpl');
-        $skeletor->removeFile('storage/views/home.tpl');
-        $skeletor->removeDirectory('storage/views');
+            return true;
+        }, 'Done successfully');
 
-        $skeletor->log('Removing latte/latte from composer.json');
-        $skeletor->updateComposerJson([
-            'require' => [
-                'borschphp/latte' => null,
-            ],
-        ]);
+
+        $skeletor->spin('Removing template files and configuration', function () use ($skeletor) {
+            $skeletor->removeFile('config/containers/template.container.php');
+            $skeletor->pregReplaceInFile(
+                '/\n[\s\S].+template[\s\S].+;/',
+                '',
+                'config/container.php'
+            );
+            $skeletor->removeFile('storage/views/404.tpl');
+            $skeletor->removeFile('storage/views/500.tpl');
+            $skeletor->removeFile('storage/views/home.tpl');
+            $skeletor->removeDirectory('storage/views');
+
+            return true;
+        }, 'Done successfully');
+
+        $skeletor->spin('Removing latte/latte from composer.json', function () use ($skeletor) {
+            $skeletor->updateComposerJson([
+                'require' => [
+                    'borschphp/latte' => null,
+                ],
+            ]);
+
+            return true;
+        }, 'Done successfully');
     }
 
     $skeletor->outro('Installation complete');
