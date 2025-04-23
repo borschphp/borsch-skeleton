@@ -57,7 +57,7 @@ return function (Skeletor $skeletor) {
             return true;
         }, 'Removing Latte template engine from composer.json', 'Unable to completely remove Latte template engine from composer.json');
 
-        $skeletor->spin('Creating environment file', function () use ($skeletor, $app_name) {)
+        $skeletor->spin('Creating environment file', function () use ($skeletor, $app_name) {
             if (!$skeletor->exists('.env')) {
                 copy('.env.example', '.env');
             }
