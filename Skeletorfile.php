@@ -20,7 +20,7 @@ return function (Skeletor $skeletor) {
             );
 
             return true;
-        }, 'Done successfully');
+        }, 'Removed front handlers', 'Unable to completely remove front handlers');
 
 
         $skeletor->spin('Removing template files and configuration', function () use ($skeletor) {
@@ -36,17 +36,19 @@ return function (Skeletor $skeletor) {
             $skeletor->removeDirectory('storage/views');
 
             return true;
-        }, 'Done successfully');
+        }, 'Removed template files and configuration', 'Unable to completely remove template files and configuration');
 
-        $skeletor->spin('Removing latte/latte from composer.json', function () use ($skeletor) {
-            $skeletor->updateComposerJson([
-                'require' => [
-                    'borschphp/latte' => null,
-                ],
-            ]);
+        $skeletor->spin('Removing Latte template engine from composer.json', function () use ($skeletor) {
+            $skeletor->pregReplaceInFile(
+                '/\n[\s].+"borschphp\/latte"[\s\S].+/',
+                '',
+                'composer.json'
+            );
+
+            $skeletor->exec(['composer', 'update']);
 
             return true;
-        }, 'Done successfully');
+        }, 'Removing Latte template engine from composer.json', 'Unable to completely remove Latte template engine from composer.json');
     }
 
     $skeletor->outro('Installation complete');
