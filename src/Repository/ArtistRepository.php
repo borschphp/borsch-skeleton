@@ -3,15 +3,21 @@
 namespace App\Repository;
 
 use App\Model\Artist;
+use Monolog\Logger;
 use PDO;
 use RuntimeException;
 
 readonly class ArtistRepository implements ArtistRepositoryInterface
 {
 
+    private Logger $logger;
+
     public function __construct(
-        private PDO $pdo
-    ) {}
+        private PDO $pdo,
+        Logger $logger
+    ) {
+        $this->logger = $logger->withName(__CLASS__);
+    }
 
     /** @return Artist[] */
     public function all(): array
@@ -40,6 +46,7 @@ readonly class ArtistRepository implements ArtistRepositoryInterface
             ->prepare('INSERT INTO artists (Name) VALUES (?)');
 
         if (!$stmt->execute([$data['name']])) {
+            $this->logger->error('An error occurred while trying to create an artist with data: {data}', ['{data}' => implode(', ', array_keys($data))]);
             throw new RuntimeException('Error creating artist', 500);
         }
 
@@ -49,6 +56,7 @@ readonly class ArtistRepository implements ArtistRepositoryInterface
     public function update(int $id, array $data): bool
     {
         if (!isset($data['name'])) {
+            $this->logger->error('No data provided to update Artist #{id}', ['{id}' => $id]);
             throw new RuntimeException('No fields to update', 400);
         }
 

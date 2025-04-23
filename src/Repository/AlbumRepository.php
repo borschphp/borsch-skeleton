@@ -4,15 +4,21 @@ namespace App\Repository;
 
 use App\Model\Artist;
 use InvalidArgumentException;
+use Monolog\Logger;
 use PDO;
 use RuntimeException;
 
 readonly class AlbumRepository implements AlbumRepositoryInterface
 {
 
+    private Logger $logger;
+
     public function __construct(
-        private PDO $pdo
-    ) {}
+        private PDO $pdo,
+        Logger $logger
+    ) {
+        $this->logger = $logger->withName(__CLASS__);
+    }
 
     /** @return Artist[] */
     public function all(): array
@@ -41,6 +47,7 @@ readonly class AlbumRepository implements AlbumRepositoryInterface
             ->prepare('INSERT INTO albums (Title, ArtistId) VALUES (?, ?)');
 
         if (!$stmt->execute([$data['title'], $data['artist_id']])) {
+            $this->logger->error('An error occurred while trying to create an album with data: {data}', ['{data}' => implode(', ', array_keys($data))]);
             throw new RuntimeException('Error creating album', 500);
         }
 
@@ -63,6 +70,7 @@ readonly class AlbumRepository implements AlbumRepositoryInterface
         }
 
         if (empty($fields)) {
+            $this->logger->error('No data provided to update Album #{id}', ['{id}' => $id]);
             throw new InvalidArgumentException('No data to update');
         }
 
