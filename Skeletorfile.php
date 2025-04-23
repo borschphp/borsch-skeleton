@@ -64,7 +64,7 @@ return function (Skeletor $skeletor) {
 
             $random_key = base64_encode(random_bytes(32));
 
-            $skeletor->replaceInFile('APP_NAME=Laravel', 'APP_NAME='.$app_name, '.env');
+            $skeletor->replaceInFile('APP_NAME=Borsch-Skeleton', 'APP_NAME='.$app_name, '.env');
             $skeletor->replaceInFile('APP_KEY=', 'APP_KEY='.$random_key, '.env');
 
             return true;
