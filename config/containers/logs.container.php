@@ -1,9 +1,9 @@
 <?php
 
 use Monolog\{Handler\StreamHandler, Level, Logger, Processor\PsrLogMessageProcessor};
-use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
+use League\Container\Container;
 
-return static function(Container $container): void {
+return static function (Container $container): void {
     $container->add(Logger::class, function (): Logger {
         $name = env('APP_NAME', 'App');
 

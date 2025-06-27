@@ -43,9 +43,14 @@ return static function(Container $container): void {
                     return $router;
                 });
 
-            $this->getContainer()->add(RequestHandlerInterface::class, RequestHandler::class);
+            $this
+                ->getContainer()
+                ->add(RequestHandlerInterface::class, RequestHandler::class);
 
-            $this->getContainer()->add(ServerRequestInterface::class, fn() => ServerRequestFactory::fromGlobals())->setShared(false);
+            $this
+                ->getContainer()
+                ->add(ServerRequestInterface::class, fn() => ServerRequestFactory::fromGlobals())
+                ->setShared(false);
         }
     });
 };
