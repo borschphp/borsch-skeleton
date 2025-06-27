@@ -4,7 +4,7 @@ use App\Listener\MonologListener;
 use Borsch\Formatter\{FormatterInterface, HtmlFormatter, JsonFormatter};
 use Borsch\Middleware\{ErrorHandlerMiddleware, NotFoundHandlerMiddleware};
 use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
-use Laminas\Diactoros\Response\{HtmlResponse, JsonResponse};
+use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\{RequestInterface, ResponseInterface, ServerRequestInterface};
 
 return static function(Container $container): void {
@@ -27,7 +27,9 @@ return static function(Container $container): void {
 
                     public function format(ResponseInterface $response, Throwable $throwable, RequestInterface $request): ResponseInterface
                     {
-                        $formatter = str_starts_with($request->getUri()->getPath(), '/api') ? new JsonFormatter() : new HtmlFormatter(isProduction());
+                        $formatter = str_starts_with($request->getUri()->getPath(), '/api') ?
+                            new JsonFormatter() :
+                            new HtmlFormatter(isProduction());
 
                         return $formatter->format($response, $throwable, $request);
                     }
