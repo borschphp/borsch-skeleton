@@ -5,6 +5,8 @@ use Borsch\Formatter\{FormatterInterface, HtmlFormatter, JsonFormatter};
 use Borsch\Middleware\{ErrorHandlerMiddleware, NotFoundHandlerMiddleware};
 use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
 use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\ResponseFactory;
+use ProblemDetails\ProblemDetailsMiddleware;
 use Psr\Http\Message\{RequestInterface, ResponseInterface, ServerRequestInterface};
 
 return static function(Container $container): void {
@@ -15,7 +17,8 @@ return static function(Container $container): void {
             return in_array($id, [
                 FormatterInterface::class,
                 ErrorHandlerMiddleware::class,
-                NotFoundHandlerMiddleware::class
+                NotFoundHandlerMiddleware::class,
+                ProblemDetailsMiddleware::class,
             ]);
         }
 
@@ -54,6 +57,11 @@ return static function(Container $container): void {
                         404
                     );
                 });
+
+            $this
+                ->getContainer()
+                ->add(ProblemDetailsMiddleware::class)
+                ->addArgument(new ResponseFactory());
         }
     });
 };
