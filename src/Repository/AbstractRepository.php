@@ -37,7 +37,7 @@ abstract readonly class AbstractRepository implements RepositoryInterface
      */
     public function find(int $id): ?array
     {
-        /** @var ResultSet $result */
+        /** @var ResultSet $results */
         $results = $this->table_gateway->select([static::ROW_IDENTIFIER => $id]);
 
         return $results->current();
