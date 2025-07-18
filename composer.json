@@ -33,7 +33,8 @@
     "vlucas/phpdotenv": "^v5.1",
     "league/container": "^4",
     "zircote/swagger-php": "^5.0",
-    "laminas/laminas-db": "^2.20"
+    "laminas/laminas-db": "^2.20",
+    "debuss-a/problem-details": "^1.0"
   },
   "require-dev": {
     "pestphp/pest": "^3.0",

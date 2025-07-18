@@ -5,6 +5,10 @@ use Borsch\Formatter\{FormatterInterface, HtmlFormatter, JsonFormatter};
 use Borsch\Middleware\{ErrorHandlerMiddleware, NotFoundHandlerMiddleware};
 use League\Container\{Container, ServiceProvider\AbstractServiceProvider};
 use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\ResponseFactory;
+use ProblemDetails\ProblemDetails;
+use ProblemDetails\ProblemDetailsException;
+use ProblemDetails\ProblemDetailsMiddleware;
 use Psr\Http\Message\{RequestInterface, ResponseInterface, ServerRequestInterface};
 
 return static function(Container $container): void {
@@ -15,7 +19,8 @@ return static function(Container $container): void {
             return in_array($id, [
                 FormatterInterface::class,
                 ErrorHandlerMiddleware::class,
-                NotFoundHandlerMiddleware::class
+                NotFoundHandlerMiddleware::class,
+                ProblemDetailsMiddleware::class,
             ]);
         }
 
@@ -46,7 +51,12 @@ return static function(Container $container): void {
                 ->add(NotFoundHandlerMiddleware::class)
                 ->addArgument(static function (ServerRequestInterface $request): ResponseInterface {
                     if (str_starts_with($request->getUri()->getPath(), '/api')) {
-                        throw new RuntimeException('Not found', 404);
+                        throw new ProblemDetailsException(new ProblemDetails(
+                            type: '://problem/not-found',
+                            title: 'Not found.',
+                            status: 404,
+                            detail: "The requested uri ({$request->getUri()->getPath()}) could not be find."
+                        ));
                     }
 
                     return new HtmlResponse(
@@ -54,6 +64,11 @@ return static function(Container $container): void {
                         404
                     );
                 });
+
+            $this
+                ->getContainer()
+                ->add(ProblemDetailsMiddleware::class)
+                ->addArgument(new ResponseFactory());
         }
     });
 };

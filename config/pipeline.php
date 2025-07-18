@@ -12,6 +12,7 @@ use Borsch\Middleware\{BodyParserMiddleware,
     TrailingSlashMiddleware,
     UploadedFilesParserMiddleware};
 use Borsch\Application\Application;
+use ProblemDetails\ProblemDetailsMiddleware;
 
 /**
  * Set up your middleware pipeline.
@@ -22,6 +23,9 @@ use Borsch\Application\Application;
 return static function(Application $app): void {
     // This should be the first middleware to catch all Exceptions.
     $app->pipe(ErrorHandlerMiddleware::class);
+
+    // This middleware will handle exceptions coming from API calls throwing a ProblemDetailsException.
+    $app->pipe(ProblemDetailsMiddleware::class);
 
     // Pipe more middleware here that you want to execute on every request.
     $app->pipe(TrailingSlashMiddleware::class);

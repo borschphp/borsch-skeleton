@@ -24,23 +24,17 @@ abstract readonly class AbstractRepository implements RepositoryInterface
 
     abstract protected function getTable(): string;
 
-    /**
-     * @return array<array<string, mixed>>
-     */
     public function all(): array
     {
         return iterator_to_array($this->table_gateway->select());
     }
 
-    /**
-     * @return array<string, mixed>|null
-     */
     public function find(int $id): ?array
     {
         /** @var ResultSet $results */
         $results = $this->table_gateway->select([static::ROW_IDENTIFIER => $id]);
 
-        return $results->current();
+        return (array)$results->current();
     }
 
     public function create(array $data): int
