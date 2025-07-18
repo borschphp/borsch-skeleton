@@ -37,7 +37,7 @@ jobs:
         run: composer config --no-plugins allow-plugins.pestphp/pest-plugin true
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+        run: composer install --prefer-dist --no-interaction --no-progress --ignore-platform-reqs
 
       - name: Copy environment file
         run: cp .env.example .env
