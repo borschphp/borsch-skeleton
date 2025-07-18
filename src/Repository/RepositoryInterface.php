@@ -2,15 +2,15 @@
 
 namespace App\Repository;
 
-use App\Model\Artist;
+use App\Model\Model;
 
-interface AlbumRepositoryInterface
+interface RepositoryInterface
 {
 
-    /** @return Artist[] */
+    /** @return Model[] */
     public function all(): array;
 
-    public function find(int $id): ?Artist;
+    public function find(int $id): ?array;
 
     /** @param array{title: string, artist_id: int} $data */
     public function create(array $data): int;
