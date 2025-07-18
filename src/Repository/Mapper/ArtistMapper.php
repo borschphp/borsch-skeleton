@@ -8,7 +8,8 @@ use App\Repository\ArtistRepository;
 class ArtistMapper
 {
 
-    public static function toArtist($object): Artist
+    /** @param iterable<string, mixed> $object */
+    public static function toArtist(iterable $object): Artist
     {
         $artist = new Artist();
         $artist->id = $object[ArtistRepository::ROW_IDENTIFIER] ?? null;

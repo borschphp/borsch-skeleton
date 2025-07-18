@@ -3,10 +3,8 @@
 namespace App\Service;
 
 use App\Model\Album;
-use App\Model\Artist;
 use App\Repository\AlbumRepository;
 use App\Repository\Mapper\AlbumMapper;
-use ArrayObject;
 use InvalidArgumentException;
 use Monolog\Logger;
 use RuntimeException;
@@ -27,7 +25,7 @@ readonly class AlbumService
     public function all(): array
     {
         return array_map(
-            fn(ArrayObject $album): Album => AlbumMapper::toAlbum($album),
+            fn(iterable $album): Album => AlbumMapper::toAlbum($album),
             $this->repository->all()
         );
     }

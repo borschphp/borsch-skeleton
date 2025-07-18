@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Model\Artist;
 use App\Repository\ArtistRepository;
 use App\Repository\Mapper\ArtistMapper;
-use ArrayObject;
 use InvalidArgumentException;
 use Monolog\Logger;
 use RuntimeException;
@@ -26,7 +25,7 @@ readonly class ArtistService
     public function all(): array
     {
         return array_map(
-            fn(ArrayObject $artist): Artist => ArtistMapper::toArtist($artist),
+            fn(iterable $artist): Artist => ArtistMapper::toArtist($artist),
             $this->repository->all()
         );
     }

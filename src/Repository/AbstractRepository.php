@@ -3,12 +3,10 @@
 namespace App\Repository;
 
 use Laminas\Db\Adapter\AdapterInterface;
+use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 use Monolog\Logger;
 
-/**
- * @template T
- */
 abstract readonly class AbstractRepository implements RepositoryInterface
 {
 
@@ -27,7 +25,7 @@ abstract readonly class AbstractRepository implements RepositoryInterface
     abstract protected function getTable(): string;
 
     /**
-     * @return T[]
+     * @return array<array<string, mixed>>
      */
     public function all(): array
     {
@@ -35,14 +33,14 @@ abstract readonly class AbstractRepository implements RepositoryInterface
     }
 
     /**
-     * @return T|null
+     * @return array<string, mixed>|null
      */
     public function find(int $id): ?array
     {
-        $rowset = $this->table_gateway->select([static::ROW_IDENTIFIER => $id]);
-        $row = (array)$rowset->current();
+        /** @var ResultSet $result */
+        $results = $this->table_gateway->select([static::ROW_IDENTIFIER => $id]);
 
-        return $row ?: null;
+        return $results->current();
     }
 
     public function create(array $data): int

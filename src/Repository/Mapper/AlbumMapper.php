@@ -8,7 +8,8 @@ use App\Repository\AlbumRepository;
 readonly class AlbumMapper
 {
 
-    public static function toAlbum($object): Album
+    /** @param iterable<string, mixed> $object */
+    public static function toAlbum(iterable $object): Album
     {
         $album = new Album();
         $album->id = $object[AlbumRepository::ROW_IDENTIFIER] ?? null;
