@@ -5,9 +5,9 @@ namespace App\Service;
 use App\Model\Album;
 use App\Repository\AlbumRepository;
 use App\Repository\Mapper\AlbumMapper;
-use InvalidArgumentException;
 use Monolog\Logger;
-use RuntimeException;
+use ProblemDetails\ProblemDetails;
+use ProblemDetails\ProblemDetailsException;
 
 readonly class AlbumService
 {
@@ -35,7 +35,13 @@ readonly class AlbumService
         $album = $this->repository->find($id);
         if ($album === null) {
             $this->logger->error('Album with ID #{id} not found', ['{id}' => $id]);
-            throw new RuntimeException('Album does not exist', 404);
+
+            throw new ProblemDetailsException(new ProblemDetails(
+                type: '://problem/not-found',
+                title: 'Album does not exist.',
+                status: 404,
+                detail: "The album with ID {$id} could not be found."
+            ));
         }
 
         return AlbumMapper::toAlbum($album);
@@ -46,13 +52,25 @@ readonly class AlbumService
     {
         if (!isset($data['title'], $data['artist_id'])) {
             $this->logger->error('Missing required data, unable to save Album, provided data: {data}', ['{data}' => implode(', ', array_keys($data))]);
-            throw new InvalidArgumentException('Missing data, "title" and "artist_id" fields are required');
+
+            throw new ProblemDetailsException(new ProblemDetails(
+                type: '://problem/missing-data',
+                title: 'Missing data.',
+                status: 400,
+                detail: 'Missing data, "title" and "artist_id" fields are required.'
+            ));
         }
 
         $id = $this->repository->create(['Title' => $data['title'], 'ArtistId' => $data['artist_id']]);
         if ($id === 0) {
             $this->logger->error('Unable to create album, provided data: {data}', ['{data}' => implode(', ', array_keys($data))]);
-            throw new RuntimeException('Album could not be created', 500);
+
+            throw new ProblemDetailsException(new ProblemDetails(
+                type: '://problem/unable-to-create-resource',
+                title: 'Album could not be created.',
+                status: 500,
+                detail: 'Unable to create the album at the moment, try again later.'
+            ));
         }
 
         return $this->find($id);
@@ -63,14 +81,17 @@ readonly class AlbumService
     {
         if (!isset($data['title']) && !isset($data['artist_id'])) {
             $this->logger->error('Missing required data, unable to update Album, provided data: {data}', ['{data}' => implode(', ', array_keys($data))]);
-            throw new InvalidArgumentException('Missing data, "title" and/or "artist_id" fields are required');
+
+            throw new ProblemDetailsException(new ProblemDetails(
+                type: '://problem/missing-data',
+                title: 'Missing data.',
+                status: 400,
+                detail: 'Missing data, "title" and "artist_id" fields are required.'
+            ));
         }
 
-        $album = $this->find($id);
-        if (!$album instanceof Album) {
-            $this->logger->error('Album with ID #{id} not found', ['{id}' => $id]);
-            throw new RuntimeException('Album does not exist', 404);
-        }
+        // Making sure it exists
+        $this->find($id);
 
         $data = array_filter([
             'Title' => $data['title'] ?? null,
@@ -79,7 +100,13 @@ readonly class AlbumService
 
         if (!$this->repository->update($id, $data)) {
             $this->logger->error('Album could not be updated with provided data: {data}', ['{data}' => implode(', ', array_keys($data))]);
-            throw new RuntimeException('Album could not be updated', 500);
+
+            throw new ProblemDetailsException(new ProblemDetails(
+                type: '://problem/not-updated',
+                title: 'Album could not be updated.',
+                status: 500,
+                detail: 'Unable to update the album at the moment, try again later.'
+            ));
         }
 
         return $this->find($id);
@@ -87,11 +114,8 @@ readonly class AlbumService
 
     public function delete(int $id): bool
     {
-        $album = $this->find($id);
-        if (!$album instanceof Album) {
-            $this->logger->error('Album with ID #{id} not found', ['{id}' => $id]);
-            throw new RuntimeException('Album does not exist', 404);
-        }
+        // Making sure it exists
+        $this->find($id);
 
         return $this->repository->delete($id);
     }
