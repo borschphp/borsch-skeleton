@@ -5,11 +5,8 @@ namespace App\Model;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema]
-class Album
+class Album extends Model
 {
-
-    #[OA\Property(example: 42, nullable: false)]
-    public int $id;
 
     #[OA\Property(example: 'Minha História', nullable: false)]
     public string $title;

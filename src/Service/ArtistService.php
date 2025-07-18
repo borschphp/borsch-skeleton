@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Model\Artist;
 use App\Repository\ArtistRepository;
+use App\Repository\Mapper\ArtistMapper;
 use InvalidArgumentException;
 use Monolog\Logger;
 use RuntimeException;
@@ -23,7 +24,10 @@ readonly class ArtistService
     /** @return Artist[] */
     public function all(): array
     {
-        return $this->repository->all();
+        return array_map(
+            fn(iterable $artist): Artist => ArtistMapper::toArtist($artist),
+            $this->repository->all()
+        );
     }
 
     public function find(int $id): ?Artist
@@ -34,7 +38,7 @@ readonly class ArtistService
             throw new RuntimeException('Artist does not exist', 404);
         }
 
-        return $artist;
+        return ArtistMapper::toArtist($artist);
     }
 
     /** @param array{name: string} $data */
@@ -45,13 +49,13 @@ readonly class ArtistService
             throw new InvalidArgumentException('Missing data, "name" field is required');
         }
 
-        $id = $this->repository->create($data);
+        $id = $this->repository->create(['Name' => $data['name']]);
         if ($id === 0) {
             $this->logger->error('Unable to create artist, provided data: {data}', ['data' => implode(', ', array_keys($data))]);
             throw new RuntimeException('Artist could not be created', 500);
         }
 
-        return $this->repository->find($id);
+        return $this->find($id);
     }
 
     /** @param array{name: string} $data */
@@ -62,8 +66,8 @@ readonly class ArtistService
             throw new InvalidArgumentException('Missing data, "name" field is required');
         }
 
-        $artist = $this->repository->find($id);
-        if ($artist === null) {
+        $artist = $this->find($id);
+        if (!$artist instanceof Artist) {
             $this->logger->error('Artist with ID #{id} not found', ['{id}' => $id]);
             throw new RuntimeException('Artist does not exist', 404);
         }
@@ -73,13 +77,13 @@ readonly class ArtistService
             throw new RuntimeException('Artist could not be updated', 500);
         }
 
-        return $this->repository->find($id);
+        return $this->find($id);
     }
 
     public function delete(int $id): bool
     {
-        $artist = $this->repository->find($id);
-        if ($artist === null) {
+        $artist = $this->find($id);
+        if (!$artist instanceof Artist) {
             $this->logger->error('Artist with ID #{id} not found', ['{id}' => $id]);
             throw new RuntimeException('Artist does not exist', 404);
         }
