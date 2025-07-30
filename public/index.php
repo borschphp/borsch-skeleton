@@ -3,6 +3,7 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 use Borsch\Application\ApplicationInterface;
+use Borsch\RequestHandler\RequestHandlerRunnerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -14,13 +15,16 @@ use Psr\Http\Message\ServerRequestInterface;
     /** @var ContainerInterface $container */
     $container = (require_once __DIR__.'/../config/container.php');
 
-    $app = $container->get(ApplicationInterface::class);
+    $runner = $container->get(RequestHandlerRunnerInterface::class);
+    $runner->run();
 
-    (require_once __DIR__.'/../config/pipeline.php')($app);
-    (require_once __DIR__.'/../config/routes.php')($app);
-    (require_once __DIR__.'/../config/api.php')($app);
+//    $app = $container->get(ApplicationInterface::class);
 
-    $request = $container->get(ServerRequestInterface::class);
+//    (require_once __DIR__.'/../config/pipeline.php')($app);
+//    (require_once __DIR__.'/../config/routes.php')($app);
+//    (require_once __DIR__.'/../config/api.php')($app);
 
-    $app->run($request);
+//    $request = $container->get(ServerRequestInterface::class);
+//
+//    $app->run($request);
 })();
