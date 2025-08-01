@@ -1,6 +1,5 @@
 {
   "name": "borschphp/borsch-skeleton",
-  "version": "3.0.0",
   "description": "A Borsch Framework skeleton application to kick start development.",
   "homepage": "https://github.com/borschphp/borsck-skeleton",
   "license": "MIT",
