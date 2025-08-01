@@ -1,77 +1,151 @@
 <?php
 
-use Borsch\Application\Factory\HandlerFactory;
-use Borsch\Application\Server\PipeMiddleware;
-use Borsch\Middleware\BodyParserMiddleware;
-use Borsch\Middleware\ContentLengthMiddleware;
-use Borsch\Middleware\DispatchMiddleware;
-use Borsch\Middleware\ErrorHandlerMiddleware;
-use Borsch\Middleware\ImplicitHeadMiddleware;
-use Borsch\Middleware\ImplicitOptionsMiddleware;
-use Borsch\Middleware\MethodNotAllowedMiddleware;
-use Borsch\Middleware\NotFoundHandlerMiddleware;
-use Borsch\Middleware\RouteMiddleware;
-use Borsch\Middleware\TrailingSlashMiddleware;
-use Borsch\Middleware\UploadedFilesParserMiddleware;
-use Borsch\RequestHandler\Emitter;
-use Borsch\RequestHandler\EmitterInterface;
-use Borsch\RequestHandler\RequestHandler;
-use Borsch\RequestHandler\RequestHandlerInterface;
-use Borsch\RequestHandler\RequestHandlerRunner;
-use Borsch\RequestHandler\RequestHandlerRunnerInterface;
-use League\Container\{Container, ReflectionContainer};
-use ProblemDetails\ProblemDetailsMiddleware;
+use Borsch\Container\Container;
+use Borsch\Latte\LatteRenderer;
+use Borsch\Template\TemplateRendererInterface;
+use Borsch\Formatter\{FormatterInterface, HtmlFormatter, JsonFormatter};
+use Borsch\Middleware\{BodyParserMiddleware,
+    ContentLengthMiddleware,
+    DispatchMiddleware,
+    ErrorHandlerMiddleware,
+    ImplicitHeadMiddleware,
+    ImplicitOptionsMiddleware,
+    MethodNotAllowedMiddleware,
+    NotFoundHandlerMiddleware,
+    RouteMiddleware,
+    TrailingSlashMiddleware,
+    UploadedFilesParserMiddleware};
+use Borsch\RequestHandler\{Emitter,
+    RequestHandler,
+    RequestHandlerInterface,
+    RequestHandlerRunner,
+    RequestHandlerRunnerInterface};
+use Borsch\Router\Contract\RouterInterface;
+use Borsch\Router\FastRouteRouter;
+use Borsch\Router\Loader\AttributeRouteLoader;
+use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\Adapter\AdapterInterface;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
+use Laminas\Diactoros\{Response\HtmlResponse, ResponseFactory, ServerRequestFactory};
+use ProblemDetails\{ProblemDetails, ProblemDetailsException, ProblemDetailsMiddleware};
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\{RequestInterface, ResponseFactoryInterface, ResponseInterface, ServerRequestInterface};
 
 $container = new Container();
+$container->setCacheByDefault(true);
 
-$container->defaultToShared();
-$container->delegate(new ReflectionContainer(true));
-
-$container->add(RequestHandlerInterface::class, function (ContainerInterface $container) {
-    $handler_factory = new HandlerFactory($container);
-
-    $handler = new RequestHandler();
-    $handler->middleware($container->get(ErrorHandlerMiddleware::class));
-    $handler->middleware($container->get(ProblemDetailsMiddleware::class));
-    $handler->middleware($container->get(TrailingSlashMiddleware::class));
-    $handler->middleware($container->get(ContentLengthMiddleware::class));
-    $handler->middleware($container->get(RouteMiddleware::class));
-    $handler->middleware($container->get(ImplicitHeadMiddleware::class));
-    $handler->middleware($container->get(ImplicitOptionsMiddleware::class));
-    $handler->middleware($container->get(MethodNotAllowedMiddleware::class));
-    $handler->middleware(new PipeMiddleware('/api', BodyParserMiddleware::class, $handler_factory));
-    $handler->middleware(new PipeMiddleware('/api', UploadedFilesParserMiddleware::class, $handler_factory));
-    $handler->middleware($container->get(DispatchMiddleware::class));
-    $handler->middleware($container->get(NotFoundHandlerMiddleware::class));
-
-    return $handler;
-})->addArgument($container);
-
-$container->add(EmitterInterface::class, Emitter::class);
-
-$container->add(RequestHandlerRunnerInterface::class, function (ContainerInterface $container) {
+$container->set(RequestHandlerRunnerInterface::class, static function (ContainerInterface $container) {
     return new RequestHandlerRunner(
         $container->get(RequestHandlerInterface::class),
-        $container->get(EmitterInterface::class),
+        new Emitter(),
         static fn() => $container->get(ServerRequestInterface::class),
-        static function(Throwable $e) use ($container) {
+        static function() use ($container) {
+            $engine = $container->get(TemplateRendererInterface::class);
             $response = ($container->get(ResponseFactoryInterface::class))->createResponse(500);
-            $response->getBody()->write(sprintf(
-                'An error occurred: %s',
-                $e->getMessage()
-            ));
+
+            $response->getBody()->write($engine->render('500.tpl'));
+
             return $response;
         }
     );
-})->addArgument($container);
+});
 
-(require_once __DIR__.'/containers/app.container.php')($container);
-(require_once __DIR__.'/containers/logs.container.php')($container);
-(require_once __DIR__.'/containers/pipeline.container.php')($container);
-(require_once __DIR__.'/containers/template.container.php')($container);
-(require_once __DIR__.'/containers/database.container.php')($container);
+$container->set(RequestHandlerInterface::class, static function (ContainerInterface $container) {
+    return (new RequestHandler())
+        ->middleware($container->get(ErrorHandlerMiddleware::class))
+        ->middleware($container->get(ProblemDetailsMiddleware::class))
+        ->middleware($container->get(TrailingSlashMiddleware::class))
+        ->middleware($container->get(ContentLengthMiddleware::class))
+        ->middleware($container->get(RouteMiddleware::class))
+        ->middleware($container->get(ImplicitHeadMiddleware::class))
+        ->middleware($container->get(ImplicitOptionsMiddleware::class))
+        ->middleware($container->get(MethodNotAllowedMiddleware::class))
+        ->middleware($container->get(BodyParserMiddleware::class))
+        ->middleware($container->get(UploadedFilesParserMiddleware::class))
+        ->middleware($container->get(DispatchMiddleware::class))
+        ->middleware($container->get(NotFoundHandlerMiddleware::class));
+});
+
+$container->set(ServerRequestInterface::class, static fn() => ServerRequestFactory::fromGlobals())->cache(false);
+
+$container->set(ResponseFactoryInterface::class, ResponseFactory::class);
+
+$container->set(
+    AttributeRouteLoader::class,
+    static fn(ContainerInterface $container) => (new AttributeRouteLoader([__ROOT_DIR__.'/src/Application'], $container))->load()
+);
+
+$container->set(RouterInterface::class, static function (AttributeRouteLoader $loader) {
+    $router = new FastRouteRouter();
+    if (isProduction()) {
+        $router->setCacheFile(cache_path('routes.cache.php'));
+    }
+
+    foreach ($loader->getRoutes() as $route) {
+        $router->addRoute($route);
+    }
+
+    return $router;
+});
+
+$container->set(NotFoundHandlerMiddleware::class, static function (TemplateRendererInterface $renderer) {
+    return new NotFoundHandlerMiddleware(static function (ServerRequestInterface $request) use ($renderer): ResponseInterface {
+        if (str_starts_with($request->getUri()->getPath(), '/api')) {
+            throw new ProblemDetailsException(new ProblemDetails(
+                type: '://problem/not-found',
+                title: 'Not found.',
+                status: 404,
+                detail: "The requested uri ({$request->getUri()->getPath()}) could not be found."
+            ));
+        }
+
+        return new HtmlResponse(
+            $renderer->render('404.tpl'),
+            404
+        );
+    });
+});
+
+$container->set(FormatterInterface::class, function () {
+    return new class implements FormatterInterface {
+
+        public function format(ResponseInterface $response, Throwable $throwable, RequestInterface $request): ResponseInterface
+        {
+            $formatter = str_starts_with($request->getUri()->getPath(), '/api') ?
+                new JsonFormatter() :
+                new HtmlFormatter(isProduction());
+
+            return $formatter->format($response, $throwable, $request);
+        }
+    };
+});
+
+$container->set(TemplateRendererInterface::class, fn() => new LatteRenderer(storage_path('views'), cache_path('views'), !isProduction()));
+
+$container->set(Logger::class, function (): Logger {
+    $name = env('APP_NAME', 'App');
+
+    $handlers = [
+        new StreamHandler(
+            logs_path(env('LOG_CHANNEL', 'app').'.log'),
+            Level::fromName(env('LOG_LEVEL', 'Debug'))
+        )
+    ];
+
+    $processors = [new PsrLogMessageProcessor(removeUsedContextFields: true)];
+    $datetime_zone = new DateTimeZone(env('TIMEZONE', 'UTC'));
+
+    return new Logger($name, $handlers, $processors, $datetime_zone);
+});
+
+$container
+    ->set(AdapterInterface::class, Adapter::class)
+    ->addParameter([
+        'driver' => 'Pdo_Sqlite',
+        'dsn' => 'sqlite:'.storage_path('database.sqlite')
+    ]);
 
 return $container;

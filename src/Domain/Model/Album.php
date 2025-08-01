@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace Domain\Model;
 
 use OpenApi\Attributes as OA;
 

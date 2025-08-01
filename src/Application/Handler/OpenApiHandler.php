@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Handler;
+namespace Application\Handler;
 
-use Laminas\Diactoros\Response;
 use OpenApi\{Attributes as OA, Generator};
+use Borsch\Router\Attribute\Controller;
+use Borsch\Router\Attribute\Get;
+use Laminas\Diactoros\Response;
 use Laminas\Diactoros\StreamFactory;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
@@ -15,9 +17,11 @@ use Psr\Http\Server\RequestHandlerInterface;
     contact: new OA\Contact('John Doe', email: 'john.doe@example.com'),
 )]
 #[OA\Server(url: 'http://localhost:8080/api')]
-readonly class OpenApiHandler implements RequestHandlerInterface
+#[Controller('/api')]
+class OpenApiHandler implements RequestHandlerInterface
 {
 
+    #[Get(path: '/openapi', name: 'openapi')]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $format = $request->getAttribute('format', 'yaml');

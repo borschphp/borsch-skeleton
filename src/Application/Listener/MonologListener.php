@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listener;
+namespace Application\Listener;
 
 use Borsch\Middleware\ErrorHandlerMiddleware;
 use ErrorException;

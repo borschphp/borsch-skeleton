@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Repository\Mapper;
+namespace Infrastructure\Mapper;
 
-use App\Model\Artist;
-use App\Repository\ArtistRepository;
+use Domain\Model\Artist;
+use Infrastructure\ArtistRepository;
 
-class ArtistMapper
+readonly class ArtistMapper implements MapperInterface
 {
 
     /** @param iterable<string, mixed> $object */
-    public static function toArtist(iterable $object): Artist
+    public function map(iterable $object): Artist
     {
         $artist = new Artist();
         $artist->id = $object[ArtistRepository::ROW_IDENTIFIER] ?? null;

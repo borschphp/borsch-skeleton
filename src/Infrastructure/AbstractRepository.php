@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Repository;
+namespace Infrastructure;
 
+use Domain\Model\Model;
+use Domain\RepositoryInterface;
+use Infrastructure\Mapper\MapperInterface;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
@@ -14,11 +17,14 @@ abstract readonly class AbstractRepository implements RepositoryInterface
 
     protected TableGateway $table_gateway;
 
+    protected MapperInterface $mapper;
+
     protected Logger $logger;
 
-    public function __construct(AdapterInterface $adapter, Logger $logger)
+    public function __construct(AdapterInterface $adapter, MapperInterface $mapper, Logger $logger)
     {
         $this->table_gateway = new TableGateway($this->getTable(), $adapter);
+        $this->mapper = $mapper;
         $this->logger = $logger->withName(__CLASS__);
     }
 
@@ -26,15 +32,20 @@ abstract readonly class AbstractRepository implements RepositoryInterface
 
     public function all(): array
     {
-        return iterator_to_array($this->table_gateway->select());
+        return array_map(
+            fn (iterable $row): Model => $this->mapper->map($row),
+            iterator_to_array($this->table_gateway->select())
+        );
     }
 
-    public function find(int $id): ?array
+    public function find(int $id): ?Model
     {
         /** @var ResultSet $results */
-        $results = $this->table_gateway->select([static::ROW_IDENTIFIER => $id]);
+        $results = $this->table_gateway->select([static::ROW_IDENTIFIER => $id])->current();
 
-        return (array)$results->current();
+        return $results === null
+            ? null
+            : $this->mapper->map((array)$results);
     }
 
     public function create(array $data): int

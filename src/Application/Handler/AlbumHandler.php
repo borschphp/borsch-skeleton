@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Handler;
+namespace Application\Handler;
 
-use App\Service\AlbumService;
+use Borsch\Router\Attribute\{Controller, Delete, Get, Patch, Post, Put};
+use Domain\AlbumService;
 use Laminas\Diactoros\Response\{EmptyResponse, JsonResponse};
 use OpenApi\Attributes as OA;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * Class AlbumHandler
- * @package App\Handler
- */
+#[Controller('/api/albums')]
 readonly class AlbumHandler implements RequestHandlerInterface
 {
 
@@ -19,6 +17,11 @@ readonly class AlbumHandler implements RequestHandlerInterface
         private AlbumService $service
     ) {}
 
+    #[Get(path: '[/{id}]', name: 'albums')]
+    #[Post]
+    #[Put(path: '/{id:\d+}')]
+    #[Patch(path: '/{id:\d+}')]
+    #[Delete(path: '/{id:\d+}')]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $id = $request->getAttribute('id');

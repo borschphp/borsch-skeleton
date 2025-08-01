@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Repository\Mapper;
+namespace Infrastructure\Mapper;
 
-use App\Model\Album;
-use App\Repository\AlbumRepository;
+use Domain\Model\Album;
+use Infrastructure\AlbumRepository;
 
-readonly class AlbumMapper
+readonly class AlbumMapper implements MapperInterface
 {
 
     /** @param iterable<string, mixed> $object */
-    public static function toAlbum(iterable $object): Album
+    public function map(iterable $object): Album
     {
         $album = new Album();
         $album->id = $object[AlbumRepository::ROW_IDENTIFIER] ?? null;

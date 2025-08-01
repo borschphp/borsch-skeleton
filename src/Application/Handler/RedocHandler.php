@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Handler;
+namespace Application\Handler;
 
-use Borsch\Router\RouterInterface;
+use Borsch\Router\Attribute\Controller;
+use Borsch\Router\Attribute\Get;
+use Borsch\Router\Contract\RouterInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
+#[Controller('/api')]
 readonly class RedocHandler implements RequestHandlerInterface
 {
 
@@ -14,6 +17,7 @@ readonly class RedocHandler implements RequestHandlerInterface
         private RouterInterface $router
     ) {}
 
+    #[Get(path: '/{redoc:redoc|swagger}')]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $openapi_url = $this->router->generateUri('openapi', ['format' => 'json']);

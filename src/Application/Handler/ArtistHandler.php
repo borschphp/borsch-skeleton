@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Handler;
+namespace Application\Handler;
 
-use App\Service\ArtistService;
+use Borsch\Router\Attribute\{Controller, Delete, Get, Patch, Post, Put};
+use Domain\ArtistService;
 use Laminas\Diactoros\Response\{EmptyResponse, JsonResponse};
 use OpenApi\Attributes as OA;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * Class ArtistHandler
- * @package App\Handler
- */
+#[Controller('/api/artists')]
 readonly class ArtistHandler implements RequestHandlerInterface
 {
 
@@ -19,6 +17,11 @@ readonly class ArtistHandler implements RequestHandlerInterface
         private ArtistService $service
     ) {}
 
+    #[Get(path: '[/{id}]', name: 'artists')]
+    #[Post]
+    #[Put(path: '/{id:\d+}')]
+    #[Patch(path: '/{id:\d+}')]
+    #[Delete(path: '/{id:\d+}')]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $id = $request->getAttribute('id');

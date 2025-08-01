@@ -1,32 +1,24 @@
 <?php
 
-namespace App\Handler;
+namespace Application\Handler;
 
-use Borsch\Router\RouterInterface;
+use Borsch\Router\Contract\RouterInterface;
 use Borsch\Template\TemplateRendererInterface;
+use Borsch\Router\Attribute\{Controller, Get};
 use Laminas\Diactoros\Response\HtmlResponse;
-use Psr\Http\{Message\ResponseInterface, Message\ServerRequestInterface, Server\RequestHandlerInterface};
+use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * Class HomeHandler
- * @package App\Handler
- */
-readonly class HomeHandler implements RequestHandlerInterface
+#[Controller]
+class HomeHandler implements RequestHandlerInterface
 {
 
-    /**
-     * @param RouterInterface $router
-     * @param TemplateRendererInterface $engine
-     */
     public function __construct(
         protected RouterInterface $router,
         protected TemplateRendererInterface $engine
     ) {}
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
+    #[Get(path: '/', name: 'home')]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->engine->assign([

@@ -11,9 +11,8 @@ ignore_user_abort(true);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Borsch\Application\ApplicationInterface;
+use Borsch\RequestHandler\RequestHandlerRunnerInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 // Warning, see: https://www.php.net/manual/en/timezones.others.php
 // do not use any of the timezones listed here (besides UTC)
@@ -22,15 +21,9 @@ date_default_timezone_set(env('TIMEZONE', 'UTC'));
 /** @var ContainerInterface $container */
 $container = (require_once __DIR__ . '/../config/container.php');
 
-$app = $container->get(ApplicationInterface::class);
-
-(require_once __DIR__.'/../config/pipeline.php')($app);
-(require_once __DIR__.'/../config/routes.php')($app);
-(require_once __DIR__.'/../config/api.php')($app);
-
-$handler = static function () use ($app, $container) {
-    $request = $container->get(ServerRequestInterface::class);
-    $app->run($request);
+$handler = static function () use ($container) {
+    $runner = $container->get(RequestHandlerRunnerInterface::class);
+    $runner->run();
 };
 
 $max_requests_number = filter_input(INPUT_SERVER, 'MAX_REQUESTS', FILTER_SANITIZE_NUMBER_INT) ?: 25;

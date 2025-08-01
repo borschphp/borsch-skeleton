@@ -1,15 +1,11 @@
 <?php
 
-namespace App\Service;
+namespace Domain;
 
-use App\Model\Artist;
-use App\Repository\ArtistRepository;
-use App\Repository\Mapper\ArtistMapper;
-use InvalidArgumentException;
+use Domain\Model\Artist;
+use Infrastructure\ArtistRepository;
 use Monolog\Logger;
-use ProblemDetails\ProblemDetails;
-use ProblemDetails\ProblemDetailsException;
-use RuntimeException;
+use ProblemDetails\{ProblemDetails, ProblemDetailsException};
 
 readonly class ArtistService
 {
@@ -26,10 +22,7 @@ readonly class ArtistService
     /** @return Artist[] */
     public function all(): array
     {
-        return array_map(
-            fn(iterable $artist): Artist => ArtistMapper::toArtist($artist),
-            $this->repository->all()
-        );
+        return $this->repository->all();
     }
 
     public function find(int $id): ?Artist
@@ -46,7 +39,7 @@ readonly class ArtistService
             ));
         }
 
-        return ArtistMapper::toArtist($artist);
+        return $artist;
     }
 
     /** @param array{name: string} $data */

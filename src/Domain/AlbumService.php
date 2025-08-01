@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Service;
+namespace Domain;
 
-use App\Model\Album;
-use App\Repository\AlbumRepository;
-use App\Repository\Mapper\AlbumMapper;
+use Domain\Model\Album;
+use Infrastructure\AlbumRepository;
 use Monolog\Logger;
-use ProblemDetails\ProblemDetails;
-use ProblemDetails\ProblemDetailsException;
+use ProblemDetails\{ProblemDetails, ProblemDetailsException};
 
 readonly class AlbumService
 {
@@ -24,10 +22,7 @@ readonly class AlbumService
     /** @return Album[] */
     public function all(): array
     {
-        return array_map(
-            fn(iterable $album): Album => AlbumMapper::toAlbum($album),
-            $this->repository->all()
-        );
+        return $this->repository->all();
     }
 
     public function find(int $id): ?Album
@@ -44,7 +39,7 @@ readonly class AlbumService
             ));
         }
 
-        return AlbumMapper::toAlbum($album);
+        return $album;
     }
 
     /** @param array{title: string, artist_id: int} $data */
