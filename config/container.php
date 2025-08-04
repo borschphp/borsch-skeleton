@@ -2,6 +2,7 @@
 
 use Borsch\Container\Container;
 use Borsch\Latte\LatteRenderer;
+use Borsch\Router\Contract\RouteInterface;
 use Borsch\Template\TemplateRendererInterface;
 use Borsch\Formatter\{FormatterInterface, HtmlFormatter, JsonFormatter};
 use Borsch\Middleware\{BodyParserMiddleware,
@@ -75,16 +76,30 @@ $container->set(ResponseFactoryInterface::class, ResponseFactory::class);
 
 $container->set(
     AttributeRouteLoader::class,
-    static fn(ContainerInterface $container) => (new AttributeRouteLoader([__ROOT_DIR__.'/src/Application'], $container))->load()
+    static fn(ContainerInterface $container) => (
+        new AttributeRouteLoader(
+            [__ROOT_DIR__ . '/src/Application'],
+            $container,
+            cache_path('loader.routes.cache.php'),
+            !isProduction()
+        ))->load()
 );
 
 $container->set(RouterInterface::class, static function (AttributeRouteLoader $loader) {
-    $router = new FastRouteRouter();
+    $routes = $loader->getRoutes();
+
     if (isProduction()) {
-        $router->setCacheFile(cache_path('routes.cache.php'));
+        return new FastRouteRouter(
+            array_combine(
+                array_map(fn(RouteInterface $route) => $route->getName(), $routes),
+                $routes
+            ),
+            cache_path('router.routes.cache.php')
+        );
     }
 
-    foreach ($loader->getRoutes() as $route) {
+    $router = new FastRouteRouter();
+    foreach ($routes as $route) {
         $router->addRoute($route);
     }
 
