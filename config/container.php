@@ -26,8 +26,7 @@ use Borsch\RequestHandler\{Emitter,
 use Borsch\Router\Contract\RouterInterface;
 use Borsch\Router\FastRouteRouter;
 use Borsch\Router\Loader\AttributeRouteLoader;
-use Laminas\Db\Adapter\Adapter;
-use Laminas\Db\Adapter\AdapterInterface;
+use Laminas\Db\Adapter\{Adapter, AdapterInterface};
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
