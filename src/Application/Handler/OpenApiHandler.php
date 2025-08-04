@@ -18,7 +18,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 )]
 #[OA\Server(url: 'http://localhost:8080/api')]
 #[Controller('/api')]
-class OpenApiHandler implements RequestHandlerInterface
+readonly class OpenApiHandler implements RequestHandlerInterface
 {
 
     #[Get(path: '/openapi', name: 'openapi')]

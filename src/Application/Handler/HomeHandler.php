@@ -2,7 +2,6 @@
 
 namespace Application\Handler;
 
-use Borsch\Router\Contract\RouterInterface;
 use Borsch\Template\TemplateRendererInterface;
 use Borsch\Router\Attribute\{Controller, Get};
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -10,11 +9,10 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
 #[Controller]
-class HomeHandler implements RequestHandlerInterface
+readonly class HomeHandler implements RequestHandlerInterface
 {
 
     public function __construct(
-        protected RouterInterface $router,
         protected TemplateRendererInterface $engine
     ) {}
 
