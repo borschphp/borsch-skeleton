@@ -3,10 +3,10 @@
 namespace Application\Handler;
 
 use OpenApi\{Attributes as OA, Generator};
+use Borsch\Http\Factory\StreamFactory;
+use Borsch\Http\Response;
 use Borsch\Router\Attribute\Controller;
 use Borsch\Router\Attribute\Get;
-use Laminas\Diactoros\Response;
-use Laminas\Diactoros\StreamFactory;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -34,8 +34,8 @@ readonly class OpenApiHandler implements RequestHandlerInterface
         $stream_factory  = new StreamFactory();
 
         return new Response(
-            $stream_factory->createStream($definition),
             200,
+            $stream_factory->createStream($definition),
             ['Content-Type' => 'text/'.$format]
         );
     }

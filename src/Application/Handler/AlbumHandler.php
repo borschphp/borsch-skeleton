@@ -2,10 +2,11 @@
 
 namespace Application\Handler;
 
+use Borsch\Http\Response\{EmptyResponse, JsonResponse};
 use Borsch\Router\Attribute\{Controller, Delete, Get, Patch, Post, Put};
 use Domain\AlbumService;
-use Laminas\Diactoros\Response\{EmptyResponse, JsonResponse};
 use OpenApi\Attributes as OA;
+use ProblemDetails\ProblemDetailsException;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -92,7 +93,10 @@ readonly class AlbumHandler implements RequestHandlerInterface
         );
     }
 
-    /** @param array{"title": string, "artist_id": int} $body */
+    /**
+     * @param array{"title": string, "artist_id": int} $body
+     * @throws ProblemDetailsException
+     */
     #[OA\Post(
         path: '/albums',
         description: 'Create a new album (there is no check on the `artist_id` existence)',
@@ -124,7 +128,10 @@ readonly class AlbumHandler implements RequestHandlerInterface
         return new JsonResponse($new_album, 201);
     }
 
-    /** @param array{title?: string, artist_id?: int} $body */
+    /**
+     * @param array{title?: string, artist_id?: int} $body
+     * @throws ProblemDetailsException
+     */
     #[OA\Put(
         path: '/albums/{id}',
         description: 'Update an album by ID',

@@ -2,9 +2,9 @@
 
 namespace Application\Handler;
 
+use Borsch\Http\Response\HtmlResponse;
 use Borsch\Template\TemplateRendererInterface;
 use Borsch\Router\Attribute\{Controller, Get};
-use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 

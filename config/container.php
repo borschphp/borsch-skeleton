@@ -1,6 +1,8 @@
 <?php
 
 use Borsch\Container\Container;
+use Borsch\Http\Response\HtmlResponse;
+use Borsch\Http\Factory\{ResponseFactory, ServerRequestFactory};
 use Borsch\Latte\LatteRenderer;
 use Borsch\Router\Contract\RouteInterface;
 use Borsch\Template\TemplateRendererInterface;
@@ -30,7 +32,6 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
-use Laminas\Diactoros\{Response\HtmlResponse, ResponseFactory, ServerRequestFactory};
 use ProblemDetails\{ProblemDetails, ProblemDetailsException, ProblemDetailsMiddleware};
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\{RequestInterface, ResponseFactoryInterface, ResponseInterface, ServerRequestInterface};
@@ -70,7 +71,9 @@ $container->set(RequestHandlerInterface::class, static function (ContainerInterf
         ->middleware($container->get(NotFoundHandlerMiddleware::class));
 });
 
-$container->set(ServerRequestInterface::class, static fn() => ServerRequestFactory::fromGlobals())->cache(false);
+$container->set(ServerRequestInterface::class, static function () {
+    return (new ServerRequestFactory())->createServerRequest($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $_SERVER);
+})->cache(false);
 
 $container->set(ResponseFactoryInterface::class, ResponseFactory::class);
 

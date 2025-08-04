@@ -2,10 +2,11 @@
 
 namespace Application\Handler;
 
+use Borsch\Http\Response\{EmptyResponse, JsonResponse};
 use Borsch\Router\Attribute\{Controller, Delete, Get, Patch, Post, Put};
 use Domain\ArtistService;
-use Laminas\Diactoros\Response\{EmptyResponse, JsonResponse};
 use OpenApi\Attributes as OA;
+use ProblemDetails\ProblemDetailsException;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -92,7 +93,10 @@ readonly class ArtistHandler implements RequestHandlerInterface
         );
     }
 
-    /** @param array{name: string} $body */
+    /**
+     * @param array{name: string} $body
+     * @throws ProblemDetailsException
+     */
     #[OA\Post(
         path: '/artists',
         description: 'Create a new artist',
@@ -121,7 +125,10 @@ readonly class ArtistHandler implements RequestHandlerInterface
         return new JsonResponse($new_artist, 201);
     }
 
-    /** @param array{name: string} $body */
+    /**
+     * @param array{name: string} $body
+     * @throws ProblemDetailsException
+     */
     #[OA\Put(
         path: '/artists/{id}',
         description: 'Update an artist',
