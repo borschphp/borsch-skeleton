@@ -21,11 +21,14 @@ use Psr\Http\Server\RequestHandlerInterface;
 readonly class OpenApiHandler implements RequestHandlerInterface
 {
 
-    #[Get(path: '/openapi', name: 'openapi')]
+    #[Get(path: '/openapi[.{format:json|yaml|yml}]', name: 'openapi')]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $format = $request->getAttribute('format', 'yaml');
-        $openapi = Generator::scan([__ROOT_DIR__.'/src']);
+        $openapi = (new Generator())->generate([
+            __ROOT_DIR__.'/src/Application/Handler',
+            __ROOT_DIR__.'/src/Domain',
+        ]);
         $definition = match ($format) {
             'json' => $openapi->toJson(),
             default => $openapi->toYaml(),
@@ -36,7 +39,7 @@ readonly class OpenApiHandler implements RequestHandlerInterface
         return new Response(
             200,
             $stream_factory->createStream($definition),
-            ['Content-Type' => 'text/'.$format]
+            ['Content-Type' => ['text/'.$format]]
         );
     }
 }
