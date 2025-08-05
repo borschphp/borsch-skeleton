@@ -2,11 +2,11 @@
 
 use Borsch\Container\Container;
 use Borsch\Http\Response\HtmlResponse;
-use Borsch\Http\Factory\{ResponseFactory, ServerRequestFactory};
+use Borsch\Http\Response\JsonResponse;
+use Borsch\Http\Factory\{ResponseFactory, ServerRequestFactory, StreamFactory, UploadedFileFactory};
 use Borsch\Latte\LatteRenderer;
 use Borsch\Router\Contract\RouteInterface;
 use Borsch\Template\TemplateRendererInterface;
-use Borsch\Formatter\{FormatterInterface, HtmlFormatter, JsonFormatter};
 use Borsch\Middleware\{BodyParserMiddleware,
     ContentLengthMiddleware,
     DispatchMiddleware,
@@ -33,7 +33,12 @@ use Monolog\Logger;
 use Monolog\Processor\PsrLogMessageProcessor;
 use ProblemDetails\{ProblemDetails, ProblemDetailsException, ProblemDetailsMiddleware};
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\{RequestInterface, ResponseFactoryInterface, ResponseInterface, ServerRequestInterface};
+use Psr\Http\Message\{RequestInterface,
+    ResponseFactoryInterface,
+    ResponseInterface,
+    ServerRequestInterface,
+    StreamFactoryInterface,
+    UploadedFileFactoryInterface};
 
 $container = new Container();
 $container->setCacheByDefault(true);
@@ -70,10 +75,48 @@ $container->set(RequestHandlerInterface::class, static function (ContainerInterf
         ->middleware($container->get(NotFoundHandlerMiddleware::class));
 });
 
+$container->set(ErrorHandlerMiddleware::class, static fn(TemplateRendererInterface $renderer) => new ErrorHandlerMiddleware(
+    static function (Throwable $throwable, ServerRequestInterface $request) use ($renderer): ResponseInterface {
+        if (str_starts_with($request->getUri()->getPath(), '/api')) {
+            return new JsonResponse(new ProblemDetails(
+                type: '://problem/internal-server-error',
+                title: 'Internal server error.',
+                status: 500,
+                detail: $throwable->getMessage()
+            ), 500);
+        }
+
+        return new HtmlResponse(
+            $renderer->render('500.tpl'),
+            500
+        );
+    }
+));
+
+$container->set(NotFoundHandlerMiddleware::class, static function (TemplateRendererInterface $renderer) {
+    return new NotFoundHandlerMiddleware(static function (ServerRequestInterface $request) use ($renderer): ResponseInterface {
+        if (str_starts_with($request->getUri()->getPath(), '/api')) {
+            throw new ProblemDetailsException(new ProblemDetails(
+                type: '://problem/not-found',
+                title: 'Not found.',
+                status: 404,
+                detail: "The requested uri ({$request->getUri()->getPath()}) could not be found."
+            ));
+        }
+
+        return new HtmlResponse(
+            $renderer->render('404.tpl'),
+            404
+        );
+    });
+});
+
 $container->set(ServerRequestInterface::class, static function () {
     return (new ServerRequestFactory())->createServerRequest($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $_SERVER);
 })->cache(false);
 
+$container->set(UploadedFileFactoryInterface::class, UploadedFileFactory::class);
+$container->set(StreamFactoryInterface::class, StreamFactory::class);
 $container->set(ResponseFactoryInterface::class, ResponseFactory::class);
 
 $container->set(
@@ -124,20 +167,6 @@ $container->set(NotFoundHandlerMiddleware::class, static function (TemplateRende
             404
         );
     });
-});
-
-$container->set(FormatterInterface::class, function () {
-    return new class implements FormatterInterface {
-
-        public function format(ResponseInterface $response, Throwable $throwable, RequestInterface $request): ResponseInterface
-        {
-            $formatter = str_starts_with($request->getUri()->getPath(), '/api') ?
-                new JsonFormatter() :
-                new HtmlFormatter(isProduction());
-
-            return $formatter->format($response, $throwable, $request);
-        }
-    };
 });
 
 $container->set(TemplateRendererInterface::class, fn() => new LatteRenderer(storage_path('views'), cache_path('views'), !isProduction()));
