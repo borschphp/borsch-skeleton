@@ -1,11 +1,12 @@
 <?php
 
 use Borsch\Container\Container;
-use Borsch\Http\Response\HtmlResponse;
-use Borsch\Http\Response\JsonResponse;
+use Borsch\Http\Response\{HtmlResponse, JsonResponse};
 use Borsch\Http\Factory\{ResponseFactory, ServerRequestFactory, StreamFactory, UploadedFileFactory};
 use Borsch\Latte\LatteRenderer;
-use Borsch\Router\Contract\RouteInterface;
+use Borsch\Router\Contract\{RouterInterface, RouteInterface};
+use Borsch\Router\FastRouteRouter;
+use Borsch\Router\Loader\AttributeRouteLoader;
 use Borsch\Template\TemplateRendererInterface;
 use Borsch\Middleware\{BodyParserMiddleware,
     ContentLengthMiddleware,
@@ -23,18 +24,11 @@ use Borsch\RequestHandler\{Emitter,
     RequestHandlerInterface,
     RequestHandlerRunner,
     RequestHandlerRunnerInterface};
-use Borsch\Router\Contract\RouterInterface;
-use Borsch\Router\FastRouteRouter;
-use Borsch\Router\Loader\AttributeRouteLoader;
 use Laminas\Db\Adapter\{Adapter, AdapterInterface};
-use Monolog\Handler\StreamHandler;
-use Monolog\Level;
-use Monolog\Logger;
-use Monolog\Processor\PsrLogMessageProcessor;
+use Monolog\{Handler\StreamHandler, Level, Logger, Processor\PsrLogMessageProcessor};
 use ProblemDetails\{ProblemDetails, ProblemDetailsException, ProblemDetailsMiddleware};
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\{RequestInterface,
-    ResponseFactoryInterface,
+use Psr\Http\Message\{ResponseFactoryInterface,
     ResponseInterface,
     ServerRequestInterface,
     StreamFactoryInterface,
