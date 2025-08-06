@@ -64,7 +64,6 @@
     }
   },
   "scripts": {
-    "pre-install-cmd": "App\\Package\\Installer::install",
     "post-create-project-cmd": [
       "NiftyCo\\Skeletor\\Runner::execute"
     ],
