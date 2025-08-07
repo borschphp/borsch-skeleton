@@ -28,6 +28,7 @@ readonly class ArtistService
     public function find(int $id): ?Artist
     {
         $artist = $this->repository->find($id);
+
         if ($artist === null) {
             $this->logger->error('Artist with ID #{id} not found', ['{id}' => $id]);
 
@@ -36,6 +37,17 @@ readonly class ArtistService
                 title: 'Artist does not exist.',
                 status: 404,
                 detail: "The artist with ID {$id} could not be found."
+            ));
+        }
+
+        if (!$artist instanceof Artist) {
+            $this->logger->error('Artist with ID #{id} is not an instance of Artist', ['{id}' => $id]);
+
+            throw new ProblemDetailsException(new ProblemDetails(
+                type: '://problem/invalid-artist',
+                title: 'Invalid artist data.',
+                status: 500,
+                detail: "The artist with ID {$id} is not a valid Artist instance."
             ));
         }
 

@@ -28,6 +28,7 @@ readonly class AlbumService
     public function find(int $id): ?Album
     {
         $album = $this->repository->find($id);
+
         if ($album === null) {
             $this->logger->error('Album with ID #{id} not found', ['{id}' => $id]);
 
@@ -36,6 +37,17 @@ readonly class AlbumService
                 title: 'Album does not exist.',
                 status: 404,
                 detail: "The album with ID {$id} could not be found."
+            ));
+        }
+
+        if (!$album instanceof Album) {
+            $this->logger->error('Album with ID #{id} is not an instance of Album', ['{id}' => $id]);
+
+            throw new ProblemDetailsException(new ProblemDetails(
+                type: '://problem/invalid-type',
+                title: 'Invalid album type.',
+                status: 500,
+                detail: "The album with ID {$id} is not a valid Album instance."
             ));
         }
 
