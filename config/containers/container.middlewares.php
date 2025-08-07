@@ -9,6 +9,15 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 return static function (Container $container) {
 
+    /*
+     * The ErrorHandlerMiddleware is responsible for handling exceptions and returning appropriate responses.
+     *
+     * If the request is for an API endpoint, it returns a JSON response with a ProblemDetails object.
+     * Otherwise, it returns an HTML response with a 500 error page.
+     *
+     * It should be registered before any other middleware so that it can catch exceptions and handle them
+     * appropriately.
+     */
     $container->set(ErrorHandlerMiddleware::class, static fn(TemplateRendererInterface $renderer) => new ErrorHandlerMiddleware(
         static function (Throwable $throwable, ServerRequestInterface $request) use ($renderer): ResponseInterface {
             if (str_starts_with($request->getUri()->getPath(), '/api')) {
@@ -27,6 +36,12 @@ return static function (Container $container) {
         }
     ));
 
+    /*
+     * The NotFoundHandlerMiddleware is responsible for handling 404 Not Found errors.
+     *
+     * If the request is for an API endpoint, it returns a JSON response with a ProblemDetails object.
+     * Otherwise, it returns an HTML response with a 404 error page.
+     */
     $container->set(NotFoundHandlerMiddleware::class, static function (TemplateRendererInterface $renderer) {
         return new NotFoundHandlerMiddleware(static function (ServerRequestInterface $request) use ($renderer): ResponseInterface {
             if (str_starts_with($request->getUri()->getPath(), '/api')) {

@@ -21,6 +21,15 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 return static function (Container $container) {
 
+    /*
+     * The RequestHandlerRunner is responsible for running the RequestHandler and emit a response.
+     *
+     * As parameters, it takes:
+     * - A RequestHandlerInterface instance that will handle the request
+     * - An Emitter instance that will emit the response
+     * - A callable that returns the ServerRequestInterface instance
+     * - A callable that returns a fallback response in case of an error
+     */
     $container->set(RequestHandlerRunnerInterface::class, static function (ContainerInterface $container) {
         return new RequestHandlerRunner(
             $container->get(RequestHandlerInterface::class),
@@ -37,6 +46,12 @@ return static function (Container $container) {
         );
     });
 
+    /*
+     * The RequestHandler is responsible for handling the request and returning a response.
+     *
+     * It is composed of several middlewares that will be executed in the order they are added (FIFO).
+     * Predefined middlewares are included to handle common tasks, feel free to add your own.
+     */
     $container->set(RequestHandlerInterface::class, static function (ContainerInterface $container) {
         return (new RequestHandler())
             ->middleware($container->get(ErrorHandlerMiddleware::class))
