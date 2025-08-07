@@ -16,7 +16,7 @@ return static function (Container $container) {
      * Logs are written to the `storage/logs/app.log` file in the application root by default.
      * The log level and channel can be configured via environment variables.
      */
-    $container->set(Logger::class, function (): Logger {
+    $container->set(Logger::class, static function (): Logger {
         $name = env('APP_NAME', 'App');
 
         $handlers = [

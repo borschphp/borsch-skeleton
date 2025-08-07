@@ -30,20 +30,25 @@ return static function (Container $container) {
      * - A callable that returns the ServerRequestInterface instance
      * - A callable that returns a fallback response in case of an error
      */
-    $container->set(RequestHandlerRunnerInterface::class, static function (ContainerInterface $container) {
-        return new RequestHandlerRunner(
-            $container->get(RequestHandlerInterface::class),
-            new Emitter(),
-            static fn() => $container->get(ServerRequestInterface::class),
-            static function() use ($container) {
-                $engine = $container->get(TemplateRendererInterface::class);
-                $response = ($container->get(ResponseFactoryInterface::class))->createResponse(500);
+    $container->set(
+        RequestHandlerRunnerInterface::class,
+        static function (
+            RequestHandlerInterface $handler,
+            ServerRequestInterface $request,
+            TemplateRendererInterface $renderer,
+            ResponseFactoryInterface $factory
+        ) {
+            return new RequestHandlerRunner(
+                $handler,
+                new Emitter(),
+                static fn() => $request,
+                static function() use ($renderer, $factory) {
+                    $response = $factory->createResponse(500);
+                    $response->getBody()->write($renderer->render('500.tpl'));
 
-                $response->getBody()->write($engine->render('500.tpl'));
-
-                return $response;
-            }
-        );
+                    return $response;
+                }
+            );
     });
 
     /*
