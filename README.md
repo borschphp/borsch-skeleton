@@ -12,7 +12,7 @@
 
 Sometimes, you don't need an overkill solution like [Laravel](https://laravel.com/) or [Symfony](https://symfony.com/).
 
-Borsch is a simple and efficient [PSR-15](https://www.php-fig.org/psr/psr-15/) micro framework made to kick start your
+Borsch is a simple, real fast and efficient [PSR-15](https://www.php-fig.org/psr/psr-15/) micro framework made to kick-start your
 web app or API development by using the tools you prefer, and provides minimal structure and facilities to ease your
 development.
 
@@ -22,8 +22,7 @@ It natively features :
 * [Router](https://github.com/borschphp/borsch-router)
 * [Request Handlers and Middlewares](https://github.com/borschphp/borsch-requesthandler)
 * [Environment Variables](https://github.com/vlucas/phpdotenv)
-* [Error Handling](https://github.com/borschphp/borsch-skeleton/blob/master/src/Middleware/ErrorHandlerMiddleware.php)
-* [Listeners](https://github.com/borschphp/borsch-skeleton/blob/master/src/Listener/MonologListener.php)
+* [Error Handling](https://github.com/borschphp/borsch-middlewares/blob/main/src/Middleware/ErrorHandlerMiddleware.php)
 
 Can be enriched with :
 
@@ -41,7 +40,7 @@ Via [composer](https://getcomposer.org/) :
 
 ## Web servers
 
-Instructions below will start a server on http://0.0.0.0:8080.
+Instructions below will start a server on http://0.0.0.0:8080 (or https://localhost if you use FrankenPHP).
 
 ### PHP Built-in web server
 
@@ -74,6 +73,8 @@ docker run \
     -v $PWD:/app \
     -p 80:8080 -p 443:443 -p 443:443/udp \
     dunglas/frankenphp
+# or use the shortcut
+composer franken
 ```
 
 ## Documentation
