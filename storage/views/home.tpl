@@ -4,8 +4,8 @@
 
 {block content}
     <div>
-        <img src="/images/logo.png"  class="h-48 mx-auto" alt="Logo" />
-        <h3 class="text-center font-bold text-xl">Fuel Your Code with Flavor</h3>
+        <img src="/images/logo.png"  class="h-48 mx-auto" alt="Logo" style="margin-top: -30px; margin-bottom: -30px;" />
+        <h3 class="text-center font-bold text-xl mt-8">Fuel Your Code with Flavor</h3>
         <div class="text-center">
             <a class="text-sm text-purple-900 no-underline hover:underline" href="https://github.com/borschphp/borsch-skeleton" target="_blank">Github</a>
         </div>
@@ -20,7 +20,7 @@
                     <p class="mt-1 text-gray-500">Get started quickly with clear, well-structured documentation covering everything you need to build and scale.</p>
                 </div>
                 <div>
-                    <a href="https://borsch-documentation.onrender.com" target="_blank" class="text-purple-900 no-underline hover:underline" >
+                    <a href="https://borschphp.github.io/borsch-skeleton-docs/#/" target="_blank" class="text-purple-900 no-underline hover:underline" >
                         >> Read the documentation
                     </a>
                 </div>
