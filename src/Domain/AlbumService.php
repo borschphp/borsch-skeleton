@@ -25,6 +25,9 @@ readonly class AlbumService
         return $this->repository->all();
     }
 
+    /**
+     * @throws ProblemDetailsException
+     */
     public function find(int $id): ?Album
     {
         $album = $this->repository->find($id);
@@ -54,7 +57,10 @@ readonly class AlbumService
         return $album;
     }
 
-    /** @param array{title: string, artist_id: int} $data */
+    /**
+     * @param array{title: string, artist_id: int} $data
+     * @throws ProblemDetailsException
+     */
     public function create(array $data): Album
     {
         if (!isset($data['title'], $data['artist_id'])) {
@@ -83,7 +89,10 @@ readonly class AlbumService
         return $this->find($id);
     }
 
-    /** @param array{title?: string, artist_id?: int} $data */
+    /**
+     * @param array{title?: string, artist_id?: int} $data
+     * @throws ProblemDetailsException
+     */
     public function update(int $id, array $data): Album
     {
         if (!isset($data['title']) && !isset($data['artist_id'])) {
@@ -119,6 +128,9 @@ readonly class AlbumService
         return $this->find($id);
     }
 
+    /**
+     * @throws ProblemDetailsException
+     */
     public function delete(int $id): bool
     {
         // Making sure it exists

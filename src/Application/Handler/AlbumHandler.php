@@ -18,6 +18,9 @@ readonly class AlbumHandler implements RequestHandlerInterface
         private AlbumService $service
     ) {}
 
+    /**
+     * @throws ProblemDetailsException
+     */
     #[Get(path: '[/{id}]', name: 'albums')]
     #[Post]
     #[Put(path: '/{id:\d+}')]
@@ -37,6 +40,9 @@ readonly class AlbumHandler implements RequestHandlerInterface
         };
     }
 
+    /**
+     * @throws ProblemDetailsException
+     */
     #[OA\Get(
         path: '/albums',
         description: 'Get all albums',
@@ -174,6 +180,9 @@ readonly class AlbumHandler implements RequestHandlerInterface
         return new JsonResponse($updated_album);
     }
 
+    /**
+     * @throws ProblemDetailsException
+     */
     #[OA\Delete(
         path: '/albums/{id}',
         description: 'Delete an album by ID',

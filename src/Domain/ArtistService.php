@@ -25,6 +25,9 @@ readonly class ArtistService
         return $this->repository->all();
     }
 
+    /**
+     * @throws ProblemDetailsException
+     */
     public function find(int $id): ?Artist
     {
         $artist = $this->repository->find($id);
@@ -54,7 +57,10 @@ readonly class ArtistService
         return $artist;
     }
 
-    /** @param array{name: string} $data */
+    /**
+     * @param array{name: string} $data
+     * @throws ProblemDetailsException
+     */
     public function create(array $data): Artist
     {
         if (!isset($data['name'])) {
@@ -83,7 +89,10 @@ readonly class ArtistService
         return $this->find($id);
     }
 
-    /** @param array{name: string} $data */
+    /**
+     * @param array{name: string} $data
+     * @throws ProblemDetailsException
+     */
     public function update(int $id, array $data): Artist
     {
         if (!isset($data['name'])) {
@@ -114,6 +123,9 @@ readonly class ArtistService
         return $this->find($id);
     }
 
+    /**
+     * @throws ProblemDetailsException
+     */
     public function delete(int $id): bool
     {
         // Making sure it exists

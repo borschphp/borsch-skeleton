@@ -18,6 +18,9 @@ readonly class ArtistHandler implements RequestHandlerInterface
         private ArtistService $service
     ) {}
 
+    /**
+     * @throws ProblemDetailsException
+     */
     #[Get(path: '[/{id}]', name: 'artists')]
     #[Post]
     #[Put(path: '/{id:\d+}')]
@@ -37,6 +40,9 @@ readonly class ArtistHandler implements RequestHandlerInterface
         };
     }
 
+    /**
+     * @throws ProblemDetailsException
+     */
     #[OA\Get(
         path: '/artists',
         description: 'Get all artists',
@@ -168,6 +174,9 @@ readonly class ArtistHandler implements RequestHandlerInterface
         return new JsonResponse($updated_artist);
     }
 
+    /**
+     * @throws ProblemDetailsException
+     */
     #[OA\Delete(
         path: '/artists/{id}',
         description: 'Delete an artist',
