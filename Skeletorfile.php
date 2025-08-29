@@ -14,27 +14,26 @@ return function (Skeletor $skeletor) {
 
     if ($installation_type === 'MINIMAL') {
         $skeletor->spin('Removing front handlers', function () use ($skeletor) {
-            $skeletor->removeFile('src/Handler/HomeHandler.php');
-            $skeletor->pregReplaceInFile(
-                '/\s\$app->[\s\S].+/',
-                '',
-                'config/routes.php'
-            );
-
+            $skeletor->removeFile('src/Application/Handler/HomeHandler.php');
             return true;
         }, 'Removed front handlers', 'Unable to completely remove front handlers');
 
-
+        /* // For now, it only removes the handlers, not the templates (because used in other container definitions).
         $skeletor->spin('Removing template files and configuration', function () use ($skeletor) {
-            $skeletor->removeFile('config/containers/template.container.php');
             $skeletor->pregReplaceInFile(
-                '/\n[\s\S].+template[\s\S].+;/',
+                '/\n[\s\S].+TemplateRendererInterface[\s\S].+;/',
+                '',
+                'config/container.php'
+            );
+            $skeletor->pregReplaceInFile(
+                '/\$engine->render(\'500.tpl\')/',
                 '',
                 'config/container.php'
             );
             $skeletor->removeFile('storage/views/404.tpl');
             $skeletor->removeFile('storage/views/500.tpl');
             $skeletor->removeFile('storage/views/home.tpl');
+            $skeletor->removeFile('storage/views/layout.tpl');
             // There is an issue with `Skeletor::removeDirectory(string $filename);` because it internally uses `rmdir`
             // which has a parameter named `$path` and not `$filename`.
             // Because of the use of `get_defined_vars()`, `rmdir` receives a parameter named `$filename` instead of
@@ -56,6 +55,7 @@ return function (Skeletor $skeletor) {
 
             return true;
         }, 'Removing Latte template engine from composer.json', 'Unable to completely remove Latte template engine from composer.json');
+        */
 
         $skeletor->spin('Creating environment file', function () use ($skeletor, $app_name) {
             if (!$skeletor->exists('.env')) {

@@ -2,9 +2,8 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-use Borsch\Application\ApplicationInterface;
+use Borsch\RequestHandler\RequestHandlerRunnerInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 (static function () {
     // Warning, see: https://www.php.net/manual/en/timezones.others.php
@@ -14,13 +13,6 @@ use Psr\Http\Message\ServerRequestInterface;
     /** @var ContainerInterface $container */
     $container = (require_once __DIR__.'/../config/container.php');
 
-    $app = $container->get(ApplicationInterface::class);
-
-    (require_once __DIR__.'/../config/pipeline.php')($app);
-    (require_once __DIR__.'/../config/routes.php')($app);
-    (require_once __DIR__.'/../config/api.php')($app);
-
-    $request = $container->get(ServerRequestInterface::class);
-
-    $app->run($request);
+    $runner = $container->get(RequestHandlerRunnerInterface::class);
+    $runner->run();
 })();

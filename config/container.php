@@ -1,16 +1,16 @@
 <?php
 
-use League\Container\{Container, ReflectionContainer};
+use Borsch\Container\Container;
 
 $container = new Container();
+$container->setCacheByDefault(true);
 
-$container->defaultToShared();
-$container->delegate(new ReflectionContainer(true));
-
-(require_once __DIR__.'/containers/app.container.php')($container);
-(require_once __DIR__.'/containers/logs.container.php')($container);
-(require_once __DIR__.'/containers/pipeline.container.php')($container);
-(require_once __DIR__.'/containers/template.container.php')($container);
-(require_once __DIR__.'/containers/database.container.php')($container);
+(require_once __DIR__ . '/containers/container.handler.php')($container);
+(require_once __DIR__ . '/containers/container.middlewares.php')($container);
+(require_once __DIR__ . '/containers/container.http.php')($container);
+(require_once __DIR__ . '/containers/container.routes.php')($container);
+(require_once __DIR__ . '/containers/container.logs.php')($container);
+(require_once __DIR__ . '/containers/container.views.php')($container);
+(require_once __DIR__ . '/containers/container.database.php')($container);
 
 return $container;
